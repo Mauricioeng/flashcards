@@ -90,10 +90,22 @@
 
         body { background: var(--bg-gradient); color: var(--text-primary); min-height: 100vh; display: flex; justify-content: center; overflow-x: hidden; position: relative; line-height: 1.6; }
 
-        body::before, body::after { content: ''; position: fixed; border-radius: 50%; filter: blur(120px); z-index: -1; opacity: 0.4; pointer-events: none; }
+        /* EFEITOS BACKGROUND */
+        body::before, body::after { content: ''; position: fixed; border-radius: 50%; filter: blur(120px); z-index: -2; opacity: 0.4; pointer-events: none; }
         body::before { top: -10%; left: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, var(--accent-color) 0%, transparent 60%); animation: float 30s infinite alternate ease-in-out; }
         body::after { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: radial-gradient(circle, #3b82f6 0%, transparent 60%); animation: float 25s infinite alternate ease-in-out reverse; }
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(50px, 50px) scale(1.1); } }
+
+        /* ANIMAÇÕES FLUTUANTES MINIMALISTAS */
+        .bg-animations { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+        .floating-icon { position: absolute; color: var(--accent-color); opacity: 0.05; animation: floatUp linear infinite; }
+        [data-theme="dark"] .floating-icon { opacity: 0.08; color: var(--text-muted); }
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) rotate(0deg) scale(0.8); opacity: 0; }
+            10% { opacity: 0.06; }
+            90% { opacity: 0.06; }
+            100% { transform: translateY(-10vh) rotate(360deg) scale(1.2); opacity: 0; }
+        }
 
         .glass-panel { background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--glass-shadow); }
         .app-container { width: 100%; max-width: 1000px; padding: 2rem 1.5rem; display: flex; flex-direction: column; gap: 2rem; z-index: 1; flex: 1;}
@@ -160,48 +172,30 @@
             overflow: hidden; display: flex; flex-direction: column; cursor: grab; align-items: center; justify-content: flex-start;
         }
         
-        /* Nova Transparência quando inativo */
         .unified-widget:not(:hover):not(.expanded) { opacity: 0.25; }
-
         .unified-widget:active { cursor: grabbing; }
         .unified-widget:not(.expanded) { width: 50px; height: 50px; border-radius: 50%; padding: 0; justify-content: center; }
         .unified-widget:not(.expanded):hover { transform: translateY(-50%) scale(1.1) rotate(5deg); opacity: 1;}
         .unified-widget:not(.expanded) .widget-body, .unified-widget:not(.expanded) .pomo-subject { display: none; }
 
-        .tomato-leaf {
-            position: absolute; top: 2px; left: 50%; margin-left: -8px; width: 16px; height: 8px; background: rgba(34, 197, 94, 0.9);
-            border-radius: 50px 0 50px 0; transform: rotate(-15deg); z-index: 2; transition: opacity 0.3s;
-        }
-        .tomato-leaf::after {
-            content: ''; position: absolute; top: 2px; left: 3px; width: 12px; height: 6px; background: rgba(22, 163, 74, 0.9);
-            border-radius: 0 50px 0 50px; transform: rotate(40deg);
-        }
+        .tomato-leaf { position: absolute; top: 2px; left: 50%; margin-left: -8px; width: 16px; height: 8px; background: rgba(34, 197, 94, 0.9); border-radius: 50px 0 50px 0; transform: rotate(-15deg); z-index: 2; transition: opacity 0.3s; }
+        .tomato-leaf::after { content: ''; position: absolute; top: 2px; left: 3px; width: 12px; height: 6px; background: rgba(22, 163, 74, 0.9); border-radius: 0 50px 0 50px; transform: rotate(40deg); }
 
-        .unified-widget.expanded {
-            width: 190px; height: auto; padding: 15px; border-radius: 20px;
-            background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2), inset 0 0 0 1px var(--glass-border);
-            border: 1px solid var(--glass-border);
-            cursor: move;
-        }
+        .unified-widget.expanded { width: 190px; height: auto; padding: 15px; border-radius: 20px; background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(0,0,0,0.2), inset 0 0 0 1px var(--glass-border); border: 1px solid var(--glass-border); cursor: move; }
         .unified-widget.expanded .tomato-leaf { opacity: 0; pointer-events: none; }
 
         .widget-header { display: flex; align-items: center; justify-content: center; width: 100%; transition: var(--transition); }
         .unified-widget.expanded .widget-header { flex-direction: column; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px; }
-        
         .pomo-time-container { display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; z-index: 3;}
         .pomodoro-time { font-size: 0.9rem; font-weight: 800; color: white; font-variant-numeric: tabular-nums; text-shadow: 1px 1px 2px rgba(0,0,0,0.4); font-family: monospace; }
         .expanded .pomodoro-time { font-size: 2rem; color: var(--accent-color); text-shadow: none; margin-bottom: 2px; }
 
         .widget-body { display: flex; flex-direction: column; opacity: 1; transition: opacity 0.3s; margin-top: 10px; gap: 10px; width: 100%; align-items: center; }
-        
         .pomo-subject-select { width: 100%; font-size: 0.75rem; padding: 6px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-base); color: var(--text-primary); text-align: center; font-weight: 700; text-transform: uppercase; cursor: pointer; min-width: auto; appearance: auto; box-shadow: none;}
-        
         .pomodoro-modes { display: flex; gap: 4px; background: rgba(0,0,0,0.05); padding: 4px; border-radius: 10px; width: 100%; justify-content: center; }
         [data-theme="dark"] .pomodoro-modes { background: rgba(255,255,255,0.05); }
         .mode-btn { background: transparent; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: var(--transition); text-transform: uppercase; width: 50%; }
         .mode-btn.active { background: var(--bg-base); color: var(--accent-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        
         .pomodoro-controls { display: flex; gap: 8px; }
         .circle-btn { background: var(--bg-base); border: 1px solid var(--glass-border); color: var(--text-secondary); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .circle-btn:hover { background: var(--accent-color); color: #fff; border-color: var(--accent-color); transform: scale(1.05); }
@@ -262,7 +256,6 @@
         .card:hover .flip-hint, .card:focus-visible .flip-hint { opacity: 1; transform: translateX(-50%) translateY(0); }
 
         .controls { display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin-bottom: auto;}
-        
         .srs-controls { display: flex; gap: 1rem; justify-content: center; width: 100%; max-width: 720px; margin-bottom: auto;}
         .srs-btn { flex: 1; background: var(--bg-base); border: 1px solid var(--glass-border); color: var(--text-primary); padding: 1.2rem 0.5rem; border-radius: 16px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: var(--transition); display: flex; flex-direction: column; align-items: center; gap: 0.6rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .srs-btn svg { transition: var(--transition); color: var(--text-muted); width: 26px; height: 26px; }
@@ -286,32 +279,10 @@
         .stat-number { font-size: 2.8rem; font-weight: 700; color: var(--text-primary); line-height: 1; }
         
         .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;}
-        
-        .chart-container { 
-            padding: 1.8rem; 
-            display: flex; 
-            flex-direction: column; 
-            min-width: 0; /* Correção: Força o container a encolher */
-            width: 100%;
-        }
-        .chart-container h3 { 
-            font-size: 1.15rem; 
-            margin-bottom: 1.5rem; 
-            color: var(--text-primary); 
-            font-weight: 600; 
-        }
-        .canvas-wrapper { 
-            height: 260px; 
-            position: relative; 
-            width: 100%; 
-            flex: 1; 
-            min-width: 0; /* Correção: Impede que o canvas quebre a tela */
-        }
-        
-        /* Garante que o elemento canvas não ultrapasse o wrapper */
-        canvas {
-            max-width: 100% !important;
-        }
+        .chart-container { padding: 1.8rem; display: flex; flex-direction: column; min-width: 0; width: 100%; }
+        .chart-container h3 { font-size: 1.15rem; margin-bottom: 1.5rem; color: var(--text-primary); font-weight: 600; }
+        .canvas-wrapper { height: 260px; position: relative; width: 100%; flex: 1; min-width: 0; }
+        canvas { max-width: 100% !important; }
 
         .difficult-cards-list { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
         .diff-card-item { background: var(--bg-base); border: 1px solid var(--glass-border); padding: 1.2rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
@@ -326,13 +297,11 @@
         .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
         .list-card { background: var(--bg-base); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1.2rem; display: flex; flex-direction: column; gap: 0.8rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .list-card:hover { transform: translateY(-3px); border-color: var(--accent-color); }
-        
         .list-card-content { font-size: 0.95rem; line-height: 1.5; color: var(--text-primary); overflow-wrap: break-word; }
         .list-card-content img { max-width: 100%; height: auto; max-height: 150px; border-radius: 8px; margin: 5px 0; }
         .list-card-content pre { background: #2d2d2d; color: #ccc; padding: 10px; border-radius: 8px; font-size: 0.8rem; overflow-x: auto; margin: 5px 0; }
         .list-card-a-wrapper { background: rgba(0,0,0,0.03); padding: 10px; border-radius: 8px; border-left: 3px solid var(--accent-color); margin-top: 5px;}
         [data-theme="dark"] .list-card-a-wrapper { background: rgba(255,255,255,0.03); }
-        
         .list-card-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: auto; border-top: 1px solid var(--glass-border); padding-top: 10px;}
 
         /* --- MODAIS E FORMULÁRIOS --- */
@@ -346,12 +315,27 @@
         .close-btn { background: var(--bg-base); border: none; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); padding: 0.6rem; border-radius: 50%; }
         .close-btn:hover { color: var(--danger); background: var(--danger-light); transform: rotate(90deg); }
 
+        /* NOVA BARRA DE FORMATAÇÃO E ADIÇÃO INLINE */
+        .format-toolbar { display: flex; gap: 4px; margin-bottom: 0.5rem; background: rgba(0,0,0,0.03); padding: 4px; border-radius: 8px; border: 1px solid var(--glass-border); }
+        [data-theme="dark"] .format-toolbar { background: rgba(255,255,255,0.03); }
+        .format-btn { background: transparent; border: none; color: var(--text-secondary); cursor: pointer; border-radius: 6px; padding: 4px 8px; font-size: 0.9rem; font-weight: 600; transition: var(--transition); display:flex; align-items:center; justify-content:center; }
+        .format-btn:hover { background: var(--bg-base); color: var(--accent-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
+        
+        .subject-select-wrapper { display: flex; gap: 8px; align-items: center; }
+        #card-subject-select { flex: 1; margin-bottom: 0;}
+        .inline-add-btn { background: var(--accent-light); color: var(--accent-color); border: 1px solid transparent; width: 44px; height: 44px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); font-size: 1.5rem; font-weight: 300;}
+        .inline-add-btn:hover { background: var(--accent-color); color: white; transform: translateY(-2px);}
+        .inline-subject-input-group { display: flex; gap: 8px; margin-top: 8px; animation: fadeIn 0.3s ease;}
+        .inline-subject-input-group.hidden { display: none; }
+        .inline-subject-input-group input { margin-bottom: 0; }
+        .inline-subject-input-group button { padding: 0 1rem; margin-top: 0; white-space: nowrap;}
+
         .form-group { margin-bottom: 1.5rem; }
         .form-group label { display: block; margin-bottom: 0.6rem; font-size: 0.95rem; color: var(--text-primary); font-weight: 600; }
         input, textarea, select { width: 100%; background: var(--bg-base); border: 1px solid var(--glass-border); border-radius: 12px; padding: 0.9rem 1.2rem; color: var(--text-primary); font-size: 16px; transition: var(--transition); resize: vertical; }
         input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 0 4px var(--accent-glow); }
         
-        .submit-btn { width: 100%; margin-top: 0.5rem; padding: 1rem; font-size: 1.05rem; font-weight: 600; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .submit-btn { width: 100%; margin-top: 0.5rem; padding: 1rem; font-size: 1.05rem; font-weight: 600; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: all 0.3s; }
 
         .hidden { display: none !important; }
         .slide-in-right { animation: slideInR 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
@@ -367,33 +351,25 @@
             header { flex-direction: column; gap: 1rem; align-items: center; padding-bottom: 1rem;}
             .header-actions { justify-content: center; width: 100%; }
             .user-profile { border-right: none; padding-right: 0; margin-right: 0; }
-            
             .nav-container { flex-direction: column; gap: 1rem; }
             .app-nav { width: 100%; display: flex; justify-content: space-between; flex-wrap: wrap;}
             .nav-btn { flex: 1; justify-content: center; padding: 0.7rem 0.2rem; font-size: 0.85rem; flex-direction: column; gap: 4px; border-radius: 10px;}
             .nav-btn svg { width: 20px; height: 20px; margin: 0; }
-            
             .subject-filter { width: 100%; justify-content: space-between; }
             .subject-filter select { flex: 1; }
-
             .scene { min-height: 60vh; height: auto; max-height: none; }
             .card__face { padding: 1.5rem 1.2rem; }
-            
             .card-label { top: 1.2rem; left: 1.2rem; }
             .subject-badge { top: 0.9rem; left: 6rem; }
             .card-actions { top: 1.2rem; right: 1.2rem; }
             .voice-btn { bottom: 1.2rem; left: 1.2rem; }
             .flip-hint { bottom: 1.2rem; font-size: 0.8rem; padding: 6px 12px; opacity: 1; transform: translateX(-50%);}
-            
             .markdown-content { font-size: 1.3rem !important; }
-
             .srs-controls { flex-wrap: wrap; gap: 0.5rem; }
             .srs-btn { min-width: calc(50% - 0.5rem); padding: 0.8rem 0.5rem; flex-direction: row; justify-content: center;}
             .srs-btn svg { width: 20px; height: 20px; }
-            
             .charts-row { grid-template-columns: 1fr; }
             .modal-content { padding: 1.5rem; }
-            
             .list-card-actions { flex-wrap: wrap; }
         }
 
@@ -401,7 +377,6 @@
             .icon-btn span { display: none !important; }
             .glass-btn { padding: 0.6rem; }
             .logo h1 { font-size: 1.5rem; }
-            
             .unified-widget.expanded { width: 160px; padding: 10px; }
             .expanded .pomodoro-time { font-size: 1.5rem; }
             .pomo-subject-select { font-size: 0.65rem; }
@@ -414,6 +389,8 @@
     </style>
 </head>
 <body>
+    <div class="bg-animations" id="bg-animations"></div>
+
     <div class="app-container">
 
         <div id="auth-view" class="view-section active">
@@ -617,14 +594,7 @@
                         </div>
 
                         <div class="empty-state hidden" id="empty-state">
-                            <div class="empty-icon">
-                                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                </svg>
                             </div>
-                            <h2>Tudo limpo por aqui!</h2>
-                            <p>Você revisou todos os cards programados para agora. Adicione novos ou aproveite sua pausa.</p>
-                        </div>
 
                         <div class="controls" id="controls">
                             <button id="prev-btn" class="glass-btn icon-btn" title="Card Anterior">
@@ -749,19 +719,41 @@
                 <form id="add-card-form">
                     <div class="form-group">
                         <label>Matéria de Destino</label>
-                        <select id="card-subject-select" required>
-                            <option value="" disabled selected>Selecione uma matéria...</option>
-                        </select>
+                        <div class="subject-select-wrapper">
+                            <select id="card-subject-select" required>
+                                <option value="" disabled selected>Selecione uma matéria...</option>
+                            </select>
+                            <button type="button" class="inline-add-btn" id="toggle-inline-subject" title="Nova Matéria Rápida">+</button>
+                        </div>
+                        <div class="inline-subject-input-group hidden" id="inline-subject-group">
+                            <input type="text" id="inline-subject-name" placeholder="Nome da nova matéria...">
+                            <button type="button" class="glass-btn primary" id="save-inline-subject">Salvar</button>
+                        </div>
                     </div>
+                    
                     <div class="form-group">
                         <label for="question">Pergunta</label>
+                        <div class="format-toolbar">
+                            <button type="button" class="format-btn" onclick="insertFormat('question', '**', '**')" title="Negrito"><b>B</b></button>
+                            <button type="button" class="format-btn" onclick="insertFormat('question', '*', '*')" title="Itálico"><i>I</i></button>
+                            <button type="button" class="format-btn" onclick="insertFormat('question', '$$ ', ' $$')" title="Fórmula Matemática KaTeX">∑</button>
+                            <button type="button" class="format-btn" onclick="insertFormat('question', '`', '`')" title="Código">&lt;/&gt;</button>
+                            <button type="button" class="format-btn" onclick="insertFormat('question', '![Imagem](', ')')" title="Imagem por Link">🖼️</button>
+                        </div>
                         <textarea id="question" rows="3" required placeholder="Ex: Qual é a fórmula de Bhaskara?"></textarea>
                     </div>
+                    
                     <div class="form-group">
                         <label for="answer">Resposta</label>
+                        <div class="format-toolbar">
+                            <button type="button" class="format-btn" onclick="insertFormat('answer', '**', '**')" title="Negrito"><b>B</b></button>
+                            <button type="button" class="format-btn" onclick="insertFormat('answer', '*', '*')" title="Itálico"><i>I</i></button>
+                            <button type="button" class="format-btn" onclick="insertFormat('answer', '$$ ', ' $$')" title="Fórmula Matemática KaTeX">∑</button>
+                            <button type="button" class="format-btn" onclick="insertFormat('answer', '`', '`')" title="Código">&lt;/&gt;</button>
+                            <button type="button" class="format-btn" onclick="insertFormat('answer', '![Imagem](', ')')" title="Imagem por Link">🖼️</button>
+                        </div>
                         <textarea id="answer" rows="3" required placeholder="Ex: $$ x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} $$"></textarea>
                     </div>
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: -10px; margin-bottom: 15px;">Dica: Use imagens colando links: <code>![nome](link.jpg)</code></p>
                     <button type="submit" class="glass-btn submit-btn primary" id="submit-card-btn">Salvar Flashcard</button>
                 </form>
             </div>
@@ -924,12 +916,65 @@
             editSubjectSelect: document.getElementById('edit-subject-select'),
             editQuestion: document.getElementById('edit-question'),
             editAnswer: document.getElementById('edit-answer'),
-            submitEditBtn: document.getElementById('submit-edit-btn')
+            submitEditBtn: document.getElementById('submit-edit-btn'),
+            
+            toggleInlineSubject: document.getElementById('toggle-inline-subject'),
+            inlineSubjectGroup: document.getElementById('inline-subject-group'),
+            inlineSubjectName: document.getElementById('inline-subject-name'),
+            saveInlineSubject: document.getElementById('save-inline-subject')
         };
 
         const AUDIO_TRACKS = {
             lofi: "https://stream.zeno.fm/f3wvbbqmdg8uv", 
             classical: "http://stream.srg-ssr.ch/m/rsc_de/mp3_128" 
+        };
+
+        // --- GERAÇÃO DAS ANIMAÇÕES DE FUNDO ---
+        function createBackgroundAnimations() {
+            const container = document.getElementById('bg-animations');
+            const svgs = [
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>', // Livro
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>', // Foguete
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="22" x2="14" y2="22"></line><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg>' // Lâmpada
+            ];
+
+            for (let i = 0; i < 15; i++) {
+                const el = document.createElement('div');
+                el.className = 'floating-icon';
+                el.innerHTML = svgs[Math.floor(Math.random() * svgs.length)];
+                
+                // Posições e durações aleatórias
+                el.style.left = `${Math.random() * 100}vw`;
+                const size = 30 + Math.random() * 40;
+                el.style.width = `${size}px`;
+                el.style.height = `${size}px`;
+                el.style.animationDuration = `${25 + Math.random() * 30}s`;
+                el.style.animationDelay = `-${Math.random() * 30}s`;
+
+                container.appendChild(el);
+            }
+        }
+
+        // --- BARRA DE FORMATAÇÃO INLINE ---
+        window.insertFormat = function(elementId, prefix, suffix) {
+            const el = document.getElementById(elementId);
+            const start = el.selectionStart;
+            const end = el.selectionEnd;
+            const text = el.value;
+            const selectedText = text.substring(start, end);
+            const newText = text.substring(0, start) + prefix + selectedText + suffix + text.substring(end);
+            el.value = newText;
+            el.focus();
+            
+            if(selectedText.length === 0) {
+                // Posiciona o cursor no meio se nada estava selecionado
+                el.selectionStart = start + prefix.length;
+                el.selectionEnd = start + prefix.length;
+            } else {
+                // Mantém selecionado
+                el.selectionStart = start;
+                el.selectionEnd = end + prefix.length + suffix.length;
+            }
         };
 
         function processContent(text) {
@@ -974,6 +1019,7 @@
                 DOM.iconMoon.classList.add('hidden');
             }
 
+            createBackgroundAnimations();
             setupEventListeners();
             setupDraggablePomodoro();
             updatePomoDisplay();
@@ -990,8 +1036,6 @@
                     
                     await loadSubjects();
                     await loadCards();
-                    
-                    // Vai direto para o Dashboard (Gráficos) ao logar
                     DOM.tabDashboard.click();
 
                 } else {
@@ -1020,7 +1064,7 @@
                 const rect = DOM.unifiedWidget.getBoundingClientRect();
                 initialWidgetLeft = rect.left;
                 initialWidgetTop = rect.top;
-                DOM.unifiedWidget.style.transform = 'none'; // Desabilita o translateY para arrastar
+                DOM.unifiedWidget.style.transform = 'none';
                 DOM.unifiedWidget.style.transition = 'none';
             };
 
@@ -1044,7 +1088,6 @@
                 }
             });
 
-            // Suporte Touch
             DOM.unifiedWidget.addEventListener('touchstart', (e) => {
                 if(e.target.closest('.widget-body')) return;
                 handleDragStart(e.touches[0].clientX, e.touches[0].clientY);
@@ -1084,10 +1127,7 @@
             allCards = [];
             publicCards = [];
             
-            // Consulta de cards pessoais
             const qPersonal = query(collection(db, "flashcards"), where("userId", "==", currentUser.uid));
-            
-            // Consulta de cards públicos (os seus)
             const qPublic = query(collection(db, "flashcards"), where("userEmail", "==", "mauriciomts99@gmail.com"));
             
             const [snapPersonal, snapPublic] = await Promise.all([getDocs(qPersonal), getDocs(qPublic)]);
@@ -1095,8 +1135,6 @@
             const processSnap = (snap, isPublicContext) => {
                 snap.forEach(doc => {
                     let data = doc.data();
-                    
-                    // Se o usuário logado FOR o dono do email público, evita duplicar
                     if(isPublicContext && currentUser.email === "mauriciomts99@gmail.com") return;
 
                     if (data.interval === undefined) { 
@@ -1106,18 +1144,14 @@
                     
                     const cardObj = { id: doc.id, ...data, isPublic: isPublicContext };
                     
-                    if(isPublicContext) {
-                        publicCards.push(cardObj);
-                    } else {
-                        allCards.push(cardObj);
-                    }
+                    if(isPublicContext) publicCards.push(cardObj);
+                    else allCards.push(cardObj);
                 });
             };
 
             processSnap(snapPersonal, false);
             processSnap(snapPublic, true);
             
-            // Unir tudo para poder ser estudado se a pessoa quiser
             allCards = [...allCards, ...publicCards];
             allCards.sort((a, b) => b.createdAt?.toMillis() - a.createdAt?.toMillis());
             
@@ -1217,79 +1251,74 @@
         }
 
         function updateUI() {
-    const now = new Date().toISOString();
-    
-    // Filtra os cards que precisam ser revisados
-    dueCards = allCards.filter(c => {
-        const isDue = !c.nextReviewDate || c.nextReviewDate <= now;
-        const matchesSubject = currentFilter === 'all' || c.subjectId === currentFilter;
-        return isDue && matchesSubject;
-    });
+            const now = new Date().toISOString();
+            
+            dueCards = allCards.filter(c => {
+                const isDue = !c.nextReviewDate || c.nextReviewDate <= now;
+                const matchesSubject = currentFilter === 'all' || c.subjectId === currentFilter;
+                return isDue && matchesSubject;
+            });
 
-    if (DOM.viewDashboard.classList.contains('active')) updateDashboard();
-    if (DOM.viewAllCards.classList.contains('active')) renderAllCardsView();
-    if (DOM.viewCommunity.classList.contains('active')) renderCommunityCardsView();
+            if (DOM.viewDashboard.classList.contains('active')) updateDashboard();
+            if (DOM.viewAllCards.classList.contains('active')) renderAllCardsView();
+            if (DOM.viewCommunity.classList.contains('active')) renderCommunityCardsView();
 
-    // LÓGICA DE TELA VAZIA (ONBOARDING VS TUDO LIMPO)
-    if (dueCards.length === 0) {
-        DOM.scene.classList.add('hidden');
-        DOM.controls.classList.add('hidden');
-        DOM.srsControls.classList.add('hidden');
-        DOM.progressWrapper.classList.add('hidden');
-        DOM.emptyState.classList.remove('hidden');
+            if (dueCards.length === 0) {
+                DOM.scene.classList.add('hidden');
+                DOM.controls.classList.add('hidden');
+                DOM.srsControls.classList.add('hidden');
+                DOM.progressWrapper.classList.add('hidden');
+                DOM.emptyState.classList.remove('hidden');
 
-        // Se o usuário não tem NENHUM card na conta -> Tela de Boas-vindas
-        if (allCards.length === 0) {
-            DOM.emptyState.innerHTML = `
-                <div class="empty-icon" style="background: var(--accent-light); color: var(--accent-color);">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
-                </div>
-                <h2>Bem-vindo ao FlashLearn!</h2>
-                <p>Parece que você ainda não tem nenhum material. Siga os passos abaixo para começar a dominar qualquer assunto:</p>
-                <div class="onboarding-steps">
-                    <div class="step-item">
-                        <div class="step-number">1</div>
-                        <div class="step-text">Clique em <strong>Matéria</strong> no topo para criar sua primeira disciplina.</div>
-                    </div>
-                    <div class="step-item">
-                        <div class="step-number">2</div>
-                        <div class="step-text">Clique em <strong>Card</strong> para adicionar perguntas e respostas à matéria.</div>
-                    </div>
-                    <div class="step-item">
-                        <div class="step-number">3</div>
-                        <div class="step-text">Pronto! Seus cards aparecerão aqui para você estudar com repetição espaçada.</div>
-                    </div>
-                </div>
-            `;
-        } 
-        // Se ele tem cards, mas já revisou todos de hoje -> Tela de Sucesso
-        else {
-            DOM.emptyState.innerHTML = `
-                <div class="empty-icon">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>
-                    </svg>
-                </div>
-                <h2>Tudo limpo por aqui!</h2>
-                <p>Você revisou todos os cards programados para agora. Adicione novos ou aproveite sua pausa.</p>
-            `;
+                if (allCards.length === 0) {
+                    DOM.emptyState.innerHTML = `
+                        <div class="empty-icon" style="background: var(--accent-light); color: var(--accent-color);">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                        </div>
+                        <h2>Bem-vindo ao FlashLearn!</h2>
+                        <p>Parece que você ainda não tem nenhum material. Siga os passos abaixo para começar a dominar qualquer assunto:</p>
+                        <div class="onboarding-steps">
+                            <div class="step-item">
+                                <div class="step-number">1</div>
+                                <div class="step-text">Clique em <strong>Matéria</strong> no topo para criar sua primeira disciplina.</div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">2</div>
+                                <div class="step-text">Clique em <strong>Card</strong> para adicionar perguntas e respostas à matéria.</div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">3</div>
+                                <div class="step-text">Pronto! Seus cards aparecerão aqui para você estudar com repetição espaçada.</div>
+                            </div>
+                        </div>
+                    `;
+                } 
+                else {
+                    DOM.emptyState.innerHTML = `
+                        <div class="empty-icon">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                        </div>
+                        <h2>Tudo limpo por aqui!</h2>
+                        <p>Você revisou todos os cards programados para agora. Adicione novos ou aproveite sua pausa.</p>
+                    `;
+                }
+                return;
+            }
+
+            DOM.scene.classList.remove('hidden');
+            DOM.progressWrapper.classList.remove('hidden');
+            DOM.emptyState.classList.add('hidden');
+            
+            if (currentIndex >= dueCards.length) currentIndex = Math.max(0, dueCards.length - 1);
+
+            DOM.card.classList.remove('is-flipped');
+            DOM.controls.classList.remove('hidden');
+            DOM.srsControls.classList.add('hidden');
+
+            renderCurrentCard();
         }
-        return;
-    }
-
-    // Se houver cards para revisar, mostra a interface normal de estudo
-    DOM.scene.classList.remove('hidden');
-    DOM.progressWrapper.classList.remove('hidden');
-    DOM.emptyState.classList.add('hidden');
-    
-    if (currentIndex >= dueCards.length) currentIndex = Math.max(0, dueCards.length - 1);
-
-    DOM.card.classList.remove('is-flipped');
-    DOM.controls.classList.remove('hidden');
-    DOM.srsControls.classList.add('hidden');
-
-    renderCurrentCard();
-}
 
         function renderCurrentCard(direction = null) {
             if (dueCards.length === 0) return;
@@ -1306,10 +1335,8 @@
                 applyMathAndCode('card-answer');
             }, 10);
 
-            // Se for card público mostra um badge diferente
             DOM.subjectBadgeEl.textContent = card.isPublic ? `🌍 ${currentSub}` : currentSub;
 
-            // Esconde botões de editar e apagar se o card não for seu (público de terceiros)
             if(card.isPublic && currentUser.email !== "mauriciomts99@gmail.com") {
                 DOM.btnEditCard.classList.add('hidden');
                 DOM.btnDeleteCard.classList.add('hidden');
@@ -1387,7 +1414,6 @@
         }
 
         function renderCommunityCardsView() {
-            // Renderiza apenas os que vêm do query de cards públicos
             buildCardListHTML(publicCards, DOM.communityCardsContainer);
         }
 
@@ -1497,7 +1523,6 @@
             card.nextReviewDate = nextDate.toISOString();
             
             try {
-                // Modifica apenas se for dono do card
                 if(!card.isPublic || currentUser.email === "mauriciomts99@gmail.com") {
                     const cardRef = doc(db, "flashcards", card.id);
                     await updateDoc(cardRef, {
@@ -1515,7 +1540,7 @@
         async function createCard(subjectId, question, answer) {
             const newCard = {
                 userId: currentUser.uid, 
-                userEmail: currentUser.email, // Salva o email para a lógica da Comunidade
+                userEmail: currentUser.email, 
                 subjectId, question, answer,
                 interval: 0, repetition: 0, easeFactor: 2.5, mistakes: 0,
                 nextReviewDate: new Date().toISOString(), createdAt: serverTimestamp()
@@ -1717,11 +1742,54 @@
                 subjects.push({ id: docRef.id, name, studyTime: 0 }); updateSubjectDropdowns(); DOM.addSubjectForm.reset(); DOM.subjectModal.classList.add('hidden');
             };
 
+            // NOVA LÓGICA DE SALVAR CARD: Limpa e mantém aberto
             DOM.addCardForm.onsubmit = async (e) => {
                 e.preventDefault();
                 DOM.submitCardBtn.textContent = 'Salvando...'; DOM.submitCardBtn.disabled = true;
-                await createCard(DOM.cardSubjectSelect.value, DOM.questionInput.value.trim(), DOM.answerInput.value.trim());
-                DOM.addCardForm.reset(); DOM.addModal.classList.add('hidden'); DOM.submitCardBtn.textContent = 'Salvar Flashcard'; DOM.submitCardBtn.disabled = false;
+                
+                const success = await createCard(DOM.cardSubjectSelect.value, DOM.questionInput.value.trim(), DOM.answerInput.value.trim());
+                
+                if (success) {
+                    DOM.questionInput.value = '';
+                    DOM.answerInput.value = '';
+                    DOM.submitCardBtn.textContent = 'Salvo! Adicionar outro?';
+                    DOM.submitCardBtn.style.backgroundColor = 'var(--success)';
+                    
+                    setTimeout(() => {
+                        DOM.submitCardBtn.textContent = 'Salvar Flashcard';
+                        DOM.submitCardBtn.style.backgroundColor = 'var(--accent-color)';
+                        DOM.submitCardBtn.disabled = false;
+                    }, 1500);
+                    
+                    DOM.questionInput.focus();
+                } else {
+                    DOM.submitCardBtn.textContent = 'Erro ao salvar. Tente novamente.';
+                    DOM.submitCardBtn.disabled = false;
+                }
+            };
+
+            // LÓGICA DA NOVA MATÉRIA INLINE
+            DOM.toggleInlineSubject.onclick = () => {
+                DOM.inlineSubjectGroup.classList.toggle('hidden');
+                if(!DOM.inlineSubjectGroup.classList.contains('hidden')) DOM.inlineSubjectName.focus();
+            };
+
+            DOM.saveInlineSubject.onclick = async () => {
+                const name = DOM.inlineSubjectName.value.trim();
+                if(!name) return;
+                DOM.saveInlineSubject.textContent = '...';
+                try {
+                    const docRef = await addDoc(collection(db, "subjects"), { name, userId: currentUser.uid, studyTime: 0, createdAt: serverTimestamp() });
+                    subjects.push({ id: docRef.id, name, studyTime: 0 });
+                    updateSubjectDropdowns();
+                    DOM.cardSubjectSelect.value = docRef.id; 
+                    DOM.inlineSubjectName.value = '';
+                    DOM.inlineSubjectGroup.classList.add('hidden');
+                } catch(e) {
+                    alert("Erro ao criar matéria");
+                } finally {
+                    DOM.saveInlineSubject.textContent = 'Salvar';
+                }
             };
 
             document.addEventListener('keydown', (e) => {
