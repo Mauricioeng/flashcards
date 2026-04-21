@@ -5,35 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlashLearn - Domine Qualquer Assunto</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js para os gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Markdown (Imagens, Listas, Texto) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- Prism.js (Highlighter para Códigos) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+    <!-- KaTeX (Fórmulas Matemáticas) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     
     <style>
         :root {
-            /* Paleta Premium Moderna */
             --bg-base: #f4f4f9; 
             --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-            
             --glass-bg: rgba(255, 255, 255, 0.85);
             --glass-border: rgba(255, 255, 255, 0.5);
             --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
-            
             --accent-color: #6d28d9; 
             --accent-hover: #5b21b6;
             --accent-glow: rgba(109, 40, 217, 0.2);
             --accent-light: #ede9fe;
-            
             --text-primary: #1e293b; 
             --text-secondary: #475569; 
             --text-muted: #94a3b8;
-            
             --card-bg-front: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
             --card-bg-back: linear-gradient(145deg, #faf5ff 0%, #ffffff 100%);
-            
             --success: #10b981; --success-light: #d1fae5;
             --warning: #f59e0b; --warning-light: #fef3c7;
             --danger:  #ef4444; --danger-light:  #fee2e2;
             --info:    #3b82f6; --info-light:    #dbeafe;
-
             --radius-md: 16px;
             --radius-lg: 24px;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -50,14 +59,13 @@
 
         body { background: var(--bg-gradient); color: var(--text-primary); min-height: 100vh; display: flex; justify-content: center; overflow-x: hidden; position: relative; line-height: 1.6; }
 
-        /* Orbs de Background mais suaves */
         body::before, body::after { content: ''; position: fixed; border-radius: 50%; filter: blur(120px); z-index: -1; opacity: 0.4; pointer-events: none; }
         body::before { top: -10%; left: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, var(--accent-color) 0%, transparent 60%); animation: float 30s infinite alternate ease-in-out; }
         body::after { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: radial-gradient(circle, #3b82f6 0%, transparent 60%); animation: float 25s infinite alternate ease-in-out reverse; }
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(50px, 50px) scale(1.1); } }
 
         .glass-panel { background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--glass-shadow); }
-        .app-container { width: 100%; max-width: 1000px; padding: 2rem 1.5rem; display: flex; flex-direction: column; gap: 2rem; z-index: 1; }
+        .app-container { width: 100%; max-width: 1000px; padding: 2rem 1.5rem; display: flex; flex-direction: column; gap: 2rem; z-index: 1; flex: 1;}
 
         /* --- AUTENTICAÇÃO --- */
         #auth-view { display: flex; justify-content: center; align-items: center; min-height: 85vh; }
@@ -99,97 +107,68 @@
         .icon-btn { padding: 0.7rem; border-radius: 12px; }
         .icon-btn span { display: none; }
         @media(min-width: 768px) { .icon-btn span { display: inline; } } 
-        
-        .btn-logout { color: var(--danger); border: none; background: transparent; box-shadow: none; }
-        .btn-logout:hover { background: var(--danger-light); color: var(--danger); }
-        .btn-notify { color: var(--warning); border: none; background: transparent; box-shadow: none; }
-        .btn-notify:hover { background: var(--warning-light); color: #d97706; }
-        .notify-badge { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; background: var(--danger); border-radius: 50%; display: none; box-shadow: 0 0 0 2px #fff; }
-        .notify-badge.active { display: block; }
 
         .view-section { display: none; animation: fadeIn 0.5s ease-out forwards; flex: 1; }
         .view-section.active { display: flex; flex-direction: column; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- WIDGET RETRÁTIL (ESTILO TOMATE 3D) --- */
+        /* --- WIDGET RETRÁTIL (POMODORO MICRO E VIDRO) --- */
         .unified-widget {
             position: fixed; bottom: 24px; right: 24px;
-            background: radial-gradient(circle at 30% 30%, #ff6b6b, #dc2626, #991b1b);
-            box-shadow: 0 8px 15px rgba(220, 38, 38, 0.4), inset -5px -5px 15px rgba(0,0,0,0.3), inset 5px 5px 10px rgba(255,255,255,0.4);
-            z-index: 100;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            overflow: hidden; display: flex; flex-direction: column; cursor: pointer;
-            align-items: center; justify-content: flex-start;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 107, 107, 0.75), rgba(220, 38, 38, 0.7), rgba(153, 27, 27, 0.7));
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 8px 15px rgba(220, 38, 38, 0.2), inset -2px -2px 8px rgba(0,0,0,0.1), inset 2px 2px 8px rgba(255,255,255,0.2);
+            z-index: 100; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden; display: flex; flex-direction: column; cursor: pointer; align-items: center; justify-content: flex-start;
         }
+        .unified-widget:not(.expanded) { width: 45px; height: 45px; border-radius: 50%; padding: 0; justify-content: center; }
+        .unified-widget:not(.expanded):hover { transform: scale(1.1) rotate(-5deg); }
+        .unified-widget:not(.expanded) .widget-body, .unified-widget:not(.expanded) .pomo-subject { display: none; }
 
-        /* Formato do Tomate Fechado */
-        .unified-widget:not(.expanded) {
-            width: 75px; height: 75px; border-radius: 50%;
-            padding: 0; justify-content: center;
-        }
-        .unified-widget:not(.expanded):hover {
-            transform: scale(1.05) rotate(-5deg);
-        }
-        .unified-widget:not(.expanded) .widget-body { display: none; }
-        .unified-widget:not(.expanded) .pomo-subject { display: none; }
-
-        /* A folha verde no topo do tomate */
         .tomato-leaf {
-            position: absolute; top: -2px; left: 50%; margin-left: -12px;
-            width: 24px; height: 12px; background: #22c55e;
-            border-radius: 50px 0 50px 0;
-            box-shadow: inset 2px 2px 4px rgba(255,255,255,0.4);
-            transform: rotate(-15deg); z-index: 2;
-            transition: opacity 0.3s;
+            position: absolute; top: -2px; left: 50%; margin-left: -7px; width: 14px; height: 7px; background: rgba(34, 197, 94, 0.9);
+            border-radius: 50px 0 50px 0; transform: rotate(-15deg); z-index: 2; transition: opacity 0.3s;
         }
         .tomato-leaf::after {
-            content: ''; position: absolute; top: 4px; left: 6px;
-            width: 20px; height: 10px; background: #16a34a;
+            content: ''; position: absolute; top: 2px; left: 3px; width: 10px; height: 5px; background: rgba(22, 163, 74, 0.9);
             border-radius: 0 50px 0 50px; transform: rotate(40deg);
         }
 
-        /* Widget Expandido (Painel Branco) */
         .unified-widget.expanded {
-            width: 220px; height: auto; padding: 25px 20px 20px; border-radius: 30px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2), inset 0 0 0 1px rgba(255,255,255,0.6);
+            width: 180px; height: auto; padding: 12px 15px; border-radius: 20px;
+            background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1), inset 0 0 0 1px rgba(255,255,255,0.5);
         }
         .unified-widget.expanded .tomato-leaf { opacity: 0; pointer-events: none; }
 
         .widget-header { display: flex; align-items: center; justify-content: center; width: 100%; transition: var(--transition); }
-        .unified-widget.expanded .widget-header { flex-direction: column; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; }
+        .unified-widget.expanded .widget-header { flex-direction: column; border-bottom: 1px solid rgba(226, 232, 240, 0.5); padding-bottom: 8px; }
         
         .pomo-time-container { display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; z-index: 3;}
-        
-        /* Texto do relógio dentro do tomate */
-        .pomodoro-time { font-size: 1.2rem; font-weight: 800; color: white; font-variant-numeric: tabular-nums; letter-spacing: 0.5px; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); font-family: monospace; }
-        
-        /* Texto do relógio quando aberto */
-        .expanded .pomodoro-time { font-size: 2.2rem; color: var(--accent-color); text-shadow: none; margin-bottom: 5px; }
+        .pomodoro-time { font-size: 0.85rem; font-weight: 800; color: white; font-variant-numeric: tabular-nums; text-shadow: 1px 1px 2px rgba(0,0,0,0.4); font-family: monospace; }
+        .expanded .pomodoro-time { font-size: 1.8rem; color: var(--accent-color); text-shadow: none; margin-bottom: 2px; }
 
-        .pomo-subject { font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; text-align: center; margin-bottom: 10px;}
+        .pomo-subject { font-size: 0.7rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; text-align: center; margin-bottom: 6px;}
 
-        .widget-body { display: flex; flex-direction: column; opacity: 1; transition: opacity 0.3s; margin-top: 15px; gap: 15px; width: 100%; align-items: center; }
-        
-        .pomodoro-modes { display: flex; gap: 4px; background: #f1f5f9; padding: 4px; border-radius: 12px; width: 100%; justify-content: center; }
-        .mode-btn { background: transparent; border: none; padding: 6px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: var(--transition); text-transform: uppercase; width: 50%; }
+        .widget-body { display: flex; flex-direction: column; opacity: 1; transition: opacity 0.3s; margin-top: 8px; gap: 8px; width: 100%; align-items: center; }
+        .pomodoro-modes { display: flex; gap: 4px; background: rgba(241, 245, 249, 0.7); padding: 4px; border-radius: 10px; width: 100%; justify-content: center; }
+        .mode-btn { background: transparent; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: var(--transition); text-transform: uppercase; width: 50%; }
         .mode-btn.active { background: #ffffff; color: var(--accent-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         
-        .pomodoro-controls { display: flex; gap: 12px; }
-        .circle-btn { background: #ffffff; border: 1px solid #e2e8f0; color: var(--text-secondary); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .pomodoro-controls { display: flex; gap: 8px; }
+        .circle-btn { background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(226, 232, 240, 0.6); color: var(--text-secondary); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         .circle-btn:hover { background: var(--accent-color); color: #fff; border-color: var(--accent-color); transform: scale(1.05); }
         .circle-btn.active-play { background: var(--success); color: #fff; border-color: var(--success); }
-        .circle-btn svg { width: 18px; height: 18px; }
+        .circle-btn svg { width: 16px; height: 16px; }
 
-        .widget-music-sec { display: flex; flex-direction: column; align-items: center; width: 100%; gap: 10px; border-top: 1px solid #f1f5f9; padding-top: 15px;}
-        .music-select { width: 100%; min-width: unset; font-size: 0.8rem; padding: 8px; border-radius: 8px; border: 1px solid #e2e8f0; background: #f8fafc; color: var(--text-primary); text-align: center; font-weight: 600; outline: none; cursor: pointer; box-shadow: none; }
-        .music-controls { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; }
-        input[type=range] { -webkit-appearance: none; width: 60px; background: transparent; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 12px; width: 12px; border-radius: 50%; background: var(--accent-color); cursor: pointer; margin-top: -4px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #cbd5e1; border-radius: 2px; }
+        .widget-music-sec { display: flex; flex-direction: column; align-items: center; width: 100%; gap: 6px; border-top: 1px solid rgba(226, 232, 240, 0.5); padding-top: 8px;}
+        .music-select { width: 100%; min-width: unset; font-size: 0.75rem; padding: 4px; border-radius: 8px; border: 1px solid rgba(226, 232, 240, 0.6); background: rgba(248, 250, 252, 0.7); color: var(--text-primary); text-align: center; font-weight: 600; outline: none; cursor: pointer; box-shadow: none; }
+        .music-controls { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
+        input[type=range] { -webkit-appearance: none; width: 50px; background: transparent; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 10px; width: 10px; border-radius: 50%; background: var(--accent-color); cursor: pointer; margin-top: -3px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: rgba(203, 213, 225, 0.8); border-radius: 2px; }
 
-        /* --- FLASHCARD VIEWER MELHORADO --- */
+        /* --- FLASHCARD VIEWER (AJUSTES PARA IMAGEM/CÓDIGO/MATEMÁTICA) --- */
         .flashcard-container { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; perspective: 1500px; flex: 1; height: 100%; margin-top: 1rem; }        
         
         .empty-state { text-align: center; padding: 3rem; max-width: 450px; background: var(--glass-bg); border-radius: var(--radius-lg); border: 1px dashed #cbd5e1; }
@@ -202,7 +181,6 @@
         .study-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-color), #8b5cf6); border-radius: 10px; transition: width 0.5s ease; width: 0%; }
         .counter { font-size: 1rem; font-weight: 600; color: var(--text-secondary); min-width: 60px; text-align: right; font-variant-numeric: tabular-nums; }
 
-        /* Cartão 3D e Animação Premium */
         .scene { width: 100%; max-width: 720px; flex: 1; min-height: 420px; max-height: 550px; perspective: 2000px; margin: 0 auto; z-index: 10; }
         .card { width: 100%; height: 100%; position: relative; transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); transform-style: preserve-3d; cursor: pointer; border-radius: var(--radius-lg); }
         .card:hover:not(.is-flipped) { transform: translateY(-8px); }
@@ -221,9 +199,17 @@
         .card-action-btn:hover { background: #ffffff; border-color: #cbd5e1; color: var(--text-primary); transform: translateY(-2px); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .card-action-btn.del:hover { background: var(--danger-light); color: var(--danger); border-color: #fecaca; }
 
-        /* Tipografia dos Cards */
-        .card h2 { font-size: 2.2rem; font-weight: 700; line-height: 1.4; color: var(--text-primary); margin: auto 0; text-wrap: balance; } 
-        .card p { font-size: 1.8rem; font-weight: 500; line-height: 1.5; color: var(--accent-color); margin: auto 0; text-wrap: balance; }
+        /* Estilização para Markdown, Imagens, Códigos e Matemática dentro do Card */
+        .markdown-content { width: 100%; margin: auto 0; font-size: 1.6rem; font-weight: 500; line-height: 1.5; text-wrap: balance; color: var(--text-primary); }
+        .card__face--back .markdown-content { color: var(--accent-color); }
+        
+        .markdown-content img { max-width: 100%; max-height: 220px; border-radius: 12px; object-fit: contain; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 10px 0; }
+        .markdown-content pre { text-align: left; font-size: 1rem; border-radius: 12px; padding: 15px; margin: 15px 0; max-width: 100%; overflow-x: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .markdown-content code { font-family: 'Consolas', 'Monaco', monospace; background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+        .markdown-content pre code { background: transparent; padding: 0; color: inherit; }
+        .markdown-content ul, .markdown-content ol { text-align: left; margin: 15px auto; display: inline-block; padding-left: 20px;}
+        .markdown-content li { margin-bottom: 8px; }
+        .markdown-content p { margin-bottom: 10px; }
 
         .flip-hint { position: absolute; bottom: 1.8rem; font-size: 0.9rem; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 0.6rem; opacity: 0; transform: translateY(10px); transition: var(--transition); left: 50%; transform: translateX(-50%) translateY(10px); background: #f8fafc; padding: 8px 18px; border-radius: 99px; border: 1px solid #e2e8f0; }
         .card:hover .flip-hint, .card:focus-visible .flip-hint { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -259,15 +245,26 @@
         .chart-container h3 { font-size: 1.15rem; margin-bottom: 1.5rem; color: var(--text-primary); font-weight: 600; }
         .canvas-wrapper { height: 260px; position: relative; width: 100%; flex: 1; }
 
-        .ai-tutor-section { padding: 2rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-lg); }
-        .ai-tutor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;}
-        .ai-tutor-header h3 { font-size: 1.3rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.8rem; }
-        
         .difficult-cards-list { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
         .diff-card-item { background: #f8fafc; border: 1px solid #e2e8f0; padding: 1.2rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; transition: var(--transition); }
         .diff-card-item:hover { background: #ffffff; box-shadow: 0 4px 10px rgba(0,0,0,0.03); transform: translateX(4px); }
         .diff-card-q { font-size: 1rem; font-weight: 500; color: var(--text-primary); flex: 1; margin-right: 1.5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .diff-badge { background: var(--danger-light); color: var(--danger); font-size: 0.85rem; font-weight: 600; padding: 0.4rem 0.8rem; border-radius: 99px; white-space: nowrap; }
+
+        /* --- ABA TODOS OS CARDS --- */
+        .all-cards-wrapper { display: flex; flex-direction: column; gap: 2rem; padding-bottom: 2rem; }
+        .subject-group { background: var(--glass-bg); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); }
+        .subject-group-title { font-size: 1.2rem; color: var(--accent-color); font-weight: 700; margin-bottom: 1rem; border-bottom: 2px solid var(--accent-light); padding-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem; }
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+        .list-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.2rem; display: flex; flex-direction: column; gap: 0.8rem; transition: var(--transition); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .list-card:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.05); border-color: #cbd5e1; }
+        
+        .list-card-content { font-size: 0.95rem; line-height: 1.5; color: var(--text-primary); overflow-wrap: break-word; }
+        .list-card-content img { max-width: 100%; height: auto; max-height: 150px; border-radius: 8px; margin: 5px 0; }
+        .list-card-content pre { background: #2d2d2d; color: #ccc; padding: 10px; border-radius: 8px; font-size: 0.8rem; overflow-x: auto; margin: 5px 0; }
+        .list-card-a-wrapper { background: #f8fafc; padding: 10px; border-radius: 8px; border-left: 3px solid var(--accent-color); margin-top: 5px;}
+        
+        .list-card-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: auto; border-top: 1px solid #e2e8f0; padding-top: 10px;}
 
         /* --- MODAIS E FORMULÁRIOS --- */
         .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; z-index: 200; opacity: 1; transition: opacity 0.3s ease; padding: 1rem; }
@@ -284,31 +281,8 @@
         .form-group label { display: block; margin-bottom: 0.6rem; font-size: 0.95rem; color: var(--text-primary); font-weight: 600; }
         input[type="email"], input[type="password"], input[type="text"], textarea { width: 100%; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 0.9rem 1.2rem; color: var(--text-primary); font-size: 1rem; transition: var(--transition); resize: vertical; }
         input:focus, textarea:focus { outline: none; background: #ffffff; border-color: var(--accent-color); box-shadow: 0 0 0 4px var(--accent-glow); }
-        .input-with-icon { position: relative; display: flex; align-items: center; }
-        .input-icon { position: absolute; left: 1.2rem; color: var(--text-muted); }
-        .input-with-icon input { padding-left: 3.2rem; }
-
+        
         .submit-btn { width: 100%; margin-top: 0.5rem; padding: 1rem; font-size: 1.05rem; font-weight: 600; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .ai-submit { background: linear-gradient(135deg, var(--accent-color), #3b82f6); border: none; color: #fff;}
-        .ai-submit:hover { box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4); }
-        .ai-hint { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.5; background: var(--accent-light); padding: 1rem; border-radius: 12px; border-left: 4px solid var(--accent-color); }
-
-        .btn-text { display: flex; align-items: center; justify-content: center; gap: 0.6rem; }
-        .btn-loader { width: 22px; height: 22px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 1s linear infinite; position: absolute; display: none; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .is-loading .btn-text { visibility: hidden; }
-        .is-loading .btn-loader { display: block !important; }
-
-        .ai-streaming-box { margin-top: 1.5rem; padding: 1.5rem; background: #faf5ff; border: 1px solid var(--accent-light); border-radius: 12px; position: relative; animation: slideDown 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        .streaming-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-        .streaming-label { font-size: 0.85rem; color: var(--accent-hover); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .ai-streaming-text { color: var(--text-secondary); font-size: 0.95rem; white-space: pre-wrap; font-family: ui-monospace, Consolas, monospace; max-height: 250px; overflow-y: auto; padding-right: 5px; line-height: 1.6; }
-
-        .typing-indicator { display: flex; gap: 4px; }
-        .typing-indicator span { width: 6px; height: 6px; background-color: var(--accent-color); border-radius: 50%; animation: typing 1.4s infinite ease-in-out both; }
-        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
-        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
-        @keyframes typing { 0%, 80%, 100% { transform: scale(0); opacity: 0.5; } 40% { transform: scale(1); opacity: 1; } }
 
         .hidden { display: none !important; }
         .slide-in-right { animation: slideInR 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
@@ -325,13 +299,11 @@
             .user-profile { border-right: none; padding-right: 0; margin-right: 0; }
             .scene { height: 400px; }
             .card__face { padding: 2rem; }
-            .card h2 { font-size: 1.6rem; }
-            .card p { font-size: 1.4rem; }
             .srs-controls { flex-wrap: wrap; }
             .srs-btn { min-width: 45%; }
             .subject-filter { width: 100%; justify-content: space-between; }
             .subject-filter select { flex: 1; }
-            .unified-widget.expanded { width: 150px; padding: 15px; }
+            .unified-widget.expanded { width: 160px; padding: 10px; }
         }
     </style>
 </head>
@@ -397,11 +369,6 @@
                         <span>Matéria</span>
                     </button>
                     
-                    <button id="ai-btn" class="glass-btn icon-btn" title="Gerar cards com IA" style="color: var(--accent-color); border-color: rgba(109, 40, 217, 0.3); background: var(--accent-light);">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path></svg>
-                        <span>Gerar IA</span>
-                    </button>
-                    
                     <button id="add-btn" class="glass-btn primary" title="Adicionar novo flashcard">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                         <span>Card</span>
@@ -415,13 +382,17 @@
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
                         Estudar
                     </button>
+                    <button id="tab-all-cards" class="nav-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="8" y1="12" x2="16" y2="12"></line><line x1="8" y1="8" x2="16" y2="8"></line><line x1="8" y1="16" x2="16" y2="16"></line></svg>
+                        Meus Cards
+                    </button>
                     <button id="tab-dashboard" class="nav-btn">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
                         Progresso
                     </button>
                 </nav>
                 
-                <div class="subject-filter">
+                <div class="subject-filter" id="subject-filter-container">
                     <label for="study-subject-filter" style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 600;">Filtrar:</label>
                     <select id="study-subject-filter">
                         <option value="all">Todas as Matérias</option>
@@ -430,10 +401,6 @@
             </div>
 
             <main style="display: flex; flex-direction: column; flex: 1;">
-                <div id="gemini-warning" class="warning-banner hidden" role="alert">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                    <span><strong>Chave do Gemini Ausente!</strong> Adicione sua API Key no código para usar a Inteligência Artificial.</span>
-                </div>
 
                 <div id="view-study" class="view-section active">
                     <div class="flashcard-container" id="flashcard-viewer">
@@ -462,7 +429,8 @@
                                         </button>
                                     </div>
 
-                                    <h2 id="card-question">...</h2>
+                                    <!-- Area da Pergunta formatada com Markdown/Math -->
+                                    <div id="card-question" class="markdown-content">...</div>
                                     
                                     <div class="flip-hint">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.92-10.24l-3.42 3.42"></path></svg>
@@ -472,7 +440,9 @@
 
                                 <div class="card__face card__face--back">
                                     <span class="card-label">Resposta</span>
-                                    <p id="card-answer">...</p>
+                                    
+                                    <!-- Area da Resposta formatada com Markdown/Math -->
+                                    <div id="card-answer" class="markdown-content">...</div>
                                     
                                     <div class="flip-hint" style="bottom: 1.8rem;">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2.5 2v6h6M2.66 15.57a10 10 0 1 0 .92-10.24l3.42 3.42"></path></svg>
@@ -522,6 +492,11 @@
                     </div>
                 </div>
 
+                <!-- ABA TODOS OS CARDS -->
+                <div id="view-all-cards" class="view-section hidden">
+                    <div id="all-cards-container" class="all-cards-wrapper"></div>
+                </div>
+
                 <div id="view-dashboard" class="view-section hidden">
                     <div class="dashboard-grid">
                         <div class="stat-card glass-panel">
@@ -559,33 +534,19 @@
                         </div>
                     </div>
 
-                    <div class="glass-panel ai-tutor-section">
-                        <div class="ai-tutor-header">
-                            <h3>
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-color)" stroke-width="2"><path d="M12 2a2 2 0 0 1 2 2c0 7.49-3.4 9.17-5.5 10.42-.51.3-1.04.62-1.5 1.08a4.5 4.5 0 0 0-1.2 2.85A2.5 2.5 0 0 0 8.3 21h7.4a2.5 2.5 0 0 0 2.5-2.65 4.5 4.5 0 0 0-1.2-2.85c-.46-.46-.99-.78-1.5-1.08C13.4 13.17 10 11.49 10 4a2 2 0 0 1 2-2z"></path></svg>
-                                Tutor IA & Dificuldades
-                            </h3>
-                            <button id="btn-tutor-ai" class="glass-btn primary" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
-                                <span class="btn-text">Pedir Dicas de Estudo à IA</span>
-                                <span class="btn-loader" style="width: 16px; height: 16px;"></span>
-                            </button>
-                        </div>
+                    <div class="glass-panel" style="padding: 2rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-lg);">
+                        <h3 style="font-size: 1.3rem; color: var(--text-primary); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                            Cards com Maior Dificuldade
+                        </h3>
                         <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Os cards que você mais marcou como "Errei" ou "Difícil":</p>
                         <div class="difficult-cards-list" id="difficult-cards-list"></div>
-                        
-                        <div id="tutor-streaming-output" class="ai-streaming-box hidden">
-                            <div class="streaming-header">
-                                <div class="typing-indicator"><span></span><span></span><span></span></div>
-                                <span class="streaming-label">Tutor Analisando...</span>
-                            </div>
-                            <pre id="tutor-streaming-text" class="ai-streaming-text"></pre>
-                        </div>
                     </div>
                 </div>
 
                 <div class="unified-widget" id="unified-widget" title="Clique para expandir">
-                    
-                    <div class="tomato-leaf"></div> <div class="widget-header">
+                    <div class="tomato-leaf"></div> 
+                    <div class="widget-header">
                         <div class="pomo-time-container">
                             <div class="pomodoro-time" id="pomodoro-display">25:00</div>
                         </div>
@@ -617,10 +578,10 @@
                                 <option value="classical">📻 Rádio Clássica</option>
                             </select>
                             <div class="music-controls">
-                                <button id="music-play" class="circle-btn" style="width: 32px; height: 32px;" title="Tocar Música">
+                                <button id="music-play" class="circle-btn" style="width: 28px; height: 28px;" title="Tocar Música">
                                     <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                                 </button>
-                                <button id="music-pause" class="circle-btn hidden" style="width: 32px; height: 32px;" title="Pausar Música">
+                                <button id="music-pause" class="circle-btn hidden" style="width: 28px; height: 28px;" title="Pausar Música">
                                     <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
                                 </button>
                                 <input type="range" id="music-volume" min="0" max="1" step="0.1" value="0.3" title="Volume">
@@ -668,12 +629,13 @@
                     </div>
                     <div class="form-group">
                         <label for="question">Pergunta</label>
-                        <textarea id="question" rows="2" required placeholder="Ex: Qual é a função da mitocôndria?"></textarea>
+                        <textarea id="question" rows="4" required placeholder="Ex: Qual é a fórmula de Bhaskara?"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="answer">Resposta</label>
-                        <textarea id="answer" rows="3" required placeholder="Ex: Produção de energia (ATP) através da respiração celular."></textarea>
+                        <textarea id="answer" rows="4" required placeholder="Ex: $$ x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} $$"></textarea>
                     </div>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: -10px; margin-bottom: 15px;">Dica: Você pode usar imagens colando links assim: <br><code>![nome](https://link-da-imagem.jpg)</code></p>
                     <button type="submit" class="glass-btn submit-btn primary" id="submit-card-btn">Salvar Flashcard</button>
                 </form>
             </div>
@@ -694,56 +656,13 @@
                     </div>
                     <div class="form-group">
                         <label for="edit-question">Pergunta</label>
-                        <textarea id="edit-question" rows="2" required></textarea>
+                        <textarea id="edit-question" rows="4" required></textarea>
                     </div>
                     <div class="form-group">
                         <label for="edit-answer">Resposta</label>
-                        <textarea id="edit-answer" rows="3" required></textarea>
+                        <textarea id="edit-answer" rows="4" required></textarea>
                     </div>
                     <button type="submit" class="glass-btn submit-btn primary" id="submit-edit-btn">Salvar Alterações</button>
-                </form>
-            </div>
-        </div>
-
-        <div id="ai-modal" class="modal-overlay hidden" role="dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>Gerar com IA ✨</h2>
-                    <button id="close-ai-modal-btn" class="close-btn" aria-label="Fechar">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                    </button>
-                </div>
-                <form id="ai-card-form">
-                    <div class="form-group">
-                        <label>Matéria de Destino</label>
-                        <select id="ai-subject-select" required>
-                            <option value="" disabled selected>Selecione uma matéria...</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="ai-topic">Tópico de Estudo</label>
-                        <div class="input-with-icon">
-                            <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                            <input type="text" id="ai-topic" required placeholder="Ex: Padrões de Projeto, Células...">
-                        </div>
-                    </div>
-                    <p class="ai-hint">A Inteligência Artificial analisará o tópico e criará automaticamente 3 flashcards otimizados para seu aprendizado.</p>
-                    
-                    <button type="submit" class="glass-btn submit-btn ai-submit" id="submit-ai-btn">
-                        <span class="btn-text">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path></svg>
-                            Gerar Magicamente
-                        </span>
-                        <span class="btn-loader"></span>
-                    </button>
-                    
-                    <div id="ai-streaming-output" class="ai-streaming-box hidden">
-                        <div class="streaming-header">
-                            <div class="typing-indicator"><span></span><span></span><span></span></div>
-                            <span class="streaming-label">Gemini Processando...</span>
-                        </div>
-                        <pre id="ai-streaming-text" class="ai-streaming-text"></pre>
-                    </div>
                 </form>
             </div>
         </div>
@@ -751,11 +670,6 @@
     </div>
 
     <script type="module">
-        // ==========================================
-        // SUBSTITUA ESTA URL PELA URL DO SEU GOOGLE APPS SCRIPT
-        // ==========================================
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbwcYtP8j0W54y3eYqO0N6eA42P2H9D5i5hR-d1l-75qLntNl21R3-uG6_N99D0yI_vM/exec";
-        
         // ==========================================
         // FIREBASE CONFIGURATION
         // ==========================================
@@ -813,10 +727,15 @@
             notifyBadge: document.getElementById('notify-badge'),
 
             tabStudy: document.getElementById('tab-study'),
+            tabAllCards: document.getElementById('tab-all-cards'),
             tabDashboard: document.getElementById('tab-dashboard'),
             viewStudy: document.getElementById('view-study'),
+            viewAllCards: document.getElementById('view-all-cards'),
             viewDashboard: document.getElementById('view-dashboard'),
+            
+            subjectFilterContainer: document.getElementById('subject-filter-container'),
             studySubjectFilter: document.getElementById('study-subject-filter'),
+            allCardsContainer: document.getElementById('all-cards-container'),
 
             unifiedWidget: document.getElementById('unified-widget'),
             pomoDisplay: document.getElementById('pomodoro-display'),
@@ -854,9 +773,6 @@
             statToReview: document.getElementById('stat-to-review'),
             statLearned: document.getElementById('stat-learned'),
             diffList: document.getElementById('difficult-cards-list'),
-            btnTutor: document.getElementById('btn-tutor-ai'),
-            tutorOutput: document.getElementById('tutor-streaming-output'),
-            tutorText: document.getElementById('tutor-streaming-text'),
 
             addSubjectBtn: document.getElementById('add-subject-btn'),
             subjectModal: document.getElementById('subject-modal'),
@@ -879,24 +795,48 @@
             editSubjectSelect: document.getElementById('edit-subject-select'),
             editQuestion: document.getElementById('edit-question'),
             editAnswer: document.getElementById('edit-answer'),
-            submitEditBtn: document.getElementById('submit-edit-btn'),
-
-            aiBtn: document.getElementById('ai-btn'),
-            aiModal: document.getElementById('ai-modal'),
-            closeAiModalBtn: document.getElementById('close-ai-modal-btn'),
-            aiForm: document.getElementById('ai-card-form'),
-            aiSubjectSelect: document.getElementById('ai-subject-select'),
-            aiTopicInput: document.getElementById('ai-topic'),
-            submitAiBtn: document.getElementById('submit-ai-btn'),
-            aiStreamingOutput: document.getElementById('ai-streaming-output'),
-            aiStreamingText: document.getElementById('ai-streaming-text'),
-            geminiWarning: document.getElementById('gemini-warning')
+            submitEditBtn: document.getElementById('submit-edit-btn')
         };
 
         const AUDIO_TRACKS = {
             lofi: "https://stream.zeno.fm/f3wvbbqmdg8uv", 
             classical: "http://stream.srg-ssr.ch/m/rsc_de/mp3_128" 
         };
+
+        // Função Mágica para renderizar Texto -> Markdown -> Math -> Syntax Highlight
+        function processContent(text) {
+            if(!text) return "";
+            
+            // 1. Converte o texto (Markdown) para HTML usando Marked.js
+            let html = marked.parse(text);
+            
+            // Retorna o HTML bruto (KaTeX e Prism processam no DOM depois)
+            return html;
+        }
+
+        function applyMathAndCode(elementId) {
+            const el = document.getElementById(elementId);
+            if(!el) return;
+            
+            // Aplica KaTeX (Matemática)
+            if (window.renderMathInElement) {
+                renderMathInElement(el, {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false},
+                        {left: "\\(", right: "\\)", display: false},
+                        {left: "\\[", right: "\\]", display: true}
+                    ],
+                    throwOnError: false
+                });
+            }
+
+            // Aplica Prism.js (Código)
+            if (window.Prism) {
+                Prism.highlightAllUnder(el);
+            }
+        }
+
 
         function init() {
             setupEventListeners();
@@ -915,10 +855,6 @@
                     await loadSubjects();
                     await loadCards();
 
-                    if (allCards.length === 0 && subjects.length === 0) {
-                        await createDefaultDataIfNeeded();
-                    }
-
                 } else {
                     currentUser = null;
                     DOM.authView.classList.remove('hidden');
@@ -931,26 +867,6 @@
             });
 
             setInterval(syncTimeToFirebase, 30000); 
-        }
-
-        async function createDefaultDataIfNeeded() {
-            try {
-                const mathRef = await addDoc(collection(db, "subjects"), { name: "Matemática", userId: currentUser.uid, studyTime: 0, createdAt: serverTimestamp() });
-                const itRef = await addDoc(collection(db, "subjects"), { name: "Informática", userId: currentUser.uid, studyTime: 0, createdAt: serverTimestamp() });
-
-                await createCard(mathRef.id, "Qual é o valor de Pi (π) aproximado a duas casas decimais?", "3.14");
-                await createCard(mathRef.id, "Qual é a fórmula de Bhaskara?", "x = (-b ± √(b² - 4ac)) / 2a");
-                await createCard(mathRef.id, "O que é um número primo?", "Um número natural maior que 1, que é divisível apenas por 1 e por ele mesmo.");
-
-                await createCard(itRef.id, "O que significa a sigla RAM?", "Random Access Memory (Memória de Acesso Aleatório). É uma memória volátil.");
-                await createCard(itRef.id, "Qual é a principal diferença entre HTTP e HTTPS?", "O HTTPS possui uma camada de segurança (criptografia via SSL/TLS), protegendo os dados trafegados.");
-                await createCard(itRef.id, "O que é o Kernel de um Sistema Operacional?", "É o núcleo do sistema. A ponte principal entre o hardware e o software.");
-
-                await loadSubjects();
-                await loadCards();
-            } catch (e) {
-                console.error("Erro ao gerar dados iniciais: ", e);
-            }
         }
 
         async function loadSubjects() {
@@ -985,8 +901,9 @@
         }
 
         function updateSubjectDropdowns() {
-            const selects = [DOM.studySubjectFilter, DOM.cardSubjectSelect, DOM.aiSubjectSelect, DOM.editSubjectSelect];
+            const selects = [DOM.studySubjectFilter, DOM.cardSubjectSelect, DOM.editSubjectSelect];
             selects.forEach(el => {
+                if(!el) return;
                 const isFilter = el.id === 'study-subject-filter';
                 el.innerHTML = isFilter ? '<option value="all">Todas as Matérias</option>' : '<option value="" disabled selected>Selecione uma matéria...</option>';
                 subjects.forEach(sub => {
@@ -1092,6 +1009,7 @@
             });
 
             if (DOM.viewDashboard.classList.contains('active')) updateDashboard();
+            if (DOM.viewAllCards.classList.contains('active')) renderAllCardsView();
 
             if (dueCards.length === 0) {
                 DOM.scene.classList.add('hidden');
@@ -1121,8 +1039,16 @@
             const card = dueCards[currentIndex];
             const currentSub = getSubjectName(card.subjectId);
 
-            DOM.questionEl.textContent = card.question;
-            DOM.answerEl.textContent = card.answer;
+            // Injeta o HTML processado
+            DOM.questionEl.innerHTML = processContent(card.question);
+            DOM.answerEl.innerHTML = processContent(card.answer);
+            
+            // Aplica Matemática e Código nos elementos
+            setTimeout(() => {
+                applyMathAndCode('card-question');
+                applyMathAndCode('card-answer');
+            }, 10);
+
             DOM.subjectBadgeEl.textContent = currentSub;
             
             if(pomoMode === 'focus') {
@@ -1144,6 +1070,67 @@
             DOM.prevBtn.style.cursor = currentIndex === 0 ? 'not-allowed' : 'pointer';
             DOM.nextBtn.style.opacity = currentIndex === dueCards.length - 1 ? '0.5' : '1';
             DOM.nextBtn.style.cursor = currentIndex === dueCards.length - 1 ? 'not-allowed' : 'pointer';
+        }
+
+        // --- RENDERIZAÇÃO DA ABA "TODOS OS CARDS" ---
+        function renderAllCardsView() {
+            DOM.allCardsContainer.innerHTML = '';
+            
+            if (allCards.length === 0) {
+                DOM.allCardsContainer.innerHTML = '<div style="text-align:center; padding: 3rem; color: var(--text-muted);">Nenhum card criado ainda.</div>';
+                return;
+            }
+
+            let containerHtml = "";
+
+            subjects.forEach(sub => {
+                const cardsForSub = allCards.filter(c => c.subjectId === sub.id);
+                if (cardsForSub.length === 0) return;
+
+                let html = `
+                    <div class="subject-group">
+                        <h3 class="subject-group-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                            ${sub.name} <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: normal;">(${cardsForSub.length} cards)</span>
+                        </h3>
+                        <div class="cards-grid">
+                `;
+
+                cardsForSub.forEach(card => {
+                    html += `
+                        <div class="list-card">
+                            <div class="list-card-q list-card-content" id="list-q-${card.id}">
+                                <span style="color: var(--accent-color); font-weight: bold; margin-right: 5px;">P:</span> 
+                                <div style="display:inline;">${processContent(card.question)}</div>
+                            </div>
+                            <div class="list-card-a-wrapper">
+                                <div class="list-card-a list-card-content" id="list-a-${card.id}">
+                                    <strong style="margin-right: 5px;">R:</strong> 
+                                    <div style="display:inline;">${processContent(card.answer)}</div>
+                                </div>
+                            </div>
+                            <div class="list-card-actions">
+                                <button class="card-action-btn" title="Editar" onclick="window.openEditModalGlobal('${card.id}')">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                </button>
+                                <button class="card-action-btn del" title="Excluir" onclick="window.deleteCardGlobal('${card.id}')">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `</div></div>`;
+                containerHtml += html;
+            });
+
+            DOM.allCardsContainer.innerHTML = containerHtml;
+
+            // Aplica Matemática e Código nas listas após renderizar
+            setTimeout(() => {
+                applyMathAndCode('all-cards-container');
+            }, 50);
         }
 
         function updateDashboard() {
@@ -1199,11 +1186,7 @@
             DOM.diffList.innerHTML = '';
             if(diffCards.length === 0) {
                 DOM.diffList.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 1rem;">Você ainda não registrou dificuldades. Continue estudando!</p>';
-                DOM.btnTutor.disabled = true;
-                DOM.btnTutor.style.opacity = '0.5';
             } else {
-                DOM.btnTutor.disabled = false;
-                DOM.btnTutor.style.opacity = '1';
                 diffCards.forEach(c => {
                     DOM.diffList.innerHTML += `
                         <div class="diff-card-item">
@@ -1290,24 +1273,22 @@
             } catch (error) { return false; }
         }
 
-        async function deleteCurrentCard() {
-            if (dueCards.length === 0) return;
-            const card = dueCards[currentIndex];
-            
+        // Funções Globais para a Aba de Lista poder chamar
+        window.deleteCardGlobal = async function(id) {
             if(confirm("Tem certeza que deseja excluir este flashcard definitivamente?")) {
                 try {
-                    await deleteDoc(doc(db, "flashcards", card.id));
-                    allCards = allCards.filter(c => c.id !== card.id);
+                    await deleteDoc(doc(db, "flashcards", id));
+                    allCards = allCards.filter(c => c.id !== id);
                     updateUI();
                 } catch(e) {
                     alert("Erro ao excluir. Tente novamente.");
                 }
             }
-        }
+        };
 
-        function openEditModal() {
-            if (dueCards.length === 0) return;
-            const card = dueCards[currentIndex];
+        window.openEditModalGlobal = function(id) {
+            const card = allCards.find(c => c.id === id);
+            if(!card) return;
             editingCardId = card.id;
             
             DOM.editSubjectSelect.value = card.subjectId;
@@ -1316,7 +1297,7 @@
             
             DOM.editModal.classList.remove('hidden');
             DOM.editQuestion.focus();
-        }
+        };
 
         async function saveCardEdits(e) {
             e.preventDefault();
@@ -1347,74 +1328,6 @@
                 DOM.submitEditBtn.textContent = 'Salvar Alterações';
                 DOM.submitEditBtn.disabled = false;
                 editingCardId = null;
-            }
-        }
-
-        // ==========================================
-        // IA E EVENTOS (BACKEND GOOGLE APPS SCRIPT)
-        // ==========================================
-        async function getAITutorAdvice() {
-            DOM.btnTutor.classList.add('is-loading'); 
-            DOM.btnTutor.disabled = true; 
-            DOM.tutorOutput.classList.remove('hidden'); 
-            DOM.tutorText.textContent = "O Tutor está analisando suas dificuldades...";
-
-            const hardCards = allCards.filter(c => c.mistakes > 0).sort((a,b) => b.mistakes - a.mistakes).slice(0, 5);
-            const cardListText = hardCards.map(c => `- Pergunta: ${c.question}\n  Resposta correta: ${c.answer}`).join('\n');
-
-            try {
-                const response = await fetch(GAS_URL, {
-                    method: "POST",
-                    body: JSON.stringify({ acao: "tutor", cards_dificeis: cardListText }),
-                    headers: { "Content-Type": "text/plain;charset=utf-8" }
-                });
-
-                const data = await response.json();
-                if (!data.sucesso) throw new Error(data.erro);
-                
-                DOM.tutorText.textContent = data.texto;
-
-            } catch (e) {
-                DOM.tutorText.textContent = "Houve um problema de conexão com o servidor. Tente novamente mais tarde.";
-            } finally { 
-                DOM.btnTutor.classList.remove('is-loading'); 
-                DOM.btnTutor.disabled = false; 
-            }
-        }
-
-        async function generateFlashcardsWithAI(topic, subjectId) {
-            DOM.geminiWarning.classList.add('hidden');
-
-            try {
-                DOM.aiStreamingOutput.classList.remove('hidden'); 
-                DOM.aiStreamingText.textContent = "A IA está processando seus cards no servidor...";
-
-                const response = await fetch(GAS_URL, {
-                    method: "POST",
-                    body: JSON.stringify({ acao: "gerar_cards", topico: topic }),
-                    headers: { "Content-Type": "text/plain;charset=utf-8" }
-                });
-
-                const data = await response.json();
-                if (!data.sucesso) throw new Error(data.erro);
-
-                let jsonStr = data.texto.trim();
-                if (jsonStr.startsWith("```json")) jsonStr = jsonStr.substring(7);
-                if (jsonStr.startsWith("```")) jsonStr = jsonStr.substring(3);
-                if (jsonStr.endsWith("```")) jsonStr = jsonStr.substring(0, jsonStr.length - 3);
-
-                const generatedCards = JSON.parse(jsonStr.trim());
-                for (const card of generatedCards.reverse()) {
-                    await createCard(subjectId, card.question, card.answer);
-                }
-                
-                DOM.aiStreamingOutput.classList.add('hidden');
-                return true;
-                
-            } catch (error) { 
-                console.error(error);
-                DOM.aiStreamingText.textContent = "Erro ao gerar cards. Tente novamente.";
-                return false; 
             }
         }
 
@@ -1465,22 +1378,34 @@
 
             // Tabs
             DOM.tabStudy.addEventListener('click', () => {
-                DOM.tabStudy.classList.add('active'); DOM.tabDashboard.classList.remove('active');
+                DOM.tabStudy.classList.add('active'); DOM.tabDashboard.classList.remove('active'); DOM.tabAllCards.classList.remove('active');
                 DOM.viewStudy.classList.add('active'); DOM.viewStudy.classList.remove('hidden');
                 DOM.viewDashboard.classList.add('hidden'); DOM.viewDashboard.classList.remove('active');
+                DOM.viewAllCards.classList.add('hidden'); DOM.viewAllCards.classList.remove('active');
+                DOM.subjectFilterContainer.classList.remove('hidden');
+            });
+            DOM.tabAllCards.addEventListener('click', () => {
+                DOM.tabAllCards.classList.add('active'); DOM.tabStudy.classList.remove('active'); DOM.tabDashboard.classList.remove('active');
+                DOM.viewAllCards.classList.add('active'); DOM.viewAllCards.classList.remove('hidden');
+                DOM.viewStudy.classList.add('hidden'); DOM.viewStudy.classList.remove('active');
+                DOM.viewDashboard.classList.add('hidden'); DOM.viewDashboard.classList.remove('active');
+                DOM.subjectFilterContainer.classList.add('hidden');
+                renderAllCardsView();
             });
             DOM.tabDashboard.addEventListener('click', () => {
-                DOM.tabDashboard.classList.add('active'); DOM.tabStudy.classList.remove('active');
+                DOM.tabDashboard.classList.add('active'); DOM.tabStudy.classList.remove('active'); DOM.tabAllCards.classList.remove('active');
                 DOM.viewDashboard.classList.add('active'); DOM.viewDashboard.classList.remove('hidden');
                 DOM.viewStudy.classList.add('hidden'); DOM.viewStudy.classList.remove('active');
+                DOM.viewAllCards.classList.add('hidden'); DOM.viewAllCards.classList.remove('active');
+                DOM.subjectFilterContainer.classList.add('hidden');
                 updateDashboard();
             });
 
             DOM.studySubjectFilter.addEventListener('change', (e) => { currentFilter = e.target.value; currentIndex = 0; updateUI(); });
             DOM.card.addEventListener('click', toggleFlip);
 
-            DOM.btnEditCard.addEventListener('click', (e) => { e.stopPropagation(); openEditModal(); });
-            DOM.btnDeleteCard.addEventListener('click', (e) => { e.stopPropagation(); deleteCurrentCard(); });
+            DOM.btnEditCard.addEventListener('click', (e) => { e.stopPropagation(); window.openEditModalGlobal(dueCards[currentIndex].id); });
+            DOM.btnDeleteCard.addEventListener('click', (e) => { e.stopPropagation(); window.deleteCardGlobal(dueCards[currentIndex].id); });
 
             DOM.srsControls.addEventListener('click', (e) => {
                 const btn = e.target.closest('.srs-btn');
@@ -1499,8 +1424,6 @@
             DOM.closeEditModalBtn.onclick = () => DOM.editModal.classList.add('hidden');
             DOM.editCardForm.onsubmit = saveCardEdits;
 
-            DOM.aiBtn.onclick = () => { DOM.aiModal.classList.remove('hidden'); DOM.aiTopicInput.focus(); }
-            DOM.closeAiModalBtn.onclick = () => DOM.aiModal.classList.add('hidden');
             document.querySelectorAll('.modal-overlay').forEach(overlay => { overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.add('hidden'); }); });
 
             DOM.addSubjectForm.onsubmit = async (e) => {
@@ -1516,19 +1439,13 @@
                 DOM.addCardForm.reset(); DOM.addModal.classList.add('hidden'); DOM.submitCardBtn.textContent = 'Salvar Flashcard'; DOM.submitCardBtn.disabled = false;
             };
 
-            DOM.aiForm.addEventListener('submit', async (e) => {
-                e.preventDefault(); DOM.submitAiBtn.classList.add('is-loading'); DOM.submitAiBtn.disabled = true;
-                if (await generateFlashcardsWithAI(DOM.aiTopicInput.value.trim(), DOM.aiSubjectSelect.value)) { DOM.aiForm.reset(); DOM.aiModal.classList.add('hidden'); DOM.tabStudy.click(); }
-                DOM.submitAiBtn.classList.remove('is-loading'); DOM.submitAiBtn.disabled = false;
-            });
-
-            DOM.btnTutor.addEventListener('click', getAITutorAdvice);
-
             // Teclado
             document.addEventListener('keydown', (e) => {
                 if (document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "TEXTAREA" || document.activeElement.tagName === "SELECT") return;
-                const modalsOpen = !DOM.subjectModal.classList.contains('hidden') || !DOM.addModal.classList.contains('hidden') || !DOM.aiModal.classList.contains('hidden') || !DOM.editModal.classList.contains('hidden');
-                if (!modalsOpen && !DOM.appWrapper.classList.contains('hidden')) {
+                const modalsOpen = !DOM.subjectModal.classList.contains('hidden') || !DOM.addModal.classList.contains('hidden') || !DOM.editModal.classList.contains('hidden');
+                
+                // Só atua atalhos se a tela ativa for de Estudo
+                if (!modalsOpen && !DOM.appWrapper.classList.contains('hidden') && DOM.viewStudy.classList.contains('active')) {
                     if (e.key === 'ArrowRight' || e.key === ' ') {
                         if (e.key === ' ') e.preventDefault();
                         if (currentIndex < dueCards.length - 1 && !DOM.card.classList.contains('is-flipped')) { currentIndex++; renderCurrentCard('next'); } 
@@ -1547,4 +1464,4 @@
         init();
     </script>
 </body>
-</html> 
+</html>
