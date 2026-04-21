@@ -1410,6 +1410,32 @@
         // ==========================================
         // IA E EVENTOS (BACKEND GOOGLE APPS SCRIPT)
         // ==========================================
+
+        // Função utilitária para enviar os dados para o Google Apps Script
+        async function fetchFromGAS(payload) {
+            const response = await fetch(GAS_URL, {
+                method: "POST",
+                // Usar text/plain evita bloqueios de CORS do Google
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(payload)
+            });
+            return await response.json();
+        }
+
+        // Função para simular a digitação do texto
+        function simulateStreamingText(text, element, speed = 15, callback) {
+            element.textContent = "";
+            let i = 0;
+            const interval = setInterval(() => {
+                element.textContent += text.charAt(i);
+                i++;
+                if (i >= text.length) {
+                    clearInterval(interval);
+                    if (callback) callback();
+                }
+            }, speed);
+        }
+
         function getAITutorAdvice() {
             DOM.btnTutor.classList.add('is-loading'); 
             DOM.btnTutor.disabled = true; 
@@ -1420,63 +1446,76 @@
             const cardListText = hardCards.map(c => `- Pergunta: ${c.question}\n  Resposta correta: ${c.answer}`).join('\n');
             const prompt = `Atue como um tutor de estudos. O aluno tem tido dificuldade nos seguintes tópicos:
             ${cardListText}
-            Forneça uma análise rápida e encorajadora do porquê esses conceitos costumam ser difíceis. Depois, sugira estratégias de estudo (como analogias com sistemas computacionais, IoT ou programação lógica) para ajudar na memorização destes itens específicos. Seja direto e não muito longo.`;
+            Forneça uma análise rápida e encorajadora do porquê esses conceitos costumam ser difíceis. Depois, sugira estratégias de estudo para ajudar na memorização destes itens específicos. Seja direto e não muito longo.`;
 
-            // Chamando o backend do GAS
-            google.script.run
-                .withSuccessHandler(function(response) {
-                    simulateStreamingText(response, DOM.tutorText, 15, () => {
-                        DOM.btnTutor.classList.remove('is-loading'); 
-                        DOM.btnTutor.disabled = false;
-                    });
+            // Chamando a API via fetch
+            fetchFromGAS({ action: "tutor", prompt: prompt })
+                .then(res => {
+                    if (res.sucesso) {
+                        simulateStreamingText(res.texto, DOM.tutorText, 15, () => {
+                            DOM.btnTutor.classList.remove('is-loading'); 
+                            DOM.btnTutor.disabled = false;
+                        });
+                    } else {
+                        throw new Error(res.erro);
+                    }
                 })
-                .withFailureHandler(function(error) {
+                .catch(error => {
                     DOM.tutorText.textContent = "Houve um problema ao processar o conselho da IA. Detalhe: " + error.message;
                     DOM.btnTutor.classList.remove('is-loading'); 
                     DOM.btnTutor.disabled = false; 
-                })
-                .getAITutorAdviceGAS(prompt);
+                });
         }
 
-        function generateFlashcardsWithAI(topic, subjectId) {
-            return new Promise((resolve, reject) => {
-                DOM.geminiWarning.classList.add('hidden');
-                DOM.aiStreamingOutput.classList.remove('hidden'); 
-                DOM.aiStreamingText.textContent = "Conectando ao servidor para gerar cards...";
+        async function generateFlashcardsWithAI(topic, subjectId) {
+            DOM.geminiWarning.classList.add('hidden');
+            DOM.aiStreamingOutput.classList.remove('hidden'); 
+            DOM.aiStreamingText.textContent = "Conectando ao servidor para gerar cards...";
 
-                google.script.run
-                    .withSuccessHandler(async function(response) {
-                        try {
-                            let jsonStr = response.trim();
-                            if (jsonStr.startsWith("```json")) jsonStr = jsonStr.substring(7);
-                            if (jsonStr.startsWith("```")) jsonStr = jsonStr.substring(3);
-                            if (jsonStr.endsWith("```")) jsonStr = jsonStr.substring(0, jsonStr.length - 3);
+            try {
+                // Chamando a API via fetch
+                const res = await fetchFromGAS({ action: "flashcards", topic: topic });
+                
+                if (!res.sucesso) {
+                    throw new Error(res.erro);
+                }
 
-                            const generatedCards = JSON.parse(jsonStr.trim());
-                            
-                            // Mostra um aviso rápido antes de sumir
-                            DOM.aiStreamingText.textContent = "Cards gerados! Salvando no banco de dados...";
-                            
-                            for (const card of generatedCards.reverse()) {
-                                await createCard(subjectId, card.question, card.answer);
-                            }
-                            
-                            DOM.aiStreamingOutput.classList.add('hidden');
-                            resolve(true);
-                        } catch (error) {
-                            DOM.aiStreamingText.textContent = "Erro ao ler a resposta da IA. Tente um tópico mais simples.";
-                            setTimeout(() => DOM.aiStreamingOutput.classList.add('hidden'), 3500);
-                            resolve(false);
-                        }
-                    })
-                    .withFailureHandler(function(error) {
-                        DOM.aiStreamingText.textContent = "Erro no servidor: " + error.message;
-                        setTimeout(() => DOM.aiStreamingOutput.classList.add('hidden'), 3500);
-                        resolve(false);
-                    })
-                    .generateFlashcardsGAS(topic);
-            });
+                let jsonStr = res.texto.trim();
+                if (jsonStr.startsWith("```json")) jsonStr = jsonStr.substring(7);
+                if (jsonStr.startsWith("```")) jsonStr = jsonStr.substring(3);
+                if (jsonStr.endsWith("```")) jsonStr = jsonStr.substring(0, jsonStr.length - 3);
+
+                const generatedCards = JSON.parse(jsonStr.trim());
+                
+                // Mostra um aviso rápido antes de sumir
+                DOM.aiStreamingText.textContent = "Cards gerados! Salvando no banco de dados...";
+                
+                for (const card of generatedCards.reverse()) {
+                    await createCard(subjectId, card.question, card.answer);
+                }
+                
+                DOM.aiStreamingOutput.classList.add('hidden');
+                return true;
+
+            } catch (error) {
+                console.error("Erro gerando flashcards:", error);
+                DOM.aiStreamingText.textContent = "Erro ao ler a resposta da IA ou conexão falhou. Detalhe: " + error.message;
+                setTimeout(() => DOM.aiStreamingOutput.classList.add('hidden'), 4000);
+                return false;
+            }
         }
+        } catch (error) {
+                console.error("Erro gerando flashcards:", error);
+                DOM.aiStreamingText.textContent = "Erro ao ler a resposta da IA ou conexão falhou. Detalhe: " + error.message;
+                setTimeout(() => DOM.aiStreamingOutput.classList.add('hidden'), 4000);
+                return false;
+            }
+        } // <-- AQUI ACABA A FUNÇÃO DA IA
+
+        function setupEventListeners() { // <-- E AQUI JÁ COMEÇA A PRÓXIMA
+            // Auth
+            DOM.tabLogin.onclick = () => { isLoginMode = true; DOM.tabLogin.classList.add('active'); DOM.tabRegister.classList.remove('active'); DOM.authSubmitBtn.textContent = 'Entrar'; };
+                   
 
                 
         function setupEventListeners() {
