@@ -2,7 +2,6 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport ajustada para Mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FlashLearn - Domine Qualquer Assunto</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -76,7 +75,6 @@
             --info-light: rgba(59, 130, 246, 0.15);
         }
 
-        /* Transição global para Dark Mode */
         body, .glass-panel, .card__face, select, input, textarea, .list-card, .diff-card-item {
             transition: background 0.4s ease, border-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
         }
@@ -139,9 +137,6 @@
         .glass-btn.primary:hover { background: var(--accent-hover); box-shadow: 0 6px 20px var(--accent-glow); color: white; }
         
         .icon-btn { padding: 0.7rem; border-radius: 12px; }
-        
-        /* Oculta texto em telas médias para ícones ficarem mais limpos */
-        .icon-btn span { display: none; }
         @media(min-width: 768px) { .icon-btn span { display: inline; } } 
         
         .btn-logout { color: var(--danger); border: none; background: transparent; box-shadow: none; }
@@ -155,17 +150,22 @@
         .view-section.active { display: flex; flex-direction: column; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- WIDGET RETRÁTIL POMODORO (MEIO-ESQUERDA ESTILO IPHONE) --- */
+        /* --- WIDGET RETRÁTIL POMODORO --- */
         .unified-widget {
             position: fixed; top: 50%; left: 16px; transform: translateY(-50%);
             background: radial-gradient(circle at 30% 30%, rgba(255, 107, 107, 0.75), rgba(220, 38, 38, 0.7), rgba(153, 27, 27, 0.7));
             backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2), inset -2px -2px 8px rgba(0,0,0,0.1), inset 2px 2px 8px rgba(255,255,255,0.2);
             z-index: 9999; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            overflow: hidden; display: flex; flex-direction: column; cursor: pointer; align-items: center; justify-content: flex-start;
+            overflow: hidden; display: flex; flex-direction: column; cursor: grab; align-items: center; justify-content: flex-start;
         }
+        
+        /* Nova Transparência quando inativo */
+        .unified-widget:not(:hover):not(.expanded) { opacity: 0.25; }
+
+        .unified-widget:active { cursor: grabbing; }
         .unified-widget:not(.expanded) { width: 50px; height: 50px; border-radius: 50%; padding: 0; justify-content: center; }
-        .unified-widget:not(.expanded):hover { transform: translateY(-50%) scale(1.1) rotate(5deg); }
+        .unified-widget:not(.expanded):hover { transform: translateY(-50%) scale(1.1) rotate(5deg); opacity: 1;}
         .unified-widget:not(.expanded) .widget-body, .unified-widget:not(.expanded) .pomo-subject { display: none; }
 
         .tomato-leaf {
@@ -182,6 +182,7 @@
             background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             box-shadow: 0 10px 40px rgba(0,0,0,0.2), inset 0 0 0 1px var(--glass-border);
             border: 1px solid var(--glass-border);
+            cursor: move;
         }
         .unified-widget.expanded .tomato-leaf { opacity: 0; pointer-events: none; }
 
@@ -246,7 +247,6 @@
         .voice-btn { position: absolute; bottom: 1.8rem; left: 2.2rem; background: var(--bg-base); border: 1px solid var(--glass-border); color: var(--text-muted); padding: 8px; border-radius: 50%; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); z-index: 10;}
         .voice-btn:hover { background: var(--info-light); color: var(--info); border-color: var(--info); transform: scale(1.1); }
 
-        /* Estilização para Markdown, Imagens, Códigos e Matemática dentro do Card */
         .markdown-content { width: 100%; margin: auto 0; font-size: 1.6rem; font-weight: 500; line-height: 1.5; text-wrap: balance; color: var(--text-primary); }
         .card__face--back .markdown-content { color: var(--accent-color); }
         .markdown-content img { max-width: 100%; max-height: 220px; border-radius: 12px; object-fit: contain; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 10px 0; }
@@ -287,9 +287,31 @@
         
         .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;}
         
-        .chart-container { padding: 1.8rem; display: flex; flex-direction: column; }
-        .chart-container h3 { font-size: 1.15rem; margin-bottom: 1.5rem; color: var(--text-primary); font-weight: 600; }
-        .canvas-wrapper { height: 260px; position: relative; width: 100%; flex: 1; }
+        .chart-container { 
+            padding: 1.8rem; 
+            display: flex; 
+            flex-direction: column; 
+            min-width: 0; /* Correção: Força o container a encolher */
+            width: 100%;
+        }
+        .chart-container h3 { 
+            font-size: 1.15rem; 
+            margin-bottom: 1.5rem; 
+            color: var(--text-primary); 
+            font-weight: 600; 
+        }
+        .canvas-wrapper { 
+            height: 260px; 
+            position: relative; 
+            width: 100%; 
+            flex: 1; 
+            min-width: 0; /* Correção: Impede que o canvas quebre a tela */
+        }
+        
+        /* Garante que o elemento canvas não ultrapasse o wrapper */
+        canvas {
+            max-width: 100% !important;
+        }
 
         .difficult-cards-list { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
         .diff-card-item { background: var(--bg-base); border: 1px solid var(--glass-border); padding: 1.2rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
@@ -326,7 +348,7 @@
 
         .form-group { margin-bottom: 1.5rem; }
         .form-group label { display: block; margin-bottom: 0.6rem; font-size: 0.95rem; color: var(--text-primary); font-weight: 600; }
-        input, textarea, select { width: 100%; background: var(--bg-base); border: 1px solid var(--glass-border); border-radius: 12px; padding: 0.9rem 1.2rem; color: var(--text-primary); font-size: 16px; /* Evita zoom iOS */ transition: var(--transition); resize: vertical; }
+        input, textarea, select { width: 100%; background: var(--bg-base); border: 1px solid var(--glass-border); border-radius: 12px; padding: 0.9rem 1.2rem; color: var(--text-primary); font-size: 16px; transition: var(--transition); resize: vertical; }
         input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 0 4px var(--accent-glow); }
         
         .submit-btn { width: 100%; margin-top: 0.5rem; padding: 1rem; font-size: 1.05rem; font-weight: 600; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -347,7 +369,7 @@
             .user-profile { border-right: none; padding-right: 0; margin-right: 0; }
             
             .nav-container { flex-direction: column; gap: 1rem; }
-            .app-nav { width: 100%; display: flex; justify-content: space-between; }
+            .app-nav { width: 100%; display: flex; justify-content: space-between; flex-wrap: wrap;}
             .nav-btn { flex: 1; justify-content: center; padding: 0.7rem 0.2rem; font-size: 0.85rem; flex-direction: column; gap: 4px; border-radius: 10px;}
             .nav-btn svg { width: 20px; height: 20px; margin: 0; }
             
@@ -357,12 +379,11 @@
             .scene { min-height: 60vh; height: auto; max-height: none; }
             .card__face { padding: 1.5rem 1.2rem; }
             
-            /* Ajuste de fontes no mobile */
             .card-label { top: 1.2rem; left: 1.2rem; }
             .subject-badge { top: 0.9rem; left: 6rem; }
             .card-actions { top: 1.2rem; right: 1.2rem; }
             .voice-btn { bottom: 1.2rem; left: 1.2rem; }
-            .flip-hint { bottom: 1.2rem; font-size: 0.8rem; padding: 6px 12px; opacity: 1; transform: translateX(-50%);} /* Sempre visível no mobile */
+            .flip-hint { bottom: 1.2rem; font-size: 0.8rem; padding: 6px 12px; opacity: 1; transform: translateX(-50%);}
             
             .markdown-content { font-size: 1.3rem !important; }
 
@@ -377,7 +398,7 @@
         }
 
         @media (max-width: 480px) {
-            .icon-btn span { display: none !important; } /* Esconde texto dos botões no mobile */
+            .icon-btn span { display: none !important; }
             .glass-btn { padding: 0.6rem; }
             .logo h1 { font-size: 1.5rem; }
             
@@ -385,12 +406,16 @@
             .expanded .pomodoro-time { font-size: 1.5rem; }
             .pomo-subject-select { font-size: 0.65rem; }
         }
+
+        .onboarding-steps { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; text-align: left; }
+        .step-item { display: flex; align-items: center; gap: 1rem; background: var(--bg-base); padding: 1rem; border-radius: 12px; border: 1px solid var(--glass-border); }
+        .step-number { background: var(--accent-color); color: white; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
+        .step-text { font-size: 0.95rem; color: var(--text-primary); font-weight: 500; }
     </style>
 </head>
 <body>
     <div class="app-container">
 
-        <!-- AUTH VIEW -->
         <div id="auth-view" class="view-section active">
             <div class="auth-box glass-panel">
                 <div class="logo" style="justify-content: center; margin-bottom: 2.5rem;">
@@ -421,7 +446,6 @@
         </div>
 
         <div id="app-wrapper" class="hidden" style="display: flex; flex-direction: column; flex: 1;">
-            <!-- HEADER -->
             <header>
                 <div class="logo">
                     <div class="logo-icon-bg">
@@ -436,7 +460,6 @@
                     <div class="user-profile">
                         <span class="user-email" id="user-display-email">usuario@email.com</span>
                         
-                        <!-- Botão Dark Mode -->
                         <button id="theme-toggle" class="glass-btn icon-btn btn-theme" title="Alternar Tema Escuro">
                             <svg id="theme-icon-sun" class="hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                             <svg id="theme-icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
@@ -461,7 +484,11 @@
 
             <div class="nav-container">
                 <nav class="app-nav" aria-label="Navegação Principal">
-                    <button id="tab-study" class="nav-btn active">
+                    <button id="tab-dashboard" class="nav-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+                        Progresso
+                    </button>
+                    <button id="tab-study" class="nav-btn">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
                         Estudar
                     </button>
@@ -469,9 +496,9 @@
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="8" y1="12" x2="16" y2="12"></line><line x1="8" y1="8" x2="16" y2="8"></line><line x1="8" y1="16" x2="16" y2="16"></line></svg>
                         Meus Cards
                     </button>
-                    <button id="tab-dashboard" class="nav-btn">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-                        Progresso
+                    <button id="tab-community" class="nav-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        Comunidade
                     </button>
                 </nav>
                 
@@ -485,8 +512,54 @@
 
             <main style="display: flex; flex-direction: column; flex: 1;">
 
-                <!-- ABA ESTUDO -->
-                <div id="view-study" class="view-section active">
+                <div id="view-dashboard" class="view-section hidden">
+                    <div class="dashboard-grid">
+                        <div class="stat-card glass-panel">
+                            <div class="stat-icon" style="--icon-color: var(--warning); background: var(--warning-light);">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Para Revisar</h3>
+                                <p id="stat-to-review" class="stat-number">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card glass-panel">
+                            <div class="stat-icon" style="--icon-color: var(--success); background: var(--success-light);">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Já Aprendidos</h3>
+                                <p id="stat-learned" class="stat-number">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="charts-row">
+                        <div class="chart-container glass-panel">
+                            <h3>Aproveitamento Global</h3>
+                            <div class="canvas-wrapper">
+                                <canvas id="progressChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-container glass-panel">
+                            <h3>Tempo por Matéria (Minutos)</h3>
+                            <div class="canvas-wrapper">
+                                <canvas id="timeChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel" style="padding: 2rem;">
+                        <h3 style="font-size: 1.3rem; color: var(--text-primary); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                            Cards com Maior Dificuldade
+                        </h3>
+                        <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Os cards que você mais marcou como "Errei" ou "Difícil":</p>
+                        <div class="difficult-cards-list" id="difficult-cards-list"></div>
+                    </div>
+                </div>
+
+                <div id="view-study" class="view-section hidden">
                     <div class="flashcard-container" id="flashcard-viewer">
 
                         <div class="study-progress-wrapper" id="progress-wrapper">
@@ -499,7 +572,6 @@
                         <div class="scene" id="scene">
                             <div class="card" id="card" tabindex="0" aria-label="Flashcard: Clique para virar">
                                 
-                                <!-- FRONT -->
                                 <div class="card__face card__face--front">
                                     <div style="position: absolute; top: 1.8rem; left: 2.2rem; display: flex; align-items: center;">
                                         <span class="card-label" style="position: relative; top: 0; left: 0;">Pergunta</span>
@@ -517,7 +589,6 @@
 
                                     <div id="card-question" class="markdown-content">...</div>
                                     
-                                    <!-- Botão Ouvir -->
                                     <button class="voice-btn" id="btn-voice-q" title="Ouvir Pergunta">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
                                     </button>
@@ -528,13 +599,11 @@
                                     </div>
                                 </div>
 
-                                <!-- BACK -->
                                 <div class="card__face card__face--back">
                                     <span class="card-label">Resposta</span>
                                     
                                     <div id="card-answer" class="markdown-content">...</div>
                                     
-                                    <!-- Botão Ouvir -->
                                     <button class="voice-btn" id="btn-voice-a" title="Ouvir Resposta">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
                                     </button>
@@ -587,61 +656,19 @@
                     </div>
                 </div>
 
-                <!-- ABA TODOS OS CARDS -->
                 <div id="view-all-cards" class="view-section hidden">
                     <div id="all-cards-container" class="all-cards-wrapper"></div>
                 </div>
 
-                <!-- ABA DASHBOARD -->
-                <div id="view-dashboard" class="view-section hidden">
-                    <div class="dashboard-grid">
-                        <div class="stat-card glass-panel">
-                            <div class="stat-icon" style="--icon-color: var(--warning); background: var(--warning-light);">
-                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                            </div>
-                            <div class="stat-info">
-                                <h3>Para Revisar</h3>
-                                <p id="stat-to-review" class="stat-number">0</p>
-                            </div>
-                        </div>
-                        <div class="stat-card glass-panel">
-                            <div class="stat-icon" style="--icon-color: var(--success); background: var(--success-light);">
-                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                            </div>
-                            <div class="stat-info">
-                                <h3>Já Aprendidos</h3>
-                                <p id="stat-learned" class="stat-number">0</p>
-                            </div>
-                        </div>
+                <div id="view-community" class="view-section hidden">
+                    <div class="glass-panel" style="margin-bottom: 2rem;">
+                        <h2 style="margin-bottom: 0.5rem; color: var(--accent-color);">📚 Flashcards da Comunidade</h2>
+                        <p style="color: var(--text-secondary);">Explore e estude os cards públicos criados pelo administrador (mauriciomts99@gmail.com).</p>
                     </div>
-
-                    <div class="charts-row">
-                        <div class="chart-container glass-panel">
-                            <h3>Aproveitamento Global</h3>
-                            <div class="canvas-wrapper">
-                                <canvas id="progressChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="chart-container glass-panel">
-                            <h3>Tempo por Matéria (Minutos)</h3>
-                            <div class="canvas-wrapper">
-                                <canvas id="timeChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="glass-panel" style="padding: 2rem;">
-                        <h3 style="font-size: 1.3rem; color: var(--text-primary); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem;">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                            Cards com Maior Dificuldade
-                        </h3>
-                        <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Os cards que você mais marcou como "Errei" ou "Difícil":</p>
-                        <div class="difficult-cards-list" id="difficult-cards-list"></div>
-                    </div>
+                    <div id="community-cards-container" class="all-cards-wrapper"></div>
                 </div>
 
-                <!-- WIDGET POMODORO (MEIO DA TELA, LADO ESQUERDO) -->
-                <div class="unified-widget" id="unified-widget" title="Clique para expandir">
+                <div class="unified-widget" id="unified-widget" title="Arraste ou clique para expandir">
                     <div class="tomato-leaf"></div> 
                     <div class="widget-header">
                         <div class="pomo-time-container">
@@ -650,7 +677,6 @@
                     </div>
                     
                     <div class="widget-body">
-                        <!-- Select de Matéria Integrado no Pomodoro -->
                         <select id="pomo-subject-select" class="pomo-subject-select">
                             <option value="all">Todas as Matérias</option>
                         </select>
@@ -770,9 +796,6 @@
     </div>
 
     <script type="module">
-        // ==========================================
-        // FIREBASE CONFIGURATION
-        // ==========================================
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, query, where, doc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
@@ -790,13 +813,11 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // ==========================================
-        // ESTADO GLOBAL E POMODORO
-        // ==========================================
         let currentUser = null;
         let allCards = [];
         let dueCards = [];
         let subjects = [];
+        let publicCards = [];
         let currentIndex = 0;
         let currentFilter = 'all';
         let isLoginMode = true;
@@ -830,13 +851,17 @@
             tabStudy: document.getElementById('tab-study'),
             tabAllCards: document.getElementById('tab-all-cards'),
             tabDashboard: document.getElementById('tab-dashboard'),
+            tabCommunity: document.getElementById('tab-community'),
+            
             viewStudy: document.getElementById('view-study'),
             viewAllCards: document.getElementById('view-all-cards'),
             viewDashboard: document.getElementById('view-dashboard'),
+            viewCommunity: document.getElementById('view-community'),
             
             subjectFilterContainer: document.getElementById('subject-filter-container'),
             studySubjectFilter: document.getElementById('study-subject-filter'),
             allCardsContainer: document.getElementById('all-cards-container'),
+            communityCardsContainer: document.getElementById('community-cards-container'),
 
             unifiedWidget: document.getElementById('unified-widget'),
             pomoDisplay: document.getElementById('pomodoro-display'),
@@ -907,7 +932,6 @@
             classical: "http://stream.srg-ssr.ch/m/rsc_de/mp3_128" 
         };
 
-        // --- FUNÇÕES DE TEXTO / RENDERIZAÇÃO ---
         function processContent(text) {
             if(!text) return "";
             return marked.parse(text);
@@ -925,15 +949,12 @@
             if (window.Prism) Prism.highlightAllUnder(el);
         }
 
-        // --- FUNÇÃO VOZ (TEXT TO SPEECH) ---
         window.speakText = function(htmlContent, e) {
             if(e) e.stopPropagation();
             window.speechSynthesis.cancel(); 
             
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = htmlContent;
-            
-            // Remove math formulas para não ler coisas como "frac minus b"
             const mathTags = tempDiv.querySelectorAll('.katex');
             mathTags.forEach(el => el.remove());
 
@@ -941,13 +962,11 @@
             if(!text.trim()) return;
 
             const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'pt-BR'; // Tenta PT-BR por padrão
+            utterance.lang = 'pt-BR'; 
             window.speechSynthesis.speak(utterance);
         };
 
-        // --- INICIALIZAÇÃO ---
         function init() {
-            // Verifica Tema Salvo
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {
                 document.body.setAttribute('data-theme', 'dark');
@@ -956,6 +975,7 @@
             }
 
             setupEventListeners();
+            setupDraggablePomodoro();
             updatePomoDisplay();
             
             DOM.bgAudio.src = AUDIO_TRACKS.lofi;
@@ -970,12 +990,15 @@
                     
                     await loadSubjects();
                     await loadCards();
+                    
+                    // Vai direto para o Dashboard (Gráficos) ao logar
+                    DOM.tabDashboard.click();
 
                 } else {
                     currentUser = null;
                     DOM.authView.classList.remove('hidden');
                     DOM.appWrapper.classList.add('hidden');
-                    allCards = []; subjects = [];
+                    allCards = []; subjects = []; publicCards = [];
                     DOM.bgAudio.pause();
                     DOM.musicPause.classList.add('hidden');
                     DOM.musicPlay.classList.remove('hidden');
@@ -983,6 +1006,64 @@
             });
 
             setInterval(syncTimeToFirebase, 30000); 
+        }
+
+        function setupDraggablePomodoro() {
+            let isDraggingWidget = false;
+            let dragStartX, dragStartY, initialWidgetLeft, initialWidgetTop;
+
+            const handleDragStart = (clientX, clientY) => {
+                if(DOM.unifiedWidget.classList.contains('expanded')) return;
+                isDraggingWidget = true;
+                dragStartX = clientX;
+                dragStartY = clientY;
+                const rect = DOM.unifiedWidget.getBoundingClientRect();
+                initialWidgetLeft = rect.left;
+                initialWidgetTop = rect.top;
+                DOM.unifiedWidget.style.transform = 'none'; // Desabilita o translateY para arrastar
+                DOM.unifiedWidget.style.transition = 'none';
+            };
+
+            DOM.unifiedWidget.addEventListener('mousedown', (e) => {
+                if(e.target.closest('.widget-body')) return;
+                handleDragStart(e.clientX, e.clientY);
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if(!isDraggingWidget) return;
+                const dx = e.clientX - dragStartX;
+                const dy = e.clientY - dragStartY;
+                DOM.unifiedWidget.style.left = `${initialWidgetLeft + dx}px`;
+                DOM.unifiedWidget.style.top = `${initialWidgetTop + dy}px`;
+            });
+
+            document.addEventListener('mouseup', () => {
+                if(isDraggingWidget) {
+                    isDraggingWidget = false;
+                    DOM.unifiedWidget.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                }
+            });
+
+            // Suporte Touch
+            DOM.unifiedWidget.addEventListener('touchstart', (e) => {
+                if(e.target.closest('.widget-body')) return;
+                handleDragStart(e.touches[0].clientX, e.touches[0].clientY);
+            }, {passive: true});
+
+            document.addEventListener('touchmove', (e) => {
+                if(!isDraggingWidget) return;
+                const dx = e.touches[0].clientX - dragStartX;
+                const dy = e.touches[0].clientY - dragStartY;
+                DOM.unifiedWidget.style.left = `${initialWidgetLeft + dx}px`;
+                DOM.unifiedWidget.style.top = `${initialWidgetTop + dy}px`;
+            }, {passive: true});
+
+            document.addEventListener('touchend', () => {
+                if(isDraggingWidget) {
+                    isDraggingWidget = false;
+                    DOM.unifiedWidget.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                }
+            });
         }
 
         async function loadSubjects() {
@@ -1000,19 +1081,46 @@
 
         async function loadCards() {
             if (!currentUser) return;
-            const q = query(collection(db, "flashcards"), where("userId", "==", currentUser.uid));
-            const snap = await getDocs(q);
             allCards = [];
-            snap.forEach(doc => {
-                let data = doc.data();
-                if (data.interval === undefined) { 
-                    data.interval = 0; data.repetition = 0; data.easeFactor = 2.5; data.nextReviewDate = new Date().toISOString();
-                }
-                if (data.mistakes === undefined) data.mistakes = 0;
-                allCards.push({ id: doc.id, ...data });
-            });
+            publicCards = [];
             
+            // Consulta de cards pessoais
+            const qPersonal = query(collection(db, "flashcards"), where("userId", "==", currentUser.uid));
+            
+            // Consulta de cards públicos (os seus)
+            const qPublic = query(collection(db, "flashcards"), where("userEmail", "==", "mauriciomts99@gmail.com"));
+            
+            const [snapPersonal, snapPublic] = await Promise.all([getDocs(qPersonal), getDocs(qPublic)]);
+
+            const processSnap = (snap, isPublicContext) => {
+                snap.forEach(doc => {
+                    let data = doc.data();
+                    
+                    // Se o usuário logado FOR o dono do email público, evita duplicar
+                    if(isPublicContext && currentUser.email === "mauriciomts99@gmail.com") return;
+
+                    if (data.interval === undefined) { 
+                        data.interval = 0; data.repetition = 0; data.easeFactor = 2.5; data.nextReviewDate = new Date().toISOString();
+                    }
+                    if (data.mistakes === undefined) data.mistakes = 0;
+                    
+                    const cardObj = { id: doc.id, ...data, isPublic: isPublicContext };
+                    
+                    if(isPublicContext) {
+                        publicCards.push(cardObj);
+                    } else {
+                        allCards.push(cardObj);
+                    }
+                });
+            };
+
+            processSnap(snapPersonal, false);
+            processSnap(snapPublic, true);
+            
+            // Unir tudo para poder ser estudado se a pessoa quiser
+            allCards = [...allCards, ...publicCards];
             allCards.sort((a, b) => b.createdAt?.toMillis() - a.createdAt?.toMillis());
+            
             updateUI();
         }
 
@@ -1031,12 +1139,9 @@
 
         function getSubjectName(id) {
             const sub = subjects.find(s => s.id === id);
-            return sub ? sub.name : 'Sem Matéria';
+            return sub ? sub.name : 'Card Público / Sem Matéria';
         }
 
-        // ==========================================
-        // POMODORO LOGIC
-        // ==========================================
         function updatePomoDisplay() {
             const m = Math.floor(pomoTimeLeft / 60).toString().padStart(2, '0');
             const s = (pomoTimeLeft % 60).toString().padStart(2, '0');
@@ -1054,7 +1159,7 @@
             } else {
                 DOM.btnModeBreak.classList.add('active');
                 DOM.btnModeFocus.classList.remove('active');
-                DOM.pomoSubjectSelect.style.display = 'none'; // Esconde na pausa
+                DOM.pomoSubjectSelect.style.display = 'none';
             }
             
             pauseTimer();
@@ -1073,16 +1178,13 @@
                     updatePomoDisplay();
 
                     if(pomoMode === 'focus' && currentFilter !== 'all') {
-                        // Se estiver estudando uma matéria específica
                         pendingTimeUpdates[currentFilter] = (pendingTimeUpdates[currentFilter] || 0) + 1;
                     } else if (pomoMode === 'focus' && dueCards.length > 0 && !DOM.emptyState.classList.contains('hidden') === false) {
-                        // Se for "Todas", conta o tempo para a matéria do card atual
                         const currentSubId = dueCards[currentIndex].subjectId;
                         if(currentSubId) pendingTimeUpdates[currentSubId] = (pendingTimeUpdates[currentSubId] || 0) + 1;
                     }
                 } else {
                     pauseTimer();
-                    // Play a sound could be added here
                     alert(pomoMode === 'focus' ? "Sessão de Foco concluída! Hora de descansar." : "Pausa concluída! Voltando aos estudos.");
                     switchPomoMode(pomoMode === 'focus' ? 'break' : 'focus');
                 }
@@ -1114,46 +1216,84 @@
             if(DOM.viewDashboard.classList.contains('active')) updateDashboard();
         }
 
-        // ==========================================
-        // UI UPDATES 
-        // ==========================================
         function updateUI() {
-            const now = new Date().toISOString();
-            
-            dueCards = allCards.filter(c => {
-                const isDue = !c.nextReviewDate || c.nextReviewDate <= now;
-                const matchesSubject = currentFilter === 'all' || c.subjectId === currentFilter;
-                return isDue && matchesSubject;
-            });
+    const now = new Date().toISOString();
+    
+    // Filtra os cards que precisam ser revisados
+    dueCards = allCards.filter(c => {
+        const isDue = !c.nextReviewDate || c.nextReviewDate <= now;
+        const matchesSubject = currentFilter === 'all' || c.subjectId === currentFilter;
+        return isDue && matchesSubject;
+    });
 
-            if (DOM.viewDashboard.classList.contains('active')) updateDashboard();
-            if (DOM.viewAllCards.classList.contains('active')) renderAllCardsView();
+    if (DOM.viewDashboard.classList.contains('active')) updateDashboard();
+    if (DOM.viewAllCards.classList.contains('active')) renderAllCardsView();
+    if (DOM.viewCommunity.classList.contains('active')) renderCommunityCardsView();
 
-            if (dueCards.length === 0) {
-                DOM.scene.classList.add('hidden');
-                DOM.controls.classList.add('hidden');
-                DOM.srsControls.classList.add('hidden');
-                DOM.progressWrapper.classList.add('hidden');
-                DOM.emptyState.classList.remove('hidden');
-                return;
-            }
+    // LÓGICA DE TELA VAZIA (ONBOARDING VS TUDO LIMPO)
+    if (dueCards.length === 0) {
+        DOM.scene.classList.add('hidden');
+        DOM.controls.classList.add('hidden');
+        DOM.srsControls.classList.add('hidden');
+        DOM.progressWrapper.classList.add('hidden');
+        DOM.emptyState.classList.remove('hidden');
 
-            DOM.scene.classList.remove('hidden');
-            DOM.progressWrapper.classList.remove('hidden');
-            DOM.emptyState.classList.add('hidden');
-            
-            if (currentIndex >= dueCards.length) currentIndex = Math.max(0, dueCards.length - 1);
-
-            DOM.card.classList.remove('is-flipped');
-            DOM.controls.classList.remove('hidden');
-            DOM.srsControls.classList.add('hidden');
-
-            renderCurrentCard();
+        // Se o usuário não tem NENHUM card na conta -> Tela de Boas-vindas
+        if (allCards.length === 0) {
+            DOM.emptyState.innerHTML = `
+                <div class="empty-icon" style="background: var(--accent-light); color: var(--accent-color);">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                </div>
+                <h2>Bem-vindo ao FlashLearn!</h2>
+                <p>Parece que você ainda não tem nenhum material. Siga os passos abaixo para começar a dominar qualquer assunto:</p>
+                <div class="onboarding-steps">
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-text">Clique em <strong>Matéria</strong> no topo para criar sua primeira disciplina.</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-text">Clique em <strong>Card</strong> para adicionar perguntas e respostas à matéria.</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-text">Pronto! Seus cards aparecerão aqui para você estudar com repetição espaçada.</div>
+                    </div>
+                </div>
+            `;
+        } 
+        // Se ele tem cards, mas já revisou todos de hoje -> Tela de Sucesso
+        else {
+            DOM.emptyState.innerHTML = `
+                <div class="empty-icon">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                </div>
+                <h2>Tudo limpo por aqui!</h2>
+                <p>Você revisou todos os cards programados para agora. Adicione novos ou aproveite sua pausa.</p>
+            `;
         }
+        return;
+    }
+
+    // Se houver cards para revisar, mostra a interface normal de estudo
+    DOM.scene.classList.remove('hidden');
+    DOM.progressWrapper.classList.remove('hidden');
+    DOM.emptyState.classList.add('hidden');
+    
+    if (currentIndex >= dueCards.length) currentIndex = Math.max(0, dueCards.length - 1);
+
+    DOM.card.classList.remove('is-flipped');
+    DOM.controls.classList.remove('hidden');
+    DOM.srsControls.classList.add('hidden');
+
+    renderCurrentCard();
+}
 
         function renderCurrentCard(direction = null) {
             if (dueCards.length === 0) return;
-            window.speechSynthesis.cancel(); // Pára de falar se mudar de card
+            window.speechSynthesis.cancel(); 
 
             const card = dueCards[currentIndex];
             const currentSub = getSubjectName(card.subjectId);
@@ -1166,7 +1306,17 @@
                 applyMathAndCode('card-answer');
             }, 10);
 
-            DOM.subjectBadgeEl.textContent = currentSub;
+            // Se for card público mostra um badge diferente
+            DOM.subjectBadgeEl.textContent = card.isPublic ? `🌍 ${currentSub}` : currentSub;
+
+            // Esconde botões de editar e apagar se o card não for seu (público de terceiros)
+            if(card.isPublic && currentUser.email !== "mauriciomts99@gmail.com") {
+                DOM.btnEditCard.classList.add('hidden');
+                DOM.btnDeleteCard.classList.add('hidden');
+            } else {
+                DOM.btnEditCard.classList.remove('hidden');
+                DOM.btnDeleteCard.classList.remove('hidden');
+            }
 
             if (direction === 'next') {
                 DOM.card.classList.add('slide-in-right');
@@ -1185,86 +1335,75 @@
             DOM.nextBtn.style.cursor = currentIndex === dueCards.length - 1 ? 'not-allowed' : 'pointer';
         }
 
-        // --- RENDERIZAÇÃO DA ABA "TODOS OS CARDS" ---
-        function renderAllCardsView() {
-            DOM.allCardsContainer.innerHTML = '';
-            
-            if (allCards.length === 0) {
-                DOM.allCardsContainer.innerHTML = '<div style="text-align:center; padding: 3rem; color: var(--text-muted);">Nenhum card criado ainda.</div>';
+        function buildCardListHTML(cardsList, container) {
+            container.innerHTML = '';
+            if (cardsList.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding: 3rem; color: var(--text-muted);">Nenhum card disponível.</div>';
                 return;
             }
 
-            let containerHtml = "";
+            let containerHtml = `<div class="cards-grid" style="padding: 1.5rem;">`;
 
-            subjects.forEach(sub => {
-                const cardsForSub = allCards.filter(c => c.subjectId === sub.id);
-                if (cardsForSub.length === 0) return;
-
-                let html = `
-                    <div class="subject-group glass-panel">
-                        <h3 class="subject-group-title">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                            ${sub.name} <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: normal;">(${cardsForSub.length} cards)</span>
-                        </h3>
-                        <div class="cards-grid">
-                `;
-
-                cardsForSub.forEach(card => {
-                    const cleanQ = processContent(card.question);
-                    const cleanA = processContent(card.answer);
-                    
-                    html += `
-                        <div class="list-card">
-                            <div class="list-card-q list-card-content">
-                                <span style="color: var(--accent-color); font-weight: bold; margin-right: 5px;">P:</span> 
-                                <div style="display:inline;" id="list-q-${card.id}">${cleanQ}</div>
-                            </div>
-                            <div class="list-card-a-wrapper">
-                                <div class="list-card-a list-card-content">
-                                    <strong style="margin-right: 5px;">R:</strong> 
-                                    <div style="display:inline;" id="list-a-${card.id}">${cleanA}</div>
-                                </div>
-                            </div>
-                            <div class="list-card-actions">
-                                <button class="card-action-btn" title="Ouvir" onclick="window.speakText(document.getElementById('list-q-${card.id}').innerHTML + ' . Resposta. ' + document.getElementById('list-a-${card.id}').innerHTML, event)">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-                                </button>
-                                <button class="card-action-btn" title="Editar" onclick="window.openEditModalGlobal('${card.id}')">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                </button>
-                                <button class="card-action-btn del" title="Excluir" onclick="window.deleteCardGlobal('${card.id}')">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                </button>
+            cardsList.forEach(card => {
+                const cleanQ = processContent(card.question);
+                const cleanA = processContent(card.answer);
+                
+                const hideActions = card.isPublic && currentUser.email !== "mauriciomts99@gmail.com" ? "hidden" : "";
+                
+                containerHtml += `
+                    <div class="list-card">
+                        <div class="list-card-q list-card-content">
+                            <span style="color: var(--accent-color); font-weight: bold; margin-right: 5px;">P:</span> 
+                            <div style="display:inline;" id="list-q-${card.id}">${cleanQ}</div>
+                        </div>
+                        <div class="list-card-a-wrapper">
+                            <div class="list-card-a list-card-content">
+                                <strong style="margin-right: 5px;">R:</strong> 
+                                <div style="display:inline;" id="list-a-${card.id}">${cleanA}</div>
                             </div>
                         </div>
-                    `;
-                });
-
-                html += `</div></div>`;
-                containerHtml += html;
+                        <div class="list-card-actions">
+                            <button class="card-action-btn" title="Ouvir" onclick="window.speakText(document.getElementById('list-q-${card.id}').innerHTML + ' . Resposta. ' + document.getElementById('list-a-${card.id}').innerHTML, event)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                            </button>
+                            <button class="card-action-btn ${hideActions}" title="Editar" onclick="window.openEditModalGlobal('${card.id}')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            </button>
+                            <button class="card-action-btn del ${hideActions}" title="Excluir" onclick="window.deleteCardGlobal('${card.id}')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
             });
 
-            DOM.allCardsContainer.innerHTML = containerHtml;
-            setTimeout(() => applyMathAndCode('all-cards-container'), 50);
+            containerHtml += `</div>`;
+            container.innerHTML = containerHtml;
+            setTimeout(() => applyMathAndCode(container.id), 50);
+        }
+
+        function renderAllCardsView() {
+            buildCardListHTML(allCards.filter(c => !c.isPublic || currentUser.email === "mauriciomts99@gmail.com"), DOM.allCardsContainer);
+        }
+
+        function renderCommunityCardsView() {
+            // Renderiza apenas os que vêm do query de cards públicos
+            buildCardListHTML(publicCards, DOM.communityCardsContainer);
         }
 
         function updateDashboard() {
             const now = new Date().toISOString();
-            const toReviewCount = allCards.filter(c => !c.nextReviewDate || c.nextReviewDate <= now).length;
-            const learnedCount = allCards.filter(c => c.interval > 0).length;
+            const personalCards = allCards.filter(c => !c.isPublic || currentUser.email === "mauriciomts99@gmail.com");
+            const toReviewCount = personalCards.filter(c => !c.nextReviewDate || c.nextReviewDate <= now).length;
+            const learnedCount = personalCards.filter(c => c.interval > 0).length;
             
             if(DOM.statToReview) DOM.statToReview.textContent = toReviewCount;
             if(DOM.statLearned) DOM.statLearned.textContent = learnedCount;
             
-            if (toReviewCount > 0) DOM.notifyBadge.classList.add('active');
-            else DOM.notifyBadge.classList.remove('active');
-            
             if (document.getElementById('progressChart')) {
                 const ctx = document.getElementById('progressChart').getContext('2d');
                 if (!progressChart) {
-                    // Pega a cor do texto baseada no tema
                     const textColor = getComputedStyle(document.body).getPropertyValue('--text-secondary');
-                    
                     progressChart = new Chart(ctx, {
                         type: 'doughnut',
                         data: {
@@ -1300,7 +1439,7 @@
                 }
             }
 
-            const diffCards = allCards.filter(c => c.mistakes > 0).sort((a, b) => b.mistakes - a.mistakes).slice(0, 5);
+            const diffCards = personalCards.filter(c => c.mistakes > 0).sort((a, b) => b.mistakes - a.mistakes).slice(0, 5);
             DOM.diffList.innerHTML = '';
             if(diffCards.length === 0) {
                 DOM.diffList.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 1rem;">Você ainda não registrou dificuldades. Continue estudando!</p>';
@@ -1328,18 +1467,13 @@
             }
         }
 
-        // ==========================================
-        // SPACED REPETITION E DATA CRUD
-        // ==========================================
         async function processSRSRating(rating) {
             if (dueCards.length === 0) return;
             const card = dueCards[currentIndex];
             
             let { interval = 0, repetition = 0, easeFactor = 2.5, mistakes = 0 } = card;
             
-            if (rating <= 2) {
-                mistakes++;
-            }
+            if (rating <= 2) mistakes++;
 
             if (rating >= 3) {
                 if (repetition === 0) interval = 1;
@@ -1363,21 +1497,26 @@
             card.nextReviewDate = nextDate.toISOString();
             
             try {
-                const cardRef = doc(db, "flashcards", card.id);
-                await updateDoc(cardRef, {
-                    interval: card.interval,
-                    repetition: card.repetition,
-                    easeFactor: card.easeFactor,
-                    nextReviewDate: card.nextReviewDate,
-                    mistakes: card.mistakes
-                });
+                // Modifica apenas se for dono do card
+                if(!card.isPublic || currentUser.email === "mauriciomts99@gmail.com") {
+                    const cardRef = doc(db, "flashcards", card.id);
+                    await updateDoc(cardRef, {
+                        interval: card.interval,
+                        repetition: card.repetition,
+                        easeFactor: card.easeFactor,
+                        nextReviewDate: card.nextReviewDate,
+                        mistakes: card.mistakes
+                    });
+                }
             } catch (e) { console.error("Erro ao atualizar no Firebase: ", e); }
             updateUI();
         }
 
         async function createCard(subjectId, question, answer) {
             const newCard = {
-                userId: currentUser.uid, subjectId, question, answer,
+                userId: currentUser.uid, 
+                userEmail: currentUser.email, // Salva o email para a lógica da Comunidade
+                subjectId, question, answer,
                 interval: 0, repetition: 0, easeFactor: 2.5, mistakes: 0,
                 nextReviewDate: new Date().toISOString(), createdAt: serverTimestamp()
             };
@@ -1396,6 +1535,7 @@
                 try {
                     await deleteDoc(doc(db, "flashcards", id));
                     allCards = allCards.filter(c => c.id !== id);
+                    publicCards = publicCards.filter(c => c.id !== id);
                     updateUI();
                 } catch(e) { alert("Erro ao excluir. Tente novamente."); }
             }
@@ -1406,7 +1546,7 @@
             if(!card) return;
             editingCardId = card.id;
             
-            DOM.editSubjectSelect.value = card.subjectId;
+            DOM.editSubjectSelect.value = card.subjectId || "";
             DOM.editQuestion.value = card.question;
             DOM.editAnswer.value = card.answer;
             
@@ -1446,8 +1586,27 @@
             }
         }
 
+        function switchTab(clickedTabStr) {
+            const tabs = ['tabStudy', 'tabAllCards', 'tabDashboard', 'tabCommunity'];
+            const views = ['viewStudy', 'viewAllCards', 'viewDashboard', 'viewCommunity'];
+            
+            tabs.forEach((t, i) => {
+                if(t === clickedTabStr) {
+                    DOM[t].classList.add('active');
+                    DOM[views[i]].classList.add('active');
+                    DOM[views[i]].classList.remove('hidden');
+                } else {
+                    DOM[t].classList.remove('active');
+                    DOM[views[i]].classList.remove('active');
+                    DOM[views[i]].classList.add('hidden');
+                }
+            });
+
+            if(clickedTabStr === 'tabStudy') DOM.subjectFilterContainer.classList.remove('hidden');
+            else DOM.subjectFilterContainer.classList.add('hidden');
+        }
+
         function setupEventListeners() {
-            // Theme Toggle
             DOM.themeToggle.onclick = () => {
                 const currentTheme = document.body.getAttribute('data-theme');
                 if (currentTheme === 'dark') {
@@ -1469,11 +1628,9 @@
                 }
             };
 
-            // Voice Buttons (Main Study View)
             DOM.btnVoiceQ.onclick = (e) => window.speakText(DOM.questionEl.innerHTML, e);
             DOM.btnVoiceA.onclick = (e) => window.speakText(DOM.answerEl.innerHTML, e);
 
-            // Auth
             DOM.tabLogin.onclick = () => { isLoginMode = true; DOM.tabLogin.classList.add('active'); DOM.tabRegister.classList.remove('active'); DOM.authSubmitBtn.textContent = 'Entrar'; };
             DOM.tabRegister.onclick = () => { isLoginMode = false; DOM.tabRegister.classList.add('active'); DOM.tabLogin.classList.remove('active'); DOM.authSubmitBtn.textContent = 'Criar Conta'; };
             
@@ -1492,7 +1649,6 @@
             
             DOM.logoutBtn.onclick = () => { syncTimeToFirebase(); signOut(auth); }
 
-            // Widget Pomodoro (Esquerda Flutuante)
             DOM.unifiedWidget.addEventListener('click', (e) => {
                 if(e.target.closest('.widget-body')) return;
                 DOM.unifiedWidget.classList.toggle('expanded');
@@ -1514,7 +1670,6 @@
             DOM.musicTheme.onchange = (e) => { const isPlaying = !DOM.bgAudio.paused; DOM.bgAudio.src = AUDIO_TRACKS[e.target.value]; if (isPlaying) DOM.bgAudio.play(); };
             DOM.musicVolume.oninput = (e) => { DOM.bgAudio.volume = e.target.value; };
 
-            // Sync de Mudança de Matéria entre Header e Pomodoro
             const handleFilterChange = (val) => {
                 currentFilter = val; 
                 DOM.studySubjectFilter.value = val;
@@ -1525,34 +1680,12 @@
             DOM.studySubjectFilter.addEventListener('change', (e) => handleFilterChange(e.target.value));
             DOM.pomoSubjectSelect.addEventListener('change', (e) => handleFilterChange(e.target.value));
 
-
-            // Tabs
-            DOM.tabStudy.addEventListener('click', () => {
-                DOM.tabStudy.classList.add('active'); DOM.tabDashboard.classList.remove('active'); DOM.tabAllCards.classList.remove('active');
-                DOM.viewStudy.classList.add('active'); DOM.viewStudy.classList.remove('hidden');
-                DOM.viewDashboard.classList.add('hidden'); DOM.viewDashboard.classList.remove('active');
-                DOM.viewAllCards.classList.add('hidden'); DOM.viewAllCards.classList.remove('active');
-                DOM.subjectFilterContainer.classList.remove('hidden');
-            });
-            DOM.tabAllCards.addEventListener('click', () => {
-                DOM.tabAllCards.classList.add('active'); DOM.tabStudy.classList.remove('active'); DOM.tabDashboard.classList.remove('active');
-                DOM.viewAllCards.classList.add('active'); DOM.viewAllCards.classList.remove('hidden');
-                DOM.viewStudy.classList.add('hidden'); DOM.viewStudy.classList.remove('active');
-                DOM.viewDashboard.classList.add('hidden'); DOM.viewDashboard.classList.remove('active');
-                DOM.subjectFilterContainer.classList.add('hidden');
-                renderAllCardsView();
-            });
-            DOM.tabDashboard.addEventListener('click', () => {
-                DOM.tabDashboard.classList.add('active'); DOM.tabStudy.classList.remove('active'); DOM.tabAllCards.classList.remove('active');
-                DOM.viewDashboard.classList.add('active'); DOM.viewDashboard.classList.remove('hidden');
-                DOM.viewStudy.classList.add('hidden'); DOM.viewStudy.classList.remove('active');
-                DOM.viewAllCards.classList.add('hidden'); DOM.viewAllCards.classList.remove('active');
-                DOM.subjectFilterContainer.classList.add('hidden');
-                updateDashboard();
-            });
+            DOM.tabStudy.addEventListener('click', () => switchTab('tabStudy'));
+            DOM.tabAllCards.addEventListener('click', () => { switchTab('tabAllCards'); renderAllCardsView(); });
+            DOM.tabDashboard.addEventListener('click', () => { switchTab('tabDashboard'); updateDashboard(); });
+            DOM.tabCommunity.addEventListener('click', () => { switchTab('tabCommunity'); renderCommunityCardsView(); });
 
             DOM.card.addEventListener('click', (e) => {
-                // Não vira o card se clicar no botão de voz ou botões de ação
                 if(e.target.closest('.voice-btn') || e.target.closest('.card-action-btn')) return;
                 toggleFlip();
             });
@@ -1568,7 +1701,6 @@
             DOM.nextBtn.addEventListener('click', (e) => { e.stopPropagation(); if (currentIndex < dueCards.length - 1) { currentIndex++; renderCurrentCard('next'); } });
             DOM.prevBtn.addEventListener('click', (e) => { e.stopPropagation(); if (currentIndex > 0) { currentIndex--; renderCurrentCard('prev'); } });
 
-            // Modals
             DOM.addSubjectBtn.onclick = () => { DOM.subjectModal.classList.remove('hidden'); DOM.newSubjectName.focus(); }
             DOM.closeSubjectModal.onclick = () => DOM.subjectModal.classList.add('hidden');
             DOM.addBtn.onclick = () => { DOM.addModal.classList.remove('hidden'); DOM.questionInput.focus(); }
@@ -1592,12 +1724,10 @@
                 DOM.addCardForm.reset(); DOM.addModal.classList.add('hidden'); DOM.submitCardBtn.textContent = 'Salvar Flashcard'; DOM.submitCardBtn.disabled = false;
             };
 
-            // Teclado
             document.addEventListener('keydown', (e) => {
                 if (document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "TEXTAREA" || document.activeElement.tagName === "SELECT") return;
                 const modalsOpen = !DOM.subjectModal.classList.contains('hidden') || !DOM.addModal.classList.contains('hidden') || !DOM.editModal.classList.contains('hidden');
                 
-                // Só atua atalhos se a tela ativa for de Estudo
                 if (!modalsOpen && !DOM.appWrapper.classList.contains('hidden') && DOM.viewStudy.classList.contains('active')) {
                     if (e.key === 'ArrowRight' || e.key === ' ') {
                         if (e.key === ' ') e.preventDefault();
