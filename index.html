@@ -2,56 +2,89 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Viewport ajustada para Mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FlashLearn - Domine Qualquer Assunto</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Chart.js para os gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- Markdown (Imagens, Listas, Texto) -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
-    <!-- Prism.js (Highlighter para Códigos) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
 
-    <!-- KaTeX (Fórmulas Matemáticas) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     
     <style>
         :root {
+            /* TEMA LIGHT (Padrão) */
             --bg-base: #f4f4f9; 
             --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
             --glass-bg: rgba(255, 255, 255, 0.85);
             --glass-border: rgba(255, 255, 255, 0.5);
             --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
+            
             --accent-color: #6d28d9; 
             --accent-hover: #5b21b6;
             --accent-glow: rgba(109, 40, 217, 0.2);
             --accent-light: #ede9fe;
+            
             --text-primary: #1e293b; 
             --text-secondary: #475569; 
             --text-muted: #94a3b8;
+            
             --card-bg-front: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
             --card-bg-back: linear-gradient(145deg, #faf5ff 0%, #ffffff 100%);
+            
             --success: #10b981; --success-light: #d1fae5;
             --warning: #f59e0b; --warning-light: #fef3c7;
             --danger:  #ef4444; --danger-light:  #fee2e2;
             --info:    #3b82f6; --info-light:    #dbeafe;
+
             --radius-md: 16px;
             --radius-lg: 24px;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        /* TEMA DARK */
+        [data-theme="dark"] {
+            --bg-base: #0f172a; 
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            
+            --accent-color: #8b5cf6; 
+            --accent-hover: #a78bfa;
+            --accent-glow: rgba(139, 92, 246, 0.3);
+            --accent-light: rgba(139, 92, 246, 0.15);
+            
+            --text-primary: #f8fafc; 
+            --text-secondary: #cbd5e1; 
+            --text-muted: #64748b;
+            
+            --card-bg-front: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+            --card-bg-back: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+            
+            --success-light: rgba(16, 185, 129, 0.15);
+            --warning-light: rgba(245, 158, 11, 0.15);
+            --danger-light: rgba(239, 68, 68, 0.15);
+            --info-light: rgba(59, 130, 246, 0.15);
+        }
+
+        /* Transição global para Dark Mode */
+        body, .glass-panel, .card__face, select, input, textarea, .list-card, .diff-card-item {
+            transition: background 0.4s ease, border-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        [data-theme="dark"] ::-webkit-scrollbar-thumb { background: #475569; }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
         h1, h2, h3, .pomodoro-time, .stat-number { font-family: 'Outfit', sans-serif; }
@@ -70,7 +103,7 @@
         /* --- AUTENTICAÇÃO --- */
         #auth-view { display: flex; justify-content: center; align-items: center; min-height: 85vh; }
         .auth-box { width: 100%; max-width: 420px; padding: 3rem 2.5rem; text-align: center; }
-        .auth-tabs { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid #e2e8f0; }
+        .auth-tabs { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid var(--glass-border); }
         .auth-tab { flex: 1; background: none; border: none; color: var(--text-muted); font-size: 1.1rem; font-weight: 500; cursor: pointer; transition: var(--transition); padding-bottom: 0.8rem; position: relative; }
         .auth-tab.active { color: var(--accent-color); font-weight: 600; }
         .auth-tab.active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 3px; background: var(--accent-color); border-radius: 3px 3px 0 0; }
@@ -83,111 +116,122 @@
         .logo-icon-bg { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent-color), #8b5cf6); border-radius: 14px; box-shadow: 0 4px 15px var(--accent-glow); color: white; }
         .logo h1 { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.5px; }
         
-        .header-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
-        .user-profile { display: flex; align-items: center; gap: 0.8rem; margin-right: 0.5rem; padding-right: 1.5rem; border-right: 1px solid #cbd5e1; }
+        .header-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .user-profile { display: flex; align-items: center; gap: 0.8rem; margin-right: 0.5rem; padding-right: 1.5rem; border-right: 1px solid var(--glass-border); }
         .user-email { font-size: 0.9rem; color: var(--text-secondary); font-weight: 500; display: none; } 
         @media(min-width: 640px) { .user-email { display: block; } }
 
         .nav-container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 0.5rem; }
-        .app-nav { display: inline-flex; gap: 0.5rem; background: rgba(255,255,255,0.6); padding: 0.5rem; border-radius: var(--radius-md); border: 1px solid var(--glass-border); box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .app-nav { display: inline-flex; gap: 0.5rem; background: var(--glass-bg); padding: 0.5rem; border-radius: var(--radius-md); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); }
         .nav-btn { background: transparent; border: none; color: var(--text-secondary); font-size: 0.95rem; font-weight: 500; cursor: pointer; padding: 0.6rem 1.2rem; border-radius: 12px; transition: var(--transition); display: flex; align-items: center; gap: 0.6rem; }
-        .nav-btn:hover { color: var(--text-primary); background: rgba(255,255,255,0.5); }
-        .nav-btn.active { color: var(--accent-color); background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-weight: 600; }
+        .nav-btn:hover { color: var(--text-primary); background: rgba(255,255,255,0.1); }
+        .nav-btn.active { color: var(--accent-color); background: var(--bg-base); box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-weight: 600; border: 1px solid var(--glass-border); }
 
-        select { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0.7rem 1.2rem; color: var(--text-primary); font-size: 0.95rem; font-weight: 500; outline: none; appearance: none; cursor: pointer; transition: var(--transition); min-width: 180px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        select { background: var(--bg-base); border: 1px solid var(--glass-border); border-radius: 12px; padding: 0.7rem 1.2rem; color: var(--text-primary); font-size: 0.95rem; font-weight: 500; outline: none; appearance: none; cursor: pointer; transition: var(--transition); min-width: 180px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 3px var(--accent-glow); }
+        [data-theme="dark"] select option { background: var(--bg-base); color: var(--text-primary); }
         .subject-filter { display: flex; align-items: center; gap: 1rem; }
 
         /* --- BOTÕES GLOBAIS --- */
-        .glass-btn { background: #ffffff; border: 1px solid #e2e8f0; color: var(--text-secondary); padding: 0.7rem 1.2rem; border-radius: 12px; cursor: pointer; font-weight: 500; font-size: 0.95rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; transition: var(--transition); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .glass-btn:hover { background: #f8fafc; color: var(--text-primary); transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+        .glass-btn { background: var(--bg-base); border: 1px solid var(--glass-border); color: var(--text-secondary); padding: 0.7rem 1.2rem; border-radius: 12px; cursor: pointer; font-weight: 500; font-size: 0.95rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; transition: var(--transition); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .glass-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); color: var(--text-primary); border-color: var(--accent-color);}
         .glass-btn.primary { background: var(--accent-color); border: none; color: white; box-shadow: 0 4px 15px var(--accent-glow); }
         .glass-btn.primary:hover { background: var(--accent-hover); box-shadow: 0 6px 20px var(--accent-glow); color: white; }
         
         .icon-btn { padding: 0.7rem; border-radius: 12px; }
+        
+        /* Oculta texto em telas médias para ícones ficarem mais limpos */
         .icon-btn span { display: none; }
         @media(min-width: 768px) { .icon-btn span { display: inline; } } 
-
-        .view-section { display: none; animation: fadeIn 0.5s ease-out forwards; flex: 1; }
+        
+        .btn-logout { color: var(--danger); border: none; background: transparent; box-shadow: none; }
+        .btn-logout:hover { background: var(--danger-light); color: var(--danger); border-color: transparent;}
+        .btn-theme { color: var(--warning); border: none; background: transparent; box-shadow: none;}
+        .btn-theme:hover { background: var(--warning-light); color: #d97706; border-color: transparent;}
+        [data-theme="dark"] .btn-theme { color: #818cf8; }
+        [data-theme="dark"] .btn-theme:hover { background: rgba(129, 140, 248, 0.15); color: #a5b4fc;}
+        
+        .view-section { display: none; animation: fadeIn 0.4s ease-out forwards; flex: 1; }
         .view-section.active { display: flex; flex-direction: column; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- WIDGET RETRÁTIL (POMODORO MICRO E VIDRO) --- */
+        /* --- WIDGET RETRÁTIL POMODORO (MEIO-ESQUERDA ESTILO IPHONE) --- */
         .unified-widget {
-            position: fixed; bottom: 24px; right: 24px;
+            position: fixed; top: 50%; left: 16px; transform: translateY(-50%);
             background: radial-gradient(circle at 30% 30%, rgba(255, 107, 107, 0.75), rgba(220, 38, 38, 0.7), rgba(153, 27, 27, 0.7));
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            box-shadow: 0 8px 15px rgba(220, 38, 38, 0.2), inset -2px -2px 8px rgba(0,0,0,0.1), inset 2px 2px 8px rgba(255,255,255,0.2);
-            z-index: 100; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2), inset -2px -2px 8px rgba(0,0,0,0.1), inset 2px 2px 8px rgba(255,255,255,0.2);
+            z-index: 9999; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             overflow: hidden; display: flex; flex-direction: column; cursor: pointer; align-items: center; justify-content: flex-start;
         }
-        .unified-widget:not(.expanded) { width: 45px; height: 45px; border-radius: 50%; padding: 0; justify-content: center; }
-        .unified-widget:not(.expanded):hover { transform: scale(1.1) rotate(-5deg); }
+        .unified-widget:not(.expanded) { width: 50px; height: 50px; border-radius: 50%; padding: 0; justify-content: center; }
+        .unified-widget:not(.expanded):hover { transform: translateY(-50%) scale(1.1) rotate(5deg); }
         .unified-widget:not(.expanded) .widget-body, .unified-widget:not(.expanded) .pomo-subject { display: none; }
 
         .tomato-leaf {
-            position: absolute; top: -2px; left: 50%; margin-left: -7px; width: 14px; height: 7px; background: rgba(34, 197, 94, 0.9);
+            position: absolute; top: 2px; left: 50%; margin-left: -8px; width: 16px; height: 8px; background: rgba(34, 197, 94, 0.9);
             border-radius: 50px 0 50px 0; transform: rotate(-15deg); z-index: 2; transition: opacity 0.3s;
         }
         .tomato-leaf::after {
-            content: ''; position: absolute; top: 2px; left: 3px; width: 10px; height: 5px; background: rgba(22, 163, 74, 0.9);
+            content: ''; position: absolute; top: 2px; left: 3px; width: 12px; height: 6px; background: rgba(22, 163, 74, 0.9);
             border-radius: 0 50px 0 50px; transform: rotate(40deg);
         }
 
         .unified-widget.expanded {
-            width: 180px; height: auto; padding: 12px 15px; border-radius: 20px;
-            background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1), inset 0 0 0 1px rgba(255,255,255,0.5);
+            width: 190px; height: auto; padding: 15px; border-radius: 20px;
+            background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2), inset 0 0 0 1px var(--glass-border);
+            border: 1px solid var(--glass-border);
         }
         .unified-widget.expanded .tomato-leaf { opacity: 0; pointer-events: none; }
 
         .widget-header { display: flex; align-items: center; justify-content: center; width: 100%; transition: var(--transition); }
-        .unified-widget.expanded .widget-header { flex-direction: column; border-bottom: 1px solid rgba(226, 232, 240, 0.5); padding-bottom: 8px; }
+        .unified-widget.expanded .widget-header { flex-direction: column; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px; }
         
         .pomo-time-container { display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; z-index: 3;}
-        .pomodoro-time { font-size: 0.85rem; font-weight: 800; color: white; font-variant-numeric: tabular-nums; text-shadow: 1px 1px 2px rgba(0,0,0,0.4); font-family: monospace; }
-        .expanded .pomodoro-time { font-size: 1.8rem; color: var(--accent-color); text-shadow: none; margin-bottom: 2px; }
+        .pomodoro-time { font-size: 0.9rem; font-weight: 800; color: white; font-variant-numeric: tabular-nums; text-shadow: 1px 1px 2px rgba(0,0,0,0.4); font-family: monospace; }
+        .expanded .pomodoro-time { font-size: 2rem; color: var(--accent-color); text-shadow: none; margin-bottom: 2px; }
 
-        .pomo-subject { font-size: 0.7rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; text-align: center; margin-bottom: 6px;}
-
-        .widget-body { display: flex; flex-direction: column; opacity: 1; transition: opacity 0.3s; margin-top: 8px; gap: 8px; width: 100%; align-items: center; }
-        .pomodoro-modes { display: flex; gap: 4px; background: rgba(241, 245, 249, 0.7); padding: 4px; border-radius: 10px; width: 100%; justify-content: center; }
+        .widget-body { display: flex; flex-direction: column; opacity: 1; transition: opacity 0.3s; margin-top: 10px; gap: 10px; width: 100%; align-items: center; }
+        
+        .pomo-subject-select { width: 100%; font-size: 0.75rem; padding: 6px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-base); color: var(--text-primary); text-align: center; font-weight: 700; text-transform: uppercase; cursor: pointer; min-width: auto; appearance: auto; box-shadow: none;}
+        
+        .pomodoro-modes { display: flex; gap: 4px; background: rgba(0,0,0,0.05); padding: 4px; border-radius: 10px; width: 100%; justify-content: center; }
+        [data-theme="dark"] .pomodoro-modes { background: rgba(255,255,255,0.05); }
         .mode-btn { background: transparent; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: var(--transition); text-transform: uppercase; width: 50%; }
-        .mode-btn.active { background: #ffffff; color: var(--accent-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .mode-btn.active { background: var(--bg-base); color: var(--accent-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         
         .pomodoro-controls { display: flex; gap: 8px; }
-        .circle-btn { background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(226, 232, 240, 0.6); color: var(--text-secondary); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .circle-btn { background: var(--bg-base); border: 1px solid var(--glass-border); color: var(--text-secondary); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .circle-btn:hover { background: var(--accent-color); color: #fff; border-color: var(--accent-color); transform: scale(1.05); }
-        .circle-btn.active-play { background: var(--success); color: #fff; border-color: var(--success); }
         .circle-btn svg { width: 16px; height: 16px; }
 
-        .widget-music-sec { display: flex; flex-direction: column; align-items: center; width: 100%; gap: 6px; border-top: 1px solid rgba(226, 232, 240, 0.5); padding-top: 8px;}
-        .music-select { width: 100%; min-width: unset; font-size: 0.75rem; padding: 4px; border-radius: 8px; border: 1px solid rgba(226, 232, 240, 0.6); background: rgba(248, 250, 252, 0.7); color: var(--text-primary); text-align: center; font-weight: 600; outline: none; cursor: pointer; box-shadow: none; }
+        .widget-music-sec { display: flex; flex-direction: column; align-items: center; width: 100%; gap: 6px; border-top: 1px solid var(--glass-border); padding-top: 10px;}
+        .music-select { width: 100%; min-width: unset; font-size: 0.75rem; padding: 4px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-base); color: var(--text-primary); text-align: center; font-weight: 600; outline: none; cursor: pointer; box-shadow: none; appearance: auto;}
         .music-controls { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
         input[type=range] { -webkit-appearance: none; width: 50px; background: transparent; }
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 10px; width: 10px; border-radius: 50%; background: var(--accent-color); cursor: pointer; margin-top: -3px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: rgba(203, 213, 225, 0.8); border-radius: 2px; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: var(--glass-border); border-radius: 2px; }
 
-        /* --- FLASHCARD VIEWER (AJUSTES PARA IMAGEM/CÓDIGO/MATEMÁTICA) --- */
+        /* --- FLASHCARD VIEWER --- */
         .flashcard-container { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; perspective: 1500px; flex: 1; height: 100%; margin-top: 1rem; }        
         
-        .empty-state { text-align: center; padding: 3rem; max-width: 450px; background: var(--glass-bg); border-radius: var(--radius-lg); border: 1px dashed #cbd5e1; }
+        .empty-state { text-align: center; padding: 3rem; max-width: 450px; background: var(--glass-bg); border-radius: var(--radius-lg); border: 1px dashed var(--glass-border); }
         .empty-icon { margin-bottom: 1.5rem; display: inline-block; padding: 20px; background: var(--success-light); border-radius: 50%; color: var(--success); }
         .empty-state h2 { font-size: 1.6rem; margin-bottom: 0.8rem; color: var(--text-primary); }
         .empty-state p { color: var(--text-secondary); font-size: 1.05rem; }
 
         .study-progress-wrapper { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 720px; gap: 1.5rem; margin-top: auto;}
-        .study-progress-bar { flex: 1; height: 8px; background: #e2e8f0; border-radius: 10px; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); }
+        .study-progress-bar { flex: 1; height: 8px; background: var(--glass-border); border-radius: 10px; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); }
         .study-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-color), #8b5cf6); border-radius: 10px; transition: width 0.5s ease; width: 0%; }
         .counter { font-size: 1rem; font-weight: 600; color: var(--text-secondary); min-width: 60px; text-align: right; font-variant-numeric: tabular-nums; }
 
-        .scene { width: 100%; max-width: 720px; flex: 1; min-height: 420px; max-height: 550px; perspective: 2000px; margin: 0 auto; z-index: 10; }
-        .card { width: 100%; height: 100%; position: relative; transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); transform-style: preserve-3d; cursor: pointer; border-radius: var(--radius-lg); }
-        .card:hover:not(.is-flipped) { transform: translateY(-8px); }
+        .scene { width: 100%; max-width: 720px; flex: 1; min-height: 420px; perspective: 2000px; margin: 0 auto; z-index: 10; display: flex; }
+        .card { width: 100%; position: relative; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); transform-style: preserve-3d; cursor: pointer; border-radius: var(--radius-lg); display: flex; flex: 1;}
+        .card:hover:not(.is-flipped) { transform: translateY(-4px); }
         .card.is-flipped { transform: rotateX(180deg); }
 
-        .card__face { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: var(--radius-lg); padding: 3.5rem 4.5rem; display: flex; flex-direction: column; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: 0 20px 40px rgba(0,0,0,0.06), 0 5px 15px rgba(0,0,0,0.03); }
-        
+        .card__face { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: var(--radius-lg); padding: 3.5rem 4.5rem; display: flex; flex-direction: column; overflow-y: auto; border: 1px solid var(--glass-border); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
         .card__face--front { justify-content: center; align-items: center; text-align: center; background: var(--card-bg-front); }
         .card__face--back { background: var(--card-bg-back); border: 2px solid var(--accent-light); transform: rotateX(180deg); justify-content: center; align-items: center; text-align: center; }
 
@@ -195,121 +239,158 @@
         .subject-badge { background: var(--accent-light); color: var(--accent-hover); padding: 0.4rem 1.2rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; margin-left: 12px; border: 1px solid rgba(109, 40, 217, 0.1); }
         
         .card-actions { position: absolute; top: 1.8rem; right: 1.8rem; display: flex; gap: 8px; z-index: 10; }
-        .card-action-btn { background: #f8fafc; border: 1px solid transparent; color: var(--text-muted); padding: 6px; border-radius: 10px; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; }
-        .card-action-btn:hover { background: #ffffff; border-color: #cbd5e1; color: var(--text-primary); transform: translateY(-2px); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .card-action-btn.del:hover { background: var(--danger-light); color: var(--danger); border-color: #fecaca; }
+        .card-action-btn { background: var(--bg-base); border: 1px solid transparent; color: var(--text-muted); padding: 6px; border-radius: 10px; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; }
+        .card-action-btn:hover { background: var(--bg-base); border-color: var(--accent-color); color: var(--text-primary); transform: translateY(-2px); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .card-action-btn.del:hover { background: var(--danger-light); color: var(--danger); border-color: transparent; }
+
+        .voice-btn { position: absolute; bottom: 1.8rem; left: 2.2rem; background: var(--bg-base); border: 1px solid var(--glass-border); color: var(--text-muted); padding: 8px; border-radius: 50%; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); z-index: 10;}
+        .voice-btn:hover { background: var(--info-light); color: var(--info); border-color: var(--info); transform: scale(1.1); }
 
         /* Estilização para Markdown, Imagens, Códigos e Matemática dentro do Card */
         .markdown-content { width: 100%; margin: auto 0; font-size: 1.6rem; font-weight: 500; line-height: 1.5; text-wrap: balance; color: var(--text-primary); }
         .card__face--back .markdown-content { color: var(--accent-color); }
-        
         .markdown-content img { max-width: 100%; max-height: 220px; border-radius: 12px; object-fit: contain; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 10px 0; }
-        .markdown-content pre { text-align: left; font-size: 1rem; border-radius: 12px; padding: 15px; margin: 15px 0; max-width: 100%; overflow-x: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .markdown-content pre { text-align: left; font-size: 1rem; border-radius: 12px; padding: 15px; margin: 15px 0; max-width: 100%; overflow-x: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .markdown-content code { font-family: 'Consolas', 'Monaco', monospace; background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+        [data-theme="dark"] .markdown-content code { background: rgba(255,255,255,0.1); }
         .markdown-content pre code { background: transparent; padding: 0; color: inherit; }
         .markdown-content ul, .markdown-content ol { text-align: left; margin: 15px auto; display: inline-block; padding-left: 20px;}
         .markdown-content li { margin-bottom: 8px; }
         .markdown-content p { margin-bottom: 10px; }
 
-        .flip-hint { position: absolute; bottom: 1.8rem; font-size: 0.9rem; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 0.6rem; opacity: 0; transform: translateY(10px); transition: var(--transition); left: 50%; transform: translateX(-50%) translateY(10px); background: #f8fafc; padding: 8px 18px; border-radius: 99px; border: 1px solid #e2e8f0; }
+        .flip-hint { position: absolute; bottom: 1.8rem; font-size: 0.9rem; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 0.6rem; opacity: 0; transform: translateY(10px); transition: var(--transition); left: 50%; transform: translateX(-50%) translateY(10px); background: var(--bg-base); padding: 8px 18px; border-radius: 99px; border: 1px solid var(--glass-border); }
         .card:hover .flip-hint, .card:focus-visible .flip-hint { opacity: 1; transform: translateX(-50%) translateY(0); }
 
         .controls { display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin-bottom: auto;}
         
         .srs-controls { display: flex; gap: 1rem; justify-content: center; width: 100%; max-width: 720px; margin-bottom: auto;}
-        .srs-btn { flex: 1; background: #ffffff; border: 1px solid #e2e8f0; color: var(--text-primary); padding: 1.2rem 0.5rem; border-radius: 16px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: var(--transition); display: flex; flex-direction: column; align-items: center; gap: 0.6rem; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .srs-btn { flex: 1; background: var(--bg-base); border: 1px solid var(--glass-border); color: var(--text-primary); padding: 1.2rem 0.5rem; border-radius: 16px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: var(--transition); display: flex; flex-direction: column; align-items: center; gap: 0.6rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .srs-btn svg { transition: var(--transition); color: var(--text-muted); width: 26px; height: 26px; }
         .srs-btn span { font-size: 0.8rem; font-weight: 500; color: var(--text-muted); }
         
-        .btn-again:hover { background: var(--danger-light); border-color: #fca5a5; color: var(--danger); transform: translateY(-3px); box-shadow: 0 6px 12px rgba(239, 68, 68, 0.1); }
+        .btn-again:hover { background: var(--danger-light); border-color: transparent; color: var(--danger); transform: translateY(-3px); }
         .btn-again:hover svg { color: var(--danger); transform: scale(1.15); }
-        .btn-hard:hover { background: var(--warning-light); border-color: #fcd34d; color: #d97706; transform: translateY(-3px); box-shadow: 0 6px 12px rgba(245, 158, 11, 0.1); }
+        .btn-hard:hover { background: var(--warning-light); border-color: transparent; color: #d97706; transform: translateY(-3px); }
         .btn-hard:hover svg { color: #d97706; transform: scale(1.15); }
-        .btn-good:hover { background: var(--info-light); border-color: #93c5fd; color: var(--info); transform: translateY(-3px); box-shadow: 0 6px 12px rgba(59, 130, 246, 0.1); }
+        .btn-good:hover { background: var(--info-light); border-color: transparent; color: var(--info); transform: translateY(-3px); }
         .btn-good:hover svg { color: var(--info); transform: scale(1.15); }
-        .btn-easy:hover { background: var(--success-light); border-color: #6ee7b7; color: var(--success); transform: translateY(-3px); box-shadow: 0 6px 12px rgba(16, 185, 129, 0.1); }
+        .btn-easy:hover { background: var(--success-light); border-color: transparent; color: var(--success); transform: translateY(-3px); }
         .btn-easy:hover svg { color: var(--success); transform: scale(1.15); }
 
         /* --- DASHBOARD --- */
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .stat-card { display: flex; align-items: center; gap: 1.5rem; padding: 2rem; transition: var(--transition); background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-lg); }
-        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 15px 30px rgba(0,0,0,0.06); border-color: #cbd5e1; }
+        .stat-card { display: flex; align-items: center; gap: 1.5rem; padding: 2rem; transition: var(--transition); }
+        .stat-card:hover { transform: translateY(-4px); border-color: var(--accent-color); }
         .stat-icon { display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: var(--bg-base); border-radius: 18px; color: var(--icon-color, var(--text-primary)); }
         .stat-info h3 { font-size: 0.95rem; color: var(--text-secondary); font-weight: 600; margin-bottom: 0.3rem; text-transform: uppercase; letter-spacing: 0.5px;}
         .stat-number { font-size: 2.8rem; font-weight: 700; color: var(--text-primary); line-height: 1; }
         
         .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;}
-        @media(max-width: 768px) { .charts-row { grid-template-columns: 1fr; } }
         
-        .chart-container { padding: 1.8rem; background: #ffffff; display: flex; flex-direction: column; border: 1px solid #e2e8f0; border-radius: var(--radius-lg); box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        .chart-container { padding: 1.8rem; display: flex; flex-direction: column; }
         .chart-container h3 { font-size: 1.15rem; margin-bottom: 1.5rem; color: var(--text-primary); font-weight: 600; }
         .canvas-wrapper { height: 260px; position: relative; width: 100%; flex: 1; }
 
         .difficult-cards-list { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
-        .diff-card-item { background: #f8fafc; border: 1px solid #e2e8f0; padding: 1.2rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; transition: var(--transition); }
-        .diff-card-item:hover { background: #ffffff; box-shadow: 0 4px 10px rgba(0,0,0,0.03); transform: translateX(4px); }
+        .diff-card-item { background: var(--bg-base); border: 1px solid var(--glass-border); padding: 1.2rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .diff-card-item:hover { transform: translateX(4px); border-color: var(--accent-color); }
         .diff-card-q { font-size: 1rem; font-weight: 500; color: var(--text-primary); flex: 1; margin-right: 1.5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .diff-badge { background: var(--danger-light); color: var(--danger); font-size: 0.85rem; font-weight: 600; padding: 0.4rem 0.8rem; border-radius: 99px; white-space: nowrap; }
 
         /* --- ABA TODOS OS CARDS --- */
         .all-cards-wrapper { display: flex; flex-direction: column; gap: 2rem; padding-bottom: 2rem; }
-        .subject-group { background: var(--glass-bg); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); }
-        .subject-group-title { font-size: 1.2rem; color: var(--accent-color); font-weight: 700; margin-bottom: 1rem; border-bottom: 2px solid var(--accent-light); padding-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem; }
+        .subject-group { padding: 1.5rem; }
+        .subject-group-title { font-size: 1.2rem; color: var(--accent-color); font-weight: 700; margin-bottom: 1rem; border-bottom: 2px solid var(--glass-border); padding-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem; }
         .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
-        .list-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.2rem; display: flex; flex-direction: column; gap: 0.8rem; transition: var(--transition); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .list-card:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.05); border-color: #cbd5e1; }
+        .list-card { background: var(--bg-base); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1.2rem; display: flex; flex-direction: column; gap: 0.8rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .list-card:hover { transform: translateY(-3px); border-color: var(--accent-color); }
         
         .list-card-content { font-size: 0.95rem; line-height: 1.5; color: var(--text-primary); overflow-wrap: break-word; }
         .list-card-content img { max-width: 100%; height: auto; max-height: 150px; border-radius: 8px; margin: 5px 0; }
         .list-card-content pre { background: #2d2d2d; color: #ccc; padding: 10px; border-radius: 8px; font-size: 0.8rem; overflow-x: auto; margin: 5px 0; }
-        .list-card-a-wrapper { background: #f8fafc; padding: 10px; border-radius: 8px; border-left: 3px solid var(--accent-color); margin-top: 5px;}
+        .list-card-a-wrapper { background: rgba(0,0,0,0.03); padding: 10px; border-radius: 8px; border-left: 3px solid var(--accent-color); margin-top: 5px;}
+        [data-theme="dark"] .list-card-a-wrapper { background: rgba(255,255,255,0.03); }
         
-        .list-card-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: auto; border-top: 1px solid #e2e8f0; padding-top: 10px;}
+        .list-card-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: auto; border-top: 1px solid var(--glass-border); padding-top: 10px;}
 
         /* --- MODAIS E FORMULÁRIOS --- */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; z-index: 200; opacity: 1; transition: opacity 0.3s ease; padding: 1rem; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; z-index: 10000; opacity: 1; transition: opacity 0.3s ease; padding: 1rem; }
         .modal-overlay.hidden { opacity: 0; pointer-events: none; }
-        .modal-content { background: #ffffff; border: 1px solid #e2e8f0; width: 100%; max-width: 500px; padding: 2.5rem; transform: translateY(0) scale(1); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: var(--radius-lg); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); max-height: 90vh; overflow-y: auto;}
+        .modal-content { background: var(--card-bg-front); border: 1px solid var(--glass-border); width: 100%; max-width: 500px; padding: 2.5rem; transform: translateY(0) scale(1); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: var(--radius-lg); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto;}
         .modal-overlay.hidden .modal-content { transform: translateY(30px) scale(0.95); }
         
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.8rem; }
         .modal-header h2 { font-size: 1.5rem; color: var(--text-primary); font-weight: 700; }
-        .close-btn { background: #f1f5f9; border: none; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); padding: 0.6rem; border-radius: 50%; }
+        .close-btn { background: var(--bg-base); border: none; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); padding: 0.6rem; border-radius: 50%; }
         .close-btn:hover { color: var(--danger); background: var(--danger-light); transform: rotate(90deg); }
 
         .form-group { margin-bottom: 1.5rem; }
         .form-group label { display: block; margin-bottom: 0.6rem; font-size: 0.95rem; color: var(--text-primary); font-weight: 600; }
-        input[type="email"], input[type="password"], input[type="text"], textarea { width: 100%; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 12px; padding: 0.9rem 1.2rem; color: var(--text-primary); font-size: 1rem; transition: var(--transition); resize: vertical; }
-        input:focus, textarea:focus { outline: none; background: #ffffff; border-color: var(--accent-color); box-shadow: 0 0 0 4px var(--accent-glow); }
+        input, textarea, select { width: 100%; background: var(--bg-base); border: 1px solid var(--glass-border); border-radius: 12px; padding: 0.9rem 1.2rem; color: var(--text-primary); font-size: 16px; /* Evita zoom iOS */ transition: var(--transition); resize: vertical; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 0 4px var(--accent-glow); }
         
         .submit-btn { width: 100%; margin-top: 0.5rem; padding: 1rem; font-size: 1.05rem; font-weight: 600; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
         .hidden { display: none !important; }
-        .slide-in-right { animation: slideInR 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        .slide-in-left { animation: slideInL 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        .slide-in-right { animation: slideInR 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        .slide-in-left { animation: slideInL 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         @keyframes slideInR { from { transform: translateX(50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes slideInL { from { transform: translateX(-50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
         button *, .nav-btn * { pointer-events: none; }
 
-        @media (max-width: 640px) {
-            header { flex-direction: column; align-items: stretch; }
-            .logo { justify-content: center; margin-bottom: 0.5rem; }
-            .header-actions { justify-content: center; }
+        /* --- RESPONSIVIDADE NATIVA MOBILE --- */
+        @media (max-width: 768px) {
+            .app-container { padding: 1rem; gap: 1rem; }
+            header { flex-direction: column; gap: 1rem; align-items: center; padding-bottom: 1rem;}
+            .header-actions { justify-content: center; width: 100%; }
             .user-profile { border-right: none; padding-right: 0; margin-right: 0; }
-            .scene { height: 400px; }
-            .card__face { padding: 2rem; }
-            .srs-controls { flex-wrap: wrap; }
-            .srs-btn { min-width: 45%; }
+            
+            .nav-container { flex-direction: column; gap: 1rem; }
+            .app-nav { width: 100%; display: flex; justify-content: space-between; }
+            .nav-btn { flex: 1; justify-content: center; padding: 0.7rem 0.2rem; font-size: 0.85rem; flex-direction: column; gap: 4px; border-radius: 10px;}
+            .nav-btn svg { width: 20px; height: 20px; margin: 0; }
+            
             .subject-filter { width: 100%; justify-content: space-between; }
             .subject-filter select { flex: 1; }
+
+            .scene { min-height: 60vh; height: auto; max-height: none; }
+            .card__face { padding: 1.5rem 1.2rem; }
+            
+            /* Ajuste de fontes no mobile */
+            .card-label { top: 1.2rem; left: 1.2rem; }
+            .subject-badge { top: 0.9rem; left: 6rem; }
+            .card-actions { top: 1.2rem; right: 1.2rem; }
+            .voice-btn { bottom: 1.2rem; left: 1.2rem; }
+            .flip-hint { bottom: 1.2rem; font-size: 0.8rem; padding: 6px 12px; opacity: 1; transform: translateX(-50%);} /* Sempre visível no mobile */
+            
+            .markdown-content { font-size: 1.3rem !important; }
+
+            .srs-controls { flex-wrap: wrap; gap: 0.5rem; }
+            .srs-btn { min-width: calc(50% - 0.5rem); padding: 0.8rem 0.5rem; flex-direction: row; justify-content: center;}
+            .srs-btn svg { width: 20px; height: 20px; }
+            
+            .charts-row { grid-template-columns: 1fr; }
+            .modal-content { padding: 1.5rem; }
+            
+            .list-card-actions { flex-wrap: wrap; }
+        }
+
+        @media (max-width: 480px) {
+            .icon-btn span { display: none !important; } /* Esconde texto dos botões no mobile */
+            .glass-btn { padding: 0.6rem; }
+            .logo h1 { font-size: 1.5rem; }
+            
             .unified-widget.expanded { width: 160px; padding: 10px; }
+            .expanded .pomodoro-time { font-size: 1.5rem; }
+            .pomo-subject-select { font-size: 0.65rem; }
         }
     </style>
 </head>
 <body>
     <div class="app-container">
 
+        <!-- AUTH VIEW -->
         <div id="auth-view" class="view-section active">
             <div class="auth-box glass-panel">
                 <div class="logo" style="justify-content: center; margin-bottom: 2.5rem;">
@@ -340,6 +421,7 @@
         </div>
 
         <div id="app-wrapper" class="hidden" style="display: flex; flex-direction: column; flex: 1;">
+            <!-- HEADER -->
             <header>
                 <div class="logo">
                     <div class="logo-icon-bg">
@@ -354,9 +436,10 @@
                     <div class="user-profile">
                         <span class="user-email" id="user-display-email">usuario@email.com</span>
                         
-                        <button id="notify-btn" class="glass-btn icon-btn btn-notify" style="position: relative;" aria-label="Notificações" title="Ativar lembretes">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-                            <span class="notify-badge" id="notify-badge"></span>
+                        <!-- Botão Dark Mode -->
+                        <button id="theme-toggle" class="glass-btn icon-btn btn-theme" title="Alternar Tema Escuro">
+                            <svg id="theme-icon-sun" class="hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                            <svg id="theme-icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                         </button>
                         
                         <button id="logout-btn" class="glass-btn icon-btn btn-logout" title="Sair da conta">
@@ -402,6 +485,7 @@
 
             <main style="display: flex; flex-direction: column; flex: 1;">
 
+                <!-- ABA ESTUDO -->
                 <div id="view-study" class="view-section active">
                     <div class="flashcard-container" id="flashcard-viewer">
 
@@ -414,6 +498,8 @@
 
                         <div class="scene" id="scene">
                             <div class="card" id="card" tabindex="0" aria-label="Flashcard: Clique para virar">
+                                
+                                <!-- FRONT -->
                                 <div class="card__face card__face--front">
                                     <div style="position: absolute; top: 1.8rem; left: 2.2rem; display: flex; align-items: center;">
                                         <span class="card-label" style="position: relative; top: 0; left: 0;">Pergunta</span>
@@ -429,21 +515,30 @@
                                         </button>
                                     </div>
 
-                                    <!-- Area da Pergunta formatada com Markdown/Math -->
                                     <div id="card-question" class="markdown-content">...</div>
                                     
+                                    <!-- Botão Ouvir -->
+                                    <button class="voice-btn" id="btn-voice-q" title="Ouvir Pergunta">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                                    </button>
+
                                     <div class="flip-hint">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.92-10.24l-3.42 3.42"></path></svg>
                                         Clique para virar
                                     </div>
                                 </div>
 
+                                <!-- BACK -->
                                 <div class="card__face card__face--back">
                                     <span class="card-label">Resposta</span>
                                     
-                                    <!-- Area da Resposta formatada com Markdown/Math -->
                                     <div id="card-answer" class="markdown-content">...</div>
                                     
+                                    <!-- Botão Ouvir -->
+                                    <button class="voice-btn" id="btn-voice-a" title="Ouvir Resposta">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                                    </button>
+
                                     <div class="flip-hint" style="bottom: 1.8rem;">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2.5 2v6h6M2.66 15.57a10 10 0 1 0 .92-10.24l3.42 3.42"></path></svg>
                                         Clique para voltar
@@ -497,6 +592,7 @@
                     <div id="all-cards-container" class="all-cards-wrapper"></div>
                 </div>
 
+                <!-- ABA DASHBOARD -->
                 <div id="view-dashboard" class="view-section hidden">
                     <div class="dashboard-grid">
                         <div class="stat-card glass-panel">
@@ -534,7 +630,7 @@
                         </div>
                     </div>
 
-                    <div class="glass-panel" style="padding: 2rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-lg);">
+                    <div class="glass-panel" style="padding: 2rem;">
                         <h3 style="font-size: 1.3rem; color: var(--text-primary); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem;">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
                             Cards com Maior Dificuldade
@@ -544,6 +640,7 @@
                     </div>
                 </div>
 
+                <!-- WIDGET POMODORO (MEIO DA TELA, LADO ESQUERDO) -->
                 <div class="unified-widget" id="unified-widget" title="Clique para expandir">
                     <div class="tomato-leaf"></div> 
                     <div class="widget-header">
@@ -553,7 +650,10 @@
                     </div>
                     
                     <div class="widget-body">
-                        <div id="pomo-current-subject" class="pomo-subject">Pausa / Descanso</div>
+                        <!-- Select de Matéria Integrado no Pomodoro -->
+                        <select id="pomo-subject-select" class="pomo-subject-select">
+                            <option value="all">Todas as Matérias</option>
+                        </select>
                         
                         <div class="pomodoro-modes">
                             <button class="mode-btn active" id="btn-mode-focus">Foco</button>
@@ -595,7 +695,7 @@
         </div>
 
         <div id="subject-modal" class="modal-overlay hidden" role="dialog">
-            <div class="modal-content">
+            <div class="modal-content glass-panel">
                 <div class="modal-header">
                     <h2>Nova Matéria</h2>
                     <button id="close-subject-modal" class="close-btn" aria-label="Fechar">
@@ -613,7 +713,7 @@
         </div>
 
         <div id="add-modal" class="modal-overlay hidden" role="dialog">
-            <div class="modal-content">
+            <div class="modal-content glass-panel">
                 <div class="modal-header">
                     <h2>Criar Flashcard</h2>
                     <button id="close-modal-btn" class="close-btn" aria-label="Fechar">
@@ -629,20 +729,20 @@
                     </div>
                     <div class="form-group">
                         <label for="question">Pergunta</label>
-                        <textarea id="question" rows="4" required placeholder="Ex: Qual é a fórmula de Bhaskara?"></textarea>
+                        <textarea id="question" rows="3" required placeholder="Ex: Qual é a fórmula de Bhaskara?"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="answer">Resposta</label>
-                        <textarea id="answer" rows="4" required placeholder="Ex: $$ x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} $$"></textarea>
+                        <textarea id="answer" rows="3" required placeholder="Ex: $$ x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} $$"></textarea>
                     </div>
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: -10px; margin-bottom: 15px;">Dica: Você pode usar imagens colando links assim: <br><code>![nome](https://link-da-imagem.jpg)</code></p>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: -10px; margin-bottom: 15px;">Dica: Use imagens colando links: <code>![nome](link.jpg)</code></p>
                     <button type="submit" class="glass-btn submit-btn primary" id="submit-card-btn">Salvar Flashcard</button>
                 </form>
             </div>
         </div>
 
         <div id="edit-modal" class="modal-overlay hidden" role="dialog">
-            <div class="modal-content">
+            <div class="modal-content glass-panel">
                 <div class="modal-header">
                     <h2>Editar Flashcard</h2>
                     <button id="close-edit-modal-btn" class="close-btn" aria-label="Fechar">
@@ -656,11 +756,11 @@
                     </div>
                     <div class="form-group">
                         <label for="edit-question">Pergunta</label>
-                        <textarea id="edit-question" rows="4" required></textarea>
+                        <textarea id="edit-question" rows="3" required></textarea>
                     </div>
                     <div class="form-group">
                         <label for="edit-answer">Resposta</label>
-                        <textarea id="edit-answer" rows="4" required></textarea>
+                        <textarea id="edit-answer" rows="3" required></textarea>
                     </div>
                     <button type="submit" class="glass-btn submit-btn primary" id="submit-edit-btn">Salvar Alterações</button>
                 </form>
@@ -723,8 +823,9 @@
             userDisplayEmail: document.getElementById('user-display-email'),
             logoutBtn: document.getElementById('logout-btn'),
             
-            notifyBtn: document.getElementById('notify-btn'),
-            notifyBadge: document.getElementById('notify-badge'),
+            themeToggle: document.getElementById('theme-toggle'),
+            iconSun: document.getElementById('theme-icon-sun'),
+            iconMoon: document.getElementById('theme-icon-moon'),
 
             tabStudy: document.getElementById('tab-study'),
             tabAllCards: document.getElementById('tab-all-cards'),
@@ -739,7 +840,7 @@
 
             unifiedWidget: document.getElementById('unified-widget'),
             pomoDisplay: document.getElementById('pomodoro-display'),
-            pomoSubjectLabel: document.getElementById('pomo-current-subject'), 
+            pomoSubjectSelect: document.getElementById('pomo-subject-select'), 
             btnPomoPlay: document.getElementById('btn-pomo-play'),
             btnPomoPause: document.getElementById('btn-pomo-pause'),
             btnPomoReset: document.getElementById('btn-pomo-reset'),
@@ -757,6 +858,9 @@
             questionEl: document.getElementById('card-question'),
             answerEl: document.getElementById('card-answer'),
             subjectBadgeEl: document.getElementById('card-subject-badge'),
+            
+            btnVoiceQ: document.getElementById('btn-voice-q'),
+            btnVoiceA: document.getElementById('btn-voice-a'),
 
             emptyState: document.getElementById('empty-state'),
             controls: document.getElementById('controls'),
@@ -803,42 +907,54 @@
             classical: "http://stream.srg-ssr.ch/m/rsc_de/mp3_128" 
         };
 
-        // Função Mágica para renderizar Texto -> Markdown -> Math -> Syntax Highlight
+        // --- FUNÇÕES DE TEXTO / RENDERIZAÇÃO ---
         function processContent(text) {
             if(!text) return "";
-            
-            // 1. Converte o texto (Markdown) para HTML usando Marked.js
-            let html = marked.parse(text);
-            
-            // Retorna o HTML bruto (KaTeX e Prism processam no DOM depois)
-            return html;
+            return marked.parse(text);
         }
 
         function applyMathAndCode(elementId) {
             const el = document.getElementById(elementId);
             if(!el) return;
-            
-            // Aplica KaTeX (Matemática)
             if (window.renderMathInElement) {
                 renderMathInElement(el, {
-                    delimiters: [
-                        {left: "$$", right: "$$", display: true},
-                        {left: "$", right: "$", display: false},
-                        {left: "\\(", right: "\\)", display: false},
-                        {left: "\\[", right: "\\]", display: true}
-                    ],
+                    delimiters: [ {left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false}, {left: "\\(", right: "\\)", display: false}, {left: "\\[", right: "\\]", display: true} ],
                     throwOnError: false
                 });
             }
-
-            // Aplica Prism.js (Código)
-            if (window.Prism) {
-                Prism.highlightAllUnder(el);
-            }
+            if (window.Prism) Prism.highlightAllUnder(el);
         }
 
+        // --- FUNÇÃO VOZ (TEXT TO SPEECH) ---
+        window.speakText = function(htmlContent, e) {
+            if(e) e.stopPropagation();
+            window.speechSynthesis.cancel(); 
+            
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = htmlContent;
+            
+            // Remove math formulas para não ler coisas como "frac minus b"
+            const mathTags = tempDiv.querySelectorAll('.katex');
+            mathTags.forEach(el => el.remove());
 
+            const text = tempDiv.textContent || tempDiv.innerText || "";
+            if(!text.trim()) return;
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'pt-BR'; // Tenta PT-BR por padrão
+            window.speechSynthesis.speak(utterance);
+        };
+
+        // --- INICIALIZAÇÃO ---
         function init() {
+            // Verifica Tema Salvo
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                DOM.iconSun.classList.remove('hidden');
+                DOM.iconMoon.classList.add('hidden');
+            }
+
             setupEventListeners();
             updatePomoDisplay();
             
@@ -901,14 +1017,15 @@
         }
 
         function updateSubjectDropdowns() {
-            const selects = [DOM.studySubjectFilter, DOM.cardSubjectSelect, DOM.editSubjectSelect];
+            const selects = [DOM.studySubjectFilter, DOM.pomoSubjectSelect, DOM.cardSubjectSelect, DOM.editSubjectSelect];
             selects.forEach(el => {
                 if(!el) return;
-                const isFilter = el.id === 'study-subject-filter';
+                const isFilter = (el.id === 'study-subject-filter' || el.id === 'pomo-subject-select');
                 el.innerHTML = isFilter ? '<option value="all">Todas as Matérias</option>' : '<option value="" disabled selected>Selecione uma matéria...</option>';
                 subjects.forEach(sub => {
                     el.innerHTML += `<option value="${sub.id}">${sub.name}</option>`;
                 });
+                if(isFilter) el.value = currentFilter;
             });
         }
 
@@ -933,13 +1050,11 @@
             if(mode === 'focus') {
                 DOM.btnModeFocus.classList.add('active');
                 DOM.btnModeBreak.classList.remove('active');
-                if(dueCards.length > 0) {
-                    DOM.pomoSubjectLabel.textContent = getSubjectName(dueCards[currentIndex].subjectId);
-                }
+                DOM.pomoSubjectSelect.style.display = 'block';
             } else {
                 DOM.btnModeBreak.classList.add('active');
                 DOM.btnModeFocus.classList.remove('active');
-                DOM.pomoSubjectLabel.textContent = "Pausa / Descanso";
+                DOM.pomoSubjectSelect.style.display = 'none'; // Esconde na pausa
             }
             
             pauseTimer();
@@ -957,14 +1072,17 @@
                     pomoTimeLeft--;
                     updatePomoDisplay();
 
-                    if(pomoMode === 'focus' && dueCards.length > 0 && !DOM.emptyState.classList.contains('hidden') === false) {
+                    if(pomoMode === 'focus' && currentFilter !== 'all') {
+                        // Se estiver estudando uma matéria específica
+                        pendingTimeUpdates[currentFilter] = (pendingTimeUpdates[currentFilter] || 0) + 1;
+                    } else if (pomoMode === 'focus' && dueCards.length > 0 && !DOM.emptyState.classList.contains('hidden') === false) {
+                        // Se for "Todas", conta o tempo para a matéria do card atual
                         const currentSubId = dueCards[currentIndex].subjectId;
-                        if(currentSubId) {
-                            pendingTimeUpdates[currentSubId] = (pendingTimeUpdates[currentSubId] || 0) + 1;
-                        }
+                        if(currentSubId) pendingTimeUpdates[currentSubId] = (pendingTimeUpdates[currentSubId] || 0) + 1;
                     }
                 } else {
                     pauseTimer();
+                    // Play a sound could be added here
                     alert(pomoMode === 'focus' ? "Sessão de Foco concluída! Hora de descansar." : "Pausa concluída! Voltando aos estudos.");
                     switchPomoMode(pomoMode === 'focus' ? 'break' : 'focus');
                 }
@@ -1017,7 +1135,6 @@
                 DOM.srsControls.classList.add('hidden');
                 DOM.progressWrapper.classList.add('hidden');
                 DOM.emptyState.classList.remove('hidden');
-                DOM.pomoSubjectLabel.textContent = "Pausa / Descanso";
                 return;
             }
 
@@ -1036,24 +1153,20 @@
 
         function renderCurrentCard(direction = null) {
             if (dueCards.length === 0) return;
+            window.speechSynthesis.cancel(); // Pára de falar se mudar de card
+
             const card = dueCards[currentIndex];
             const currentSub = getSubjectName(card.subjectId);
 
-            // Injeta o HTML processado
             DOM.questionEl.innerHTML = processContent(card.question);
             DOM.answerEl.innerHTML = processContent(card.answer);
             
-            // Aplica Matemática e Código nos elementos
             setTimeout(() => {
                 applyMathAndCode('card-question');
                 applyMathAndCode('card-answer');
             }, 10);
 
             DOM.subjectBadgeEl.textContent = currentSub;
-            
-            if(pomoMode === 'focus') {
-                DOM.pomoSubjectLabel.textContent = currentSub;
-            }
 
             if (direction === 'next') {
                 DOM.card.classList.add('slide-in-right');
@@ -1088,7 +1201,7 @@
                 if (cardsForSub.length === 0) return;
 
                 let html = `
-                    <div class="subject-group">
+                    <div class="subject-group glass-panel">
                         <h3 class="subject-group-title">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
                             ${sub.name} <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: normal;">(${cardsForSub.length} cards)</span>
@@ -1097,19 +1210,25 @@
                 `;
 
                 cardsForSub.forEach(card => {
+                    const cleanQ = processContent(card.question);
+                    const cleanA = processContent(card.answer);
+                    
                     html += `
                         <div class="list-card">
-                            <div class="list-card-q list-card-content" id="list-q-${card.id}">
+                            <div class="list-card-q list-card-content">
                                 <span style="color: var(--accent-color); font-weight: bold; margin-right: 5px;">P:</span> 
-                                <div style="display:inline;">${processContent(card.question)}</div>
+                                <div style="display:inline;" id="list-q-${card.id}">${cleanQ}</div>
                             </div>
                             <div class="list-card-a-wrapper">
-                                <div class="list-card-a list-card-content" id="list-a-${card.id}">
+                                <div class="list-card-a list-card-content">
                                     <strong style="margin-right: 5px;">R:</strong> 
-                                    <div style="display:inline;">${processContent(card.answer)}</div>
+                                    <div style="display:inline;" id="list-a-${card.id}">${cleanA}</div>
                                 </div>
                             </div>
                             <div class="list-card-actions">
+                                <button class="card-action-btn" title="Ouvir" onclick="window.speakText(document.getElementById('list-q-${card.id}').innerHTML + ' . Resposta. ' + document.getElementById('list-a-${card.id}').innerHTML, event)">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                                </button>
                                 <button class="card-action-btn" title="Editar" onclick="window.openEditModalGlobal('${card.id}')">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                                 </button>
@@ -1126,11 +1245,7 @@
             });
 
             DOM.allCardsContainer.innerHTML = containerHtml;
-
-            // Aplica Matemática e Código nas listas após renderizar
-            setTimeout(() => {
-                applyMathAndCode('all-cards-container');
-            }, 50);
+            setTimeout(() => applyMathAndCode('all-cards-container'), 50);
         }
 
         function updateDashboard() {
@@ -1147,13 +1262,16 @@
             if (document.getElementById('progressChart')) {
                 const ctx = document.getElementById('progressChart').getContext('2d');
                 if (!progressChart) {
+                    // Pega a cor do texto baseada no tema
+                    const textColor = getComputedStyle(document.body).getPropertyValue('--text-secondary');
+                    
                     progressChart = new Chart(ctx, {
                         type: 'doughnut',
                         data: {
                             labels: ['Aprender Hoje', 'Aprendidos'],
                             datasets: [{ data: [toReviewCount, learnedCount], backgroundColor: ['#f59e0b', '#10b981'], borderWidth: 0, hoverOffset: 4 }]
                         },
-                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#475569', font: {family: 'Inter'} } } } }
+                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: textColor, font: {family: 'Inter'} } } } }
                     });
                 } else {
                     progressChart.data.datasets[0].data = [toReviewCount, learnedCount];
@@ -1273,16 +1391,13 @@
             } catch (error) { return false; }
         }
 
-        // Funções Globais para a Aba de Lista poder chamar
         window.deleteCardGlobal = async function(id) {
             if(confirm("Tem certeza que deseja excluir este flashcard definitivamente?")) {
                 try {
                     await deleteDoc(doc(db, "flashcards", id));
                     allCards = allCards.filter(c => c.id !== id);
                     updateUI();
-                } catch(e) {
-                    alert("Erro ao excluir. Tente novamente.");
-                }
+                } catch(e) { alert("Erro ao excluir. Tente novamente."); }
             }
         };
 
@@ -1332,6 +1447,32 @@
         }
 
         function setupEventListeners() {
+            // Theme Toggle
+            DOM.themeToggle.onclick = () => {
+                const currentTheme = document.body.getAttribute('data-theme');
+                if (currentTheme === 'dark') {
+                    document.body.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'light');
+                    DOM.iconSun.classList.add('hidden');
+                    DOM.iconMoon.classList.remove('hidden');
+                } else {
+                    document.body.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                    DOM.iconSun.classList.remove('hidden');
+                    DOM.iconMoon.classList.add('hidden');
+                }
+                if (DOM.viewDashboard.classList.contains('active')) {
+                    if (progressChart) progressChart.destroy();
+                    if (timeChart) timeChart.destroy();
+                    progressChart = null; timeChart = null;
+                    updateDashboard();
+                }
+            };
+
+            // Voice Buttons (Main Study View)
+            DOM.btnVoiceQ.onclick = (e) => window.speakText(DOM.questionEl.innerHTML, e);
+            DOM.btnVoiceA.onclick = (e) => window.speakText(DOM.answerEl.innerHTML, e);
+
             // Auth
             DOM.tabLogin.onclick = () => { isLoginMode = true; DOM.tabLogin.classList.add('active'); DOM.tabRegister.classList.remove('active'); DOM.authSubmitBtn.textContent = 'Entrar'; };
             DOM.tabRegister.onclick = () => { isLoginMode = false; DOM.tabRegister.classList.add('active'); DOM.tabLogin.classList.remove('active'); DOM.authSubmitBtn.textContent = 'Criar Conta'; };
@@ -1343,17 +1484,15 @@
                     if (isLoginMode) await signInWithEmailAndPassword(auth, DOM.authEmail.value, DOM.authPassword.value);
                     else await createUserWithEmailAndPassword(auth, DOM.authEmail.value, DOM.authPassword.value);
                 } catch (error) { 
-                    console.error(error);
                     DOM.authError.textContent = 'Erro de Autenticação. Verifique os dados e a senha.'; 
-                } 
-                finally { 
+                } finally { 
                     DOM.authSubmitBtn.disabled = false; 
                 }
             };
             
             DOM.logoutBtn.onclick = () => { syncTimeToFirebase(); signOut(auth); }
 
-            // Widget Retrátil
+            // Widget Pomodoro (Esquerda Flutuante)
             DOM.unifiedWidget.addEventListener('click', (e) => {
                 if(e.target.closest('.widget-body')) return;
                 DOM.unifiedWidget.classList.toggle('expanded');
@@ -1364,7 +1503,6 @@
                 }
             });
 
-            // Widget Controles
             DOM.btnPomoPlay.onclick = startTimer;
             DOM.btnPomoPause.onclick = pauseTimer;
             DOM.btnPomoReset.onclick = () => { pauseTimer(); switchPomoMode(pomoMode); };
@@ -1375,6 +1513,18 @@
             DOM.musicPause.onclick = () => { DOM.bgAudio.pause(); DOM.musicPause.classList.add('hidden'); DOM.musicPlay.classList.remove('hidden'); };
             DOM.musicTheme.onchange = (e) => { const isPlaying = !DOM.bgAudio.paused; DOM.bgAudio.src = AUDIO_TRACKS[e.target.value]; if (isPlaying) DOM.bgAudio.play(); };
             DOM.musicVolume.oninput = (e) => { DOM.bgAudio.volume = e.target.value; };
+
+            // Sync de Mudança de Matéria entre Header e Pomodoro
+            const handleFilterChange = (val) => {
+                currentFilter = val; 
+                DOM.studySubjectFilter.value = val;
+                DOM.pomoSubjectSelect.value = val;
+                currentIndex = 0; 
+                updateUI();
+            };
+            DOM.studySubjectFilter.addEventListener('change', (e) => handleFilterChange(e.target.value));
+            DOM.pomoSubjectSelect.addEventListener('change', (e) => handleFilterChange(e.target.value));
+
 
             // Tabs
             DOM.tabStudy.addEventListener('click', () => {
@@ -1401,8 +1551,11 @@
                 updateDashboard();
             });
 
-            DOM.studySubjectFilter.addEventListener('change', (e) => { currentFilter = e.target.value; currentIndex = 0; updateUI(); });
-            DOM.card.addEventListener('click', toggleFlip);
+            DOM.card.addEventListener('click', (e) => {
+                // Não vira o card se clicar no botão de voz ou botões de ação
+                if(e.target.closest('.voice-btn') || e.target.closest('.card-action-btn')) return;
+                toggleFlip();
+            });
 
             DOM.btnEditCard.addEventListener('click', (e) => { e.stopPropagation(); window.openEditModalGlobal(dueCards[currentIndex].id); });
             DOM.btnDeleteCard.addEventListener('click', (e) => { e.stopPropagation(); window.deleteCardGlobal(dueCards[currentIndex].id); });
