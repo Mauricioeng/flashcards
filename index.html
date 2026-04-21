@@ -746,10 +746,7 @@
     </div>
 
     <script type="module">
-        // ==========================================
-        // CHAVE DA API DO GEMINI
-        // ==========================================
-        const GEMINI_API_KEY = "AIzaSyD5CwRLQlllY2gU_f2gQx7pNz6FXApEg3E";
+     
         
         // ==========================================
         // FIREBASE CONFIGURATION E IMPORTS
@@ -757,7 +754,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, query, where, doc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-        import { GoogleGenAI } from "https://esm.sh/@google/genai";
+        
 
         const firebaseConfig = {
             apiKey: "AIzaSyDbUU7pBaPzNzG_IOgGvxiCg5zUX_H-udU",
@@ -1360,49 +1357,117 @@
         // ==========================================
         // IA E EVENTOS
         // ==========================================
+        // ==========================================
+        // IA E EVENTOS (COMUNICAÇÃO COM SEU GOOGLE APPS SCRIPT)
+        // ==========================================
         async function getAITutorAdvice() {
-            if (!GEMINI_API_KEY || GEMINI_API_KEY.includes("SUA_CHAVE_AQUI")) { alert("Chave do Gemini ausente no código."); return; }
-            DOM.btnTutor.classList.add('is-loading'); DOM.btnTutor.disabled = true; DOM.tutorOutput.classList.remove('hidden'); DOM.tutorText.textContent = "";
+            DOM.btnTutor.classList.add('is-loading'); 
+            DOM.btnTutor.disabled = true; 
+            DOM.tutorOutput.classList.remove('hidden'); 
+            DOM.tutorText.textContent = "O Tutor está analisando suas dificuldades...";
 
             const hardCards = allCards.filter(c => c.mistakes > 0).sort((a,b) => b.mistakes - a.mistakes).slice(0, 5);
             const cardListText = hardCards.map(c => `- Pergunta: ${c.question}\n  Resposta correta: ${c.answer}`).join('\n');
-            const prompt = `Atue como um tutor de estudos. O aluno tem tido dificuldade nos seguintes tópicos:
-            ${cardListText}
-            Forneça uma análise rápida e encorajadora do porquê esses conceitos costumam ser difíceis. Depois, sugira estratégias de estudo (como analogias com sistemas computacionais, IoT ou programação lógica) para ajudar na memorização destes itens específicos. Seja direto e não muito longo.`;
 
             try {
-                const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
-                const responseStream = await ai.models.generateContentStream({ model: "gemini-2.5-flash", contents: prompt });
-                let fullText = "";
-                for await (const chunk of responseStream) { fullText += chunk.text; DOM.tutorText.textContent = fullText; }
+                // Chama o seu backend no Google Apps Script
+                const response = await fetch(GAS_URL, {
+                    method: "POST",
+                    body: JSON.stringify({ acao: "tutor", cards_dificeis: cardListText }),
+                    headers: { "Content-Type": "text/plain;charset=utf-8" }
+                });
+
+                const data = await response.json();
+                if (!data.sucesso) throw new Error(data.erro);
+                
+                DOM.tutorText.textContent = data.texto;
+
             } catch (e) {
-                DOM.tutorText.textContent = "Houve um problema ao processar o conselho da IA. Tente novamente mais tarde.";
-            } finally { DOM.btnTutor.classList.remove('is-loading'); DOM.btnTutor.disabled = false; }
+                DOM.tutorText.textContent = "Houve um problema de conexão com o servidor. Tente novamente mais tarde.";
+            } finally { 
+                DOM.btnTutor.classList.remove('is-loading'); 
+                DOM.btnTutor.disabled = false; 
+            }
         }
 
         async function generateFlashcardsWithAI(topic, subjectId) {
-            if (!GEMINI_API_KEY || GEMINI_API_KEY.includes("SUA_CHAVE_AQUI")) { DOM.geminiWarning.classList.remove('hidden'); throw new Error("Sem Chave Gemini"); }
             DOM.geminiWarning.classList.add('hidden');
 
-            const prompt = `Gere exatamente 3 flashcards educativos sobre o tópico: "${topic}". Responda APENAS um array JSON válido. Use as propriedades "question" e "answer". Exemplo: [{"question": "X?", "answer": "Y"}]`;
             try {
-                const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
-                DOM.aiStreamingOutput.classList.remove('hidden'); DOM.aiStreamingText.textContent = "";
-                const responseStream = await ai.models.generateContentStream({ model: "gemini-2.5-flash", contents: prompt });
-                let fullText = "";
-                for await (const chunk of responseStream) { fullText += chunk.text; DOM.aiStreamingText.textContent = fullText; }
+                DOM.aiStreamingOutput.classList.remove('hidden'); 
+                DOM.aiStreamingText.textContent = "A IA está processando seus cards no servidor...";
 
-                let jsonStr = fullText.trim();
+                // Chama o seu backend no Google Apps Script
+                const response = await fetch(GAS_URL, {
+                    method: "POST",
+                    body: JSON.stringify({ acao: "gerar_cards", topico: topic }),
+                    headers: { "Content-Type": "text/plain;charset=utf-8" }
+                });
+
+                const data = await response.json();
+                if (!data.sucesso) throw new Error(data.erro);
+
+                let jsonStr = data.texto.trim();
                 if (jsonStr.startsWith("```json")) jsonStr = jsonStr.substring(7);
                 if (jsonStr.startsWith("```")) jsonStr = jsonStr.substring(3);
                 if (jsonStr.endsWith("```")) jsonStr = jsonStr.substring(0, jsonStr.length - 3);
 
                 const generatedCards = JSON.parse(jsonStr.trim());
-                for (const card of generatedCards.reverse()) await createCard(subjectId, card.question, card.answer);
+                for (const card of generatedCards.reverse()) {
+                    await createCard(subjectId, card.question, card.answer);
+                }
+                
                 DOM.aiStreamingOutput.classList.add('hidden');
                 return true;
-            } catch (error) { DOM.aiStreamingOutput.classList.add('hidden'); return false; }
+                
+            } catch (error) { 
+                console.error(error);
+                DOM.aiStreamingText.textContent = "Erro ao gerar cards. Tente novamente.";
+                return false; 
+            }
         }
+    // Cole aqui a URL do seu Google Apps Script recém-criado
+   const GAS_URL = "https://script.google.com/macros/s/AKfycbwJoyD9XIe_u8lduYHz1xV42G4JWSgiNqHZlIdianH5NbJRnbcpqxKxQCirT8hF-64F/exec";
+
+    try {
+        DOM.aiStreamingOutput.classList.remove('hidden'); 
+        DOM.aiStreamingText.textContent = "A IA está processando seus cards no servidor...";
+
+        // Manda o tópico para o GAS
+        const response = await fetch(GAS_URL, {
+            method: "POST",
+            body: JSON.stringify({ topic: topic }),
+            headers: { "Content-Type": "text/plain;charset=utf-8" }
+        });
+
+        const data = await response.json();
+
+        if (!data.sucesso) {
+            throw new Error(data.erro);
+        }
+
+        // Limpa o texto da resposta (tira as crases do markdown do JSON)
+        let jsonStr = data.texto.trim();
+        if (jsonStr.startsWith("```json")) jsonStr = jsonStr.substring(7);
+        if (jsonStr.startsWith("```")) jsonStr = jsonStr.substring(3);
+        if (jsonStr.endsWith("```")) jsonStr = jsonStr.substring(0, jsonStr.length - 3);
+
+        const generatedCards = JSON.parse(jsonStr.trim());
+        
+        // Cria os cards no banco de dados do Firebase
+        for (const card of generatedCards.reverse()) {
+            await createCard(subjectId, card.question, card.answer);
+        }
+        
+        DOM.aiStreamingOutput.classList.add('hidden');
+        return true;
+        
+    } catch (error) { 
+        console.error(error);
+        DOM.aiStreamingText.textContent = "Erro ao gerar cards. Tente novamente.";
+        return false; 
+    }
+}
 
         function setupEventListeners() {
             // Auth
