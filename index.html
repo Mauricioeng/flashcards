@@ -89,7 +89,10 @@
         *:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 2px; }
 
         body { background: var(--bg-gradient); color: var(--text-primary); min-height: 100vh; display: flex; justify-content: center; overflow-x: hidden; position: relative; line-height: 1.6; }
-
+           /* --- CLASSE GLOBAL DE OCULTAÇÃO --- */
+        .hidden {
+         display: none !important;
+        }
         /* EFEITOS BACKGROUND */
         body::before, body::after { content: ''; position: fixed; border-radius: 50%; filter: blur(120px); z-index: -2; opacity: 0.4; pointer-events: none; }
         body::before { top: -10%; left: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, var(--accent-color) 0%, transparent 60%); animation: float 30s infinite alternate ease-in-out; }
@@ -290,11 +293,18 @@
         .diff-card-q { font-size: 1rem; font-weight: 500; color: var(--text-primary); flex: 1; margin-right: 1.5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .diff-badge { background: var(--danger-light); color: var(--danger); font-size: 0.85rem; font-weight: 600; padding: 0.4rem 0.8rem; border-radius: 99px; white-space: nowrap; }
 
-        /* --- ABA TODOS OS CARDS --- */
-        .all-cards-wrapper { display: flex; flex-direction: column; gap: 2rem; padding-bottom: 2rem; }
-        .subject-group { padding: 1.5rem; }
-        .subject-group-title { font-size: 1.2rem; color: var(--accent-color); font-weight: 700; margin-bottom: 1rem; border-bottom: 2px solid var(--glass-border); padding-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem; }
-        .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+        /* --- ABA TODOS OS CARDS (ACORDEÃO MINIMIZADO) --- */
+        .all-cards-wrapper { display: flex; flex-direction: column; gap: 1rem; padding-bottom: 2rem; }
+        .subject-group { padding: 0; overflow: hidden; }
+        .subject-group-title { padding: 1.5rem; cursor: pointer; user-select: none; font-size: 1.2rem; color: var(--accent-color); font-weight: 700; margin: 0; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; background: var(--bg-base); transition: background 0.3s; }
+        .subject-group-title:hover { background: rgba(0,0,0,0.02); }
+        [data-theme="dark"] .subject-group-title:hover { background: rgba(255,255,255,0.02); }
+        .subject-group-title .chevron { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: var(--text-muted); }
+        .subject-group-title.collapsed .chevron { transform: rotate(-90deg); }
+        
+        .cards-grid { padding: 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; border-top: 1px solid var(--glass-border); }
+        .cards-grid.hidden { display: none; padding: 0; border: none; }
+        
         .list-card { background: var(--bg-base); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1.2rem; display: flex; flex-direction: column; gap: 0.8rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .list-card:hover { transform: translateY(-3px); border-color: var(--accent-color); }
         .list-card-content { font-size: 0.95rem; line-height: 1.5; color: var(--text-primary); overflow-wrap: break-word; }
@@ -316,8 +326,9 @@
         .close-btn:hover { color: var(--danger); background: var(--danger-light); transform: rotate(90deg); }
 
         /* NOVA BARRA DE FORMATAÇÃO E ADIÇÃO INLINE */
-        .format-toolbar { display: flex; gap: 4px; margin-bottom: 0.5rem; background: rgba(0,0,0,0.03); padding: 4px; border-radius: 8px; border: 1px solid var(--glass-border); }
+        .format-toolbar { display: flex; gap: 4px; margin-bottom: 0.5rem; background: rgba(0,0,0,0.03); padding: 4px; border-radius: 8px; border: 1px solid var(--glass-border); animation: fadeIn 0.2s ease;}
         [data-theme="dark"] .format-toolbar { background: rgba(255,255,255,0.03); }
+        .format-toolbar.hidden { display: none; }
         .format-btn { background: transparent; border: none; color: var(--text-secondary); cursor: pointer; border-radius: 6px; padding: 4px 8px; font-size: 0.9rem; font-weight: 600; transition: var(--transition); display:flex; align-items:center; justify-content:center; }
         .format-btn:hover { background: var(--bg-base); color: var(--accent-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
         
@@ -337,7 +348,6 @@
         
         .submit-btn { width: 100%; margin-top: 0.5rem; padding: 1rem; font-size: 1.05rem; font-weight: 600; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: all 0.3s; }
 
-        .hidden { display: none !important; }
         .slide-in-right { animation: slideInR 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         .slide-in-left { animation: slideInL 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         @keyframes slideInR { from { transform: translateX(50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
@@ -371,6 +381,7 @@
             .charts-row { grid-template-columns: 1fr; }
             .modal-content { padding: 1.5rem; }
             .list-card-actions { flex-wrap: wrap; }
+            .subject-group-title { font-size: 1rem; padding: 1rem;}
         }
 
         @media (max-width: 480px) {
@@ -386,6 +397,8 @@
         .step-item { display: flex; align-items: center; gap: 1rem; background: var(--bg-base); padding: 1rem; border-radius: 12px; border: 1px solid var(--glass-border); }
         .step-number { background: var(--accent-color); color: white; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
         .step-text { font-size: 0.95rem; color: var(--text-primary); font-weight: 500; }
+        
+        
     </style>
 </head>
 <body>
@@ -732,8 +745,11 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="question">Pergunta</label>
-                        <div class="format-toolbar">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.6rem;">
+                            <label for="question" style="margin-bottom:0;">Pergunta</label>
+                            <button type="button" style="background:none; border:none; color:var(--accent-color); cursor:pointer; font-size:0.85rem; font-weight:600;" onclick="document.getElementById('toolbar-q').classList.toggle('hidden')">🪄 Mostrar Formatação</button>
+                        </div>
+                        <div class="format-toolbar hidden" id="toolbar-q">
                             <button type="button" class="format-btn" onclick="insertFormat('question', '**', '**')" title="Negrito"><b>B</b></button>
                             <button type="button" class="format-btn" onclick="insertFormat('question', '*', '*')" title="Itálico"><i>I</i></button>
                             <button type="button" class="format-btn" onclick="insertFormat('question', '$$ ', ' $$')" title="Fórmula Matemática KaTeX">∑</button>
@@ -744,8 +760,11 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="answer">Resposta</label>
-                        <div class="format-toolbar">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.6rem;">
+                            <label for="answer" style="margin-bottom:0;">Resposta</label>
+                            <button type="button" style="background:none; border:none; color:var(--accent-color); cursor:pointer; font-size:0.85rem; font-weight:600;" onclick="document.getElementById('toolbar-a').classList.toggle('hidden')">🪄 Mostrar Formatação</button>
+                        </div>
+                        <div class="format-toolbar hidden" id="toolbar-a">
                             <button type="button" class="format-btn" onclick="insertFormat('answer', '**', '**')" title="Negrito"><b>B</b></button>
                             <button type="button" class="format-btn" onclick="insertFormat('answer', '*', '*')" title="Itálico"><i>I</i></button>
                             <button type="button" class="format-btn" onclick="insertFormat('answer', '$$ ', ' $$')" title="Fórmula Matemática KaTeX">∑</button>
@@ -929,33 +948,28 @@
             classical: "http://stream.srg-ssr.ch/m/rsc_de/mp3_128" 
         };
 
-        // --- GERAÇÃO DAS ANIMAÇÕES DE FUNDO ---
         function createBackgroundAnimations() {
             const container = document.getElementById('bg-animations');
             const svgs = [
-                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>', // Livro
-                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>', // Foguete
-                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="22" x2="14" y2="22"></line><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg>' // Lâmpada
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>',
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>',
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="22" x2="14" y2="22"></line><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg>'
             ];
 
             for (let i = 0; i < 15; i++) {
                 const el = document.createElement('div');
                 el.className = 'floating-icon';
                 el.innerHTML = svgs[Math.floor(Math.random() * svgs.length)];
-                
-                // Posições e durações aleatórias
                 el.style.left = `${Math.random() * 100}vw`;
                 const size = 30 + Math.random() * 40;
                 el.style.width = `${size}px`;
                 el.style.height = `${size}px`;
                 el.style.animationDuration = `${25 + Math.random() * 30}s`;
                 el.style.animationDelay = `-${Math.random() * 30}s`;
-
                 container.appendChild(el);
             }
         }
 
-        // --- BARRA DE FORMATAÇÃO INLINE ---
         window.insertFormat = function(elementId, prefix, suffix) {
             const el = document.getElementById(elementId);
             const start = el.selectionStart;
@@ -967,11 +981,9 @@
             el.focus();
             
             if(selectedText.length === 0) {
-                // Posiciona o cursor no meio se nada estava selecionado
                 el.selectionStart = start + prefix.length;
                 el.selectionEnd = start + prefix.length;
             } else {
-                // Mantém selecionado
                 el.selectionStart = start;
                 el.selectionEnd = end + prefix.length + suffix.length;
             }
@@ -1127,33 +1139,38 @@
             allCards = [];
             publicCards = [];
             
-            const qPersonal = query(collection(db, "flashcards"), where("userId", "==", currentUser.uid));
-            const qPublic = query(collection(db, "flashcards"), where("userEmail", "==", "mauriciomts99@gmail.com"));
-            
-            const [snapPersonal, snapPublic] = await Promise.all([getDocs(qPersonal), getDocs(qPublic)]);
-
-            const processSnap = (snap, isPublicContext) => {
-                snap.forEach(doc => {
+            try {
+                const qPersonal = query(collection(db, "flashcards"), where("userId", "==", currentUser.uid));
+                const snapPersonal = await getDocs(qPersonal);
+                snapPersonal.forEach(doc => {
                     let data = doc.data();
-                    if(isPublicContext && currentUser.email === "mauriciomts99@gmail.com") return;
-
                     if (data.interval === undefined) { 
                         data.interval = 0; data.repetition = 0; data.easeFactor = 2.5; data.nextReviewDate = new Date().toISOString();
                     }
                     if (data.mistakes === undefined) data.mistakes = 0;
-                    
-                    const cardObj = { id: doc.id, ...data, isPublic: isPublicContext };
-                    
-                    if(isPublicContext) publicCards.push(cardObj);
-                    else allCards.push(cardObj);
+                    allCards.push({ id: doc.id, ...data, isPublic: false });
                 });
-            };
+            } catch(e) {
+                console.error("Erro ao carregar cards pessoais:", e);
+            }
 
-            processSnap(snapPersonal, false);
-            processSnap(snapPublic, true);
+            try {
+                const qPublic = query(collection(db, "flashcards"), where("userEmail", "==", "mauriciomts99@gmail.com"));
+                const snapPublic = await getDocs(qPublic);
+                snapPublic.forEach(doc => {
+                    let data = doc.data();
+                    if (data.interval === undefined) { 
+                        data.interval = 0; data.repetition = 0; data.easeFactor = 2.5; data.nextReviewDate = new Date().toISOString();
+                    }
+                    if (data.mistakes === undefined) data.mistakes = 0;
+                    publicCards.push({ id: doc.id, ...data, isPublic: true });
+                });
+            } catch(e) {
+                console.error("Erro ao carregar cards da comunidade:", e);
+            }
             
-            allCards = [...allCards, ...publicCards];
             allCards.sort((a, b) => b.createdAt?.toMillis() - a.createdAt?.toMillis());
+            publicCards.sort((a, b) => b.createdAt?.toMillis() - a.createdAt?.toMillis());
             
             updateUI();
         }
@@ -1369,48 +1386,73 @@
                 return;
             }
 
-            let containerHtml = `<div class="cards-grid" style="padding: 1.5rem;">`;
-
-            cardsList.forEach(card => {
-                const cleanQ = processContent(card.question);
-                const cleanA = processContent(card.answer);
+            const grouped = {};
+            cardsList.forEach(c => {
+                // Tenta pegar o nome da matéria salvo no card, senão busca pelo ID, senão chama de "Geral"
+                const sName = c.subjectName || getSubjectName(c.subjectId) || "Geral";
                 
-                const hideActions = card.isPublic && currentUser.email !== "mauriciomts99@gmail.com" ? "hidden" : "";
-                
-                containerHtml += `
-                    <div class="list-card">
-                        <div class="list-card-q list-card-content">
-                            <span style="color: var(--accent-color); font-weight: bold; margin-right: 5px;">P:</span> 
-                            <div style="display:inline;" id="list-q-${card.id}">${cleanQ}</div>
-                        </div>
-                        <div class="list-card-a-wrapper">
-                            <div class="list-card-a list-card-content">
-                                <strong style="margin-right: 5px;">R:</strong> 
-                                <div style="display:inline;" id="list-a-${card.id}">${cleanA}</div>
-                            </div>
-                        </div>
-                        <div class="list-card-actions">
-                            <button class="card-action-btn" title="Ouvir" onclick="window.speakText(document.getElementById('list-q-${card.id}').innerHTML + ' . Resposta. ' + document.getElementById('list-a-${card.id}').innerHTML, event)">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-                            </button>
-                            <button class="card-action-btn ${hideActions}" title="Editar" onclick="window.openEditModalGlobal('${card.id}')">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                            </button>
-                            <button class="card-action-btn del ${hideActions}" title="Excluir" onclick="window.deleteCardGlobal('${card.id}')">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                            </button>
-                        </div>
-                    </div>
-                `;
+                if(!grouped[sName]) grouped[sName] = [];
+                grouped[sName].push(c);
             });
 
-            containerHtml += `</div>`;
+            let containerHtml = "";
+
+            for(const subName in grouped) {
+                const subCards = grouped[subName];
+
+                containerHtml += `
+                <div class="subject-group glass-panel" style="margin-bottom: 1rem;">
+                    <h3 class="subject-group-title collapsed" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('hidden')">
+                        <span style="display:flex; align-items:center; gap:0.5rem;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                            ${subName} <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: normal;">(${subCards.length} cards)</span>
+                        </span>
+                        <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </h3>
+                    <div class="cards-grid hidden">
+                `;
+
+                subCards.forEach(card => {
+                    const cleanQ = processContent(card.question);
+                    const cleanA = processContent(card.answer);
+                    const hideActions = card.isPublic && currentUser.email !== "mauriciomts99@gmail.com" ? "hidden" : "";
+                    
+                    containerHtml += `
+                        <div class="list-card">
+                            <div class="list-card-q list-card-content">
+                                <span style="color: var(--accent-color); font-weight: bold; margin-right: 5px;">P:</span> 
+                                <div style="display:inline;" id="list-q-${card.id}">${cleanQ}</div>
+                            </div>
+                            <div class="list-card-a-wrapper">
+                                <div class="list-card-a list-card-content">
+                                    <strong style="margin-right: 5px;">R:</strong> 
+                                    <div style="display:inline;" id="list-a-${card.id}">${cleanA}</div>
+                                </div>
+                            </div>
+                            <div class="list-card-actions">
+                                <button class="card-action-btn" title="Ouvir" onclick="window.speakText(document.getElementById('list-q-${card.id}').innerHTML + ' . Resposta. ' + document.getElementById('list-a-${card.id}').innerHTML, event)">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                                </button>
+                                <button class="card-action-btn ${hideActions}" title="Editar" onclick="window.openEditModalGlobal('${card.id}')">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                </button>
+                                <button class="card-action-btn del ${hideActions}" title="Excluir" onclick="window.deleteCardGlobal('${card.id}')">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                containerHtml += `</div></div>`;
+            }
+
             container.innerHTML = containerHtml;
             setTimeout(() => applyMathAndCode(container.id), 50);
         }
 
         function renderAllCardsView() {
-            buildCardListHTML(allCards.filter(c => !c.isPublic || currentUser.email === "mauriciomts99@gmail.com"), DOM.allCardsContainer);
+            buildCardListHTML(allCards, DOM.allCardsContainer); 
         }
 
         function renderCommunityCardsView() {
@@ -1419,9 +1461,9 @@
 
         function updateDashboard() {
             const now = new Date().toISOString();
-            const personalCards = allCards.filter(c => !c.isPublic || currentUser.email === "mauriciomts99@gmail.com");
-            const toReviewCount = personalCards.filter(c => !c.nextReviewDate || c.nextReviewDate <= now).length;
-            const learnedCount = personalCards.filter(c => c.interval > 0).length;
+            
+            const toReviewCount = allCards.filter(c => !c.nextReviewDate || c.nextReviewDate <= now).length;
+            const learnedCount = allCards.filter(c => c.interval > 0).length;
             
             if(DOM.statToReview) DOM.statToReview.textContent = toReviewCount;
             if(DOM.statLearned) DOM.statLearned.textContent = learnedCount;
@@ -1465,7 +1507,7 @@
                 }
             }
 
-            const diffCards = personalCards.filter(c => c.mistakes > 0).sort((a, b) => b.mistakes - a.mistakes).slice(0, 5);
+            const diffCards = allCards.filter(c => c.mistakes > 0).sort((a, b) => b.mistakes - a.mistakes).slice(0, 5);
             DOM.diffList.innerHTML = '';
             if(diffCards.length === 0) {
                 DOM.diffList.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 1rem;">Você ainda não registrou dificuldades. Continue estudando!</p>';
@@ -1523,25 +1565,30 @@
             card.nextReviewDate = nextDate.toISOString();
             
             try {
-                if(!card.isPublic || currentUser.email === "mauriciomts99@gmail.com") {
-                    const cardRef = doc(db, "flashcards", card.id);
-                    await updateDoc(cardRef, {
-                        interval: card.interval,
-                        repetition: card.repetition,
-                        easeFactor: card.easeFactor,
-                        nextReviewDate: card.nextReviewDate,
-                        mistakes: card.mistakes
-                    });
-                }
+                const cardRef = doc(db, "flashcards", card.id);
+                await updateDoc(cardRef, {
+                    interval: card.interval,
+                    repetition: card.repetition,
+                    easeFactor: card.easeFactor,
+                    nextReviewDate: card.nextReviewDate,
+                    mistakes: card.mistakes
+                });
             } catch (e) { console.error("Erro ao atualizar no Firebase: ", e); }
             updateUI();
         }
 
         async function createCard(subjectId, question, answer) {
+            // Busca o nome da matéria para salvar no card
+            const sub = subjects.find(s => s.id === subjectId);
+            const subjectName = sub ? sub.name : "Geral";
+
             const newCard = {
                 userId: currentUser.uid, 
                 userEmail: currentUser.email, 
-                subjectId, question, answer,
+                subjectId, 
+                subjectName, // Salvando o nome da matéria aqui!
+                question, 
+                answer,
                 interval: 0, repetition: 0, easeFactor: 2.5, mistakes: 0,
                 nextReviewDate: new Date().toISOString(), createdAt: serverTimestamp()
             };
@@ -1550,6 +1597,11 @@
                 const docRef = await addDoc(collection(db, "flashcards"), newCard);
                 newCard.id = docRef.id;
                 allCards.unshift(newCard);
+                
+                if(currentUser.email === "mauriciomts99@gmail.com") {
+                    publicCards.unshift({...newCard, isPublic: true});
+                }
+                
                 updateUI();
                 return true;
             } catch (error) { return false; }
@@ -1567,8 +1619,10 @@
         };
 
         window.openEditModalGlobal = function(id) {
-            const card = allCards.find(c => c.id === id);
+            let card = allCards.find(c => c.id === id);
+            if(!card) card = publicCards.find(c => c.id === id);
             if(!card) return;
+            
             editingCardId = card.id;
             
             DOM.editSubjectSelect.value = card.subjectId || "";
@@ -1598,6 +1652,11 @@
                 const cardIndex = allCards.findIndex(c => c.id === editingCardId);
                 if (cardIndex !== -1) {
                     allCards[cardIndex] = { ...allCards[cardIndex], ...updatedData };
+                }
+                
+                const pubIndex = publicCards.findIndex(c => c.id === editingCardId);
+                if (pubIndex !== -1) {
+                    publicCards[pubIndex] = { ...publicCards[pubIndex], ...updatedData };
                 }
                 
                 DOM.editModal.classList.add('hidden');
