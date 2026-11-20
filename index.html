@@ -2,9 +2,9 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FlashLearn Pro - Domine Qualquer Assunto</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlashLearn Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -22,402 +22,413 @@
 
     <style>
         :root {
-            --bg-base: #f4f4f9; 
-            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-            --glass-bg: rgba(255, 255, 255, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.5);
-            --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
+            --bg: #0B0C0F;
+            --surface: #121317;
+            --surface-2: #191B20;
+            --surface-3: #20232A;
+            --border: #24262C;
+            --border-strong: #30333B;
+            --text: #EAE8E2;
+            --text-2: #A7A9B1;
+            --muted: #5F626C;
 
-            --accent-color: #6d28d9; 
-            --accent-hover: #5b21b6;
-            --accent-glow: rgba(109, 40, 217, 0.2);
-            --accent-light: #ede9fe;
+            --accent: #C9A254;
+            --accent-2: #E2C078;
+            --accent-dim: rgba(201,162,84,.12);
+            --accent-glow: rgba(201,162,84,.28);
 
-            --text-primary: #1e293b; 
-            --text-secondary: #475569; 
-            --text-muted: #94a3b8;
+            --success: #7BAF94; --success-dim: rgba(123,175,148,.12);
+            --warning: #CE9D5C; --warning-dim: rgba(206,157,92,.12);
+            --danger:  #C4645C; --danger-dim:  rgba(196,100,92,.12);
+            --info:    #8A9CC4; --info-dim:    rgba(138,156,196,.12);
 
-            --card-bg-front: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
-            --card-bg-back: linear-gradient(145deg, #faf5ff 0%, #ffffff 100%);
+            --card-bg-front: linear-gradient(160deg, #15161A 0%, #101116 100%);
+            --card-bg-back:  linear-gradient(160deg, #17150F 0%, #121317 100%);
 
-            --success: #10b981; --success-light: #d1fae5;
-            --warning: #f59e0b; --warning-light: #fef3c7;
-            --danger:  #ef4444; --danger-light:  #fee2e2;
-            --info:    #3b82f6; --info-light:    #dbeafe;
-
-            --radius-md: 16px;
-            --radius-lg: 24px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius-sm: 8px;
+            --radius: 12px;
+            --radius-lg: 16px;
+            --transition: all .25s cubic-bezier(.4,0,.2,1);
         }
 
-        [data-theme="dark"] {
-            --bg-base: #0f172a; 
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            --glass-bg: rgba(30, 41, 59, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        [data-theme="light"] {
+            --bg: #F2F1EC;
+            --surface: #FFFFFF;
+            --surface-2: #F7F6F1;
+            --surface-3: #EFECE4;
+            --border: #E2E0D6;
+            --border-strong: #D2CFC2;
+            --text: #17181C;
+            --text-2: #4C4F57;
+            --muted: #8C8F99;
 
-            --accent-color: #8b5cf6; 
-            --accent-hover: #a78bfa;
-            --accent-glow: rgba(139, 92, 246, 0.3);
-            --accent-light: rgba(139, 92, 246, 0.15);
+            --accent: #96731E;
+            --accent-2: #7A5C15;
+            --accent-dim: rgba(150,115,30,.10);
+            --accent-glow: rgba(150,115,30,.22);
 
-            --text-primary: #f8fafc; 
-            --text-secondary: #cbd5e1; 
-            --text-muted: #64748b;
+            --success: #3E7D5D; --success-dim: rgba(62,125,93,.10);
+            --warning: #A4762A; --warning-dim: rgba(164,118,42,.10);
+            --danger:  #B04A42; --danger-dim:  rgba(176,74,66,.10);
+            --info:    #4A669E; --info-dim:    rgba(74,102,158,.10);
 
-            --card-bg-front: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
-            --card-bg-back: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
-
-            --success-light: rgba(16, 185, 129, 0.15);
-            --warning-light: rgba(245, 158, 11, 0.15);
-            --danger-light: rgba(239, 68, 68, 0.15);
-            --info-light: rgba(59, 130, 246, 0.15);
+            --card-bg-front: linear-gradient(160deg, #FFFFFF 0%, #F9F8F4 100%);
+            --card-bg-back:  linear-gradient(160deg, #FBF7EC 0%, #FFFFFF 100%);
         }
-
-        body, .glass-panel, .card__face, select, input, textarea, .list-card, .diff-card-item {
-            transition: background 0.4s ease, border-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
-        }
-
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        [data-theme="dark"] ::-webkit-scrollbar-thumb { background: #475569; }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
-        h1, h2, h3, .pomodoro-time, .stat-number { font-family: 'Outfit', sans-serif; }
-        *:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 2px; }
+        h1, h2, h3, .view-title, .logo h1 { font-family: 'Fraunces', serif; }
+        .pomodoro-time, .stat-number, .counter, .pomo-subject-select, .music-select, .diff-badge, .exame-badge, kbd { font-family: 'JetBrains Mono', monospace; }
+        *:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 10px; }
 
-        body { background: var(--bg-gradient); color: var(--text-primary); min-height: 100vh; display: flex; justify-content: center; overflow-x: hidden; position: relative; line-height: 1.6; }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; line-height: 1.6; transition: background .3s ease; }
         .hidden { display: none !important; }
 
-        body::before, body::after { content: ''; position: fixed; border-radius: 50%; filter: blur(120px); z-index: -2; opacity: 0.4; pointer-events: none; }
-        body::before { top: -10%; left: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, var(--accent-color) 0%, transparent 60%); animation: float 30s infinite alternate ease-in-out; }
-        body::after { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: radial-gradient(circle, #3b82f6 0%, transparent 60%); animation: float 25s infinite alternate ease-in-out reverse; }
-        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(50px, 50px) scale(1.1); } }
-
-        .bg-animations { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
-        .floating-icon { position: absolute; color: var(--accent-color); opacity: 0.05; animation: floatUp linear infinite; }
-        [data-theme="dark"] .floating-icon { opacity: 0.08; color: var(--text-muted); }
-        @keyframes floatUp {
-            0% { transform: translateY(110vh) rotate(0deg) scale(0.8); opacity: 0; }
-            10% { opacity: 0.06; }
-            90% { opacity: 0.06; }
-            100% { transform: translateY(-10vh) rotate(360deg) scale(1.2); opacity: 0; }
+        /* ============ SIDEBAR ============ */
+        .sidebar {
+            width: 238px; flex-shrink: 0; position: sticky; top: 0; height: 100vh;
+            display: flex; flex-direction: column; padding: 1.8rem 1rem 1.4rem;
+            border-right: 1px solid var(--border); background: var(--surface);
         }
+        .logo { display: flex; align-items: center; gap: 0.8rem; padding: 0 0.6rem 1.8rem; border-bottom: 1px solid var(--border); }
+        .logo-icon-bg { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: var(--accent-dim); border: 1px solid var(--border); border-radius: 10px; color: var(--accent); }
+        .logo h1 { font-size: 1.15rem; font-weight: 600; color: var(--text); letter-spacing: -.3px; }
+        .logo h1 span { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--accent); vertical-align: super; letter-spacing: 1px; }
 
-        .glass-panel { background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--glass-shadow); }
-        .app-container { width: 100%; max-width: 1000px; padding: 2rem 1.5rem; display: flex; flex-direction: column; gap: 2rem; z-index: 1; flex: 1;}
+        .nav-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 1.6rem 0.6rem 0.6rem; }
+        .app-nav { display: flex; flex-direction: column; gap: 2px; }
+        .nav-btn {
+            background: transparent; border: none; color: var(--text-2); font-size: 0.92rem; font-weight: 500;
+            cursor: pointer; padding: 0.65rem 0.8rem; border-radius: var(--radius-sm);
+            display: flex; align-items: center; gap: 0.7rem; transition: var(--transition); position: relative; text-align: left;
+        }
+        .nav-btn svg { opacity: .7; flex-shrink: 0; }
+        .nav-btn:hover { color: var(--text); background: var(--surface-2); }
+        .nav-btn:hover svg { opacity: 1; }
+        .nav-btn.active { color: var(--accent); background: var(--accent-dim); font-weight: 600; }
+        .nav-btn.active svg { opacity: 1; color: var(--accent); }
+        .nav-btn.active::before { content: ''; position: absolute; left: -1rem; top: 20%; height: 60%; width: 3px; background: var(--accent); border-radius: 0 3px 3px 0; }
 
-        #auth-view { display: flex; justify-content: center; align-items: center; min-height: 85vh; }
-        .auth-box { width: 100%; max-width: 420px; padding: 3rem 2.5rem; text-align: center; }
-        .auth-tabs { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid var(--glass-border); }
-        .auth-tab { flex: 1; background: none; border: none; color: var(--text-muted); font-size: 1.1rem; font-weight: 500; cursor: pointer; transition: var(--transition); padding-bottom: 0.8rem; position: relative; }
-        .auth-tab.active { color: var(--accent-color); font-weight: 600; }
-        .auth-tab.active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 3px; background: var(--accent-color); border-radius: 3px 3px 0 0; }
-        .auth-form { display: flex; flex-direction: column; gap: 1.5rem; text-align: left; }
-        .auth-error { color: var(--danger); font-size: 0.9rem; text-align: center; min-height: 20px; font-weight: 500; }
+        .sidebar-footer { margin-top: auto; display: flex; flex-direction: column; gap: 0.5rem; }
+        .user-chip { display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 0.6rem; border-radius: var(--radius-sm); }
+        .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-dim); border: 1px solid var(--border); color: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; font-family: 'Fraunces', serif; flex-shrink: 0; }
+        .user-email { font-size: 0.78rem; color: var(--text-2); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .sidebar-btns { display: flex; gap: 0.4rem; padding: 0 0.2rem; }
+        .icon-btn-mini { flex: 1; background: transparent; border: 1px solid var(--border); color: var(--text-2); border-radius: var(--radius-sm); padding: 0.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.8rem; transition: var(--transition); }
+        .icon-btn-mini:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+        .btn-logout:hover { color: var(--danger) !important; border-color: var(--danger) !important; background: var(--danger-dim) !important; }
 
-        header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1.5rem; flex-wrap: wrap; gap: 1.5rem; }
-        .logo { display: flex; align-items: center; gap: 1rem; }
-        .logo-icon-bg { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent-color), #8b5cf6); border-radius: 14px; box-shadow: 0 4px 15px var(--accent-glow); color: white; }
-        .logo h1 { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.5px; }
+        /* ============ LAYOUT ============ */
+        .app-container { flex: 1; max-width: 1220px; padding: 2.2rem 3rem 4rem; display: flex; flex-direction: column; min-width: 0; }
 
-        .header-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-        .user-profile { display: flex; align-items: center; gap: 0.8rem; margin-right: 0.5rem; padding-right: 1.5rem; border-right: 1px solid var(--glass-border); }
-        .user-email { font-size: 0.9rem; color: var(--text-secondary); font-weight: 500; display: none; } 
-        @media(min-width: 640px) { .user-email { display: block; } }
+        .glass-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.6rem; }
 
-        .nav-container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 0.5rem; }
-        .app-nav { display: inline-flex; gap: 0.5rem; background: var(--glass-bg); padding: 0.5rem; border-radius: var(--radius-md); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); }
-        .nav-btn { background: transparent; border: none; color: var(--text-secondary); font-size: 0.95rem; font-weight: 500; cursor: pointer; padding: 0.6rem 1.2rem; border-radius: 12px; transition: var(--transition); display: flex; align-items: center; gap: 0.6rem; }
-        .nav-btn:hover { color: var(--text-primary); background: rgba(255,255,255,0.1); }
-        .nav-btn.active { color: var(--accent-color); background: var(--bg-base); box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-weight: 600; border: 1px solid var(--glass-border); }
+        #auth-view { display: flex; justify-content: center; align-items: center; min-height: 85vh; margin-left: -238px; flex: 1; }
+        .auth-box { width: 100%; max-width: 400px; padding: 3rem 2.5rem; text-align: center; }
+        .auth-box .logo { border-bottom: none; justify-content: center; margin-bottom: 2.5rem; padding: 0; }
+        .auth-tagline { font-family: 'Fraunces', serif; font-style: italic; color: var(--muted); font-size: 0.95rem; margin: -1.8rem 0 2.2rem; }
+        .auth-tabs { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border); }
+        .auth-tab { flex: 1; background: none; border: none; color: var(--muted); font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: var(--transition); padding-bottom: 0.8rem; position: relative; }
+        .auth-tab.active { color: var(--accent); font-weight: 600; }
+        .auth-tab.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 2px; background: var(--accent); }
+        .auth-form { display: flex; flex-direction: column; gap: 1.2rem; text-align: left; }
+        .auth-error { color: var(--danger); font-size: 0.85rem; text-align: center; min-height: 18px; font-weight: 500; }
 
-        select { background: var(--bg-base); border: 1px solid var(--glass-border); border-radius: 12px; padding: 0.7rem 1.2rem; color: var(--text-primary); font-size: 0.95rem; font-weight: 500; outline: none; appearance: none; cursor: pointer; transition: var(--transition); min-width: 180px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        select:focus { border-color: var(--accent-color); box-shadow: 0 0 0 3px var(--accent-glow); }
-        [data-theme="dark"] select option { background: var(--bg-base); color: var(--text-primary); }
-        .subject-filter { display: flex; align-items: center; gap: 1rem; }
+        /* ============ TOPBAR ============ */
+        .topbar { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; margin-bottom: 1.8rem; flex-wrap: wrap; }
+        .topbar-left { display: flex; align-items: baseline; gap: 1.2rem; }
+        .view-title { font-size: 1.6rem; font-weight: 600; letter-spacing: -.5px; }
+        .shortcut-hint { display: flex; gap: 0.9rem; align-items: center; }
+        kbd { font-size: 0.62rem; background: var(--surface-2); border: 1px solid var(--border-strong); border-bottom-width: 2px; border-radius: 5px; padding: 2px 6px; color: var(--text-2); }
+        .shortcut-hint span { font-size: 0.72rem; color: var(--muted); }
+        .topbar-actions { display: flex; gap: 0.6rem; align-items: center; }
+        .filter-wrap { display: flex; align-items: center; gap: 0.6rem; }
 
-        .glass-btn { background: var(--bg-base); border: 1px solid var(--glass-border); color: var(--text-secondary); padding: 0.7rem 1.2rem; border-radius: 12px; cursor: pointer; font-weight: 500; font-size: 0.95rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; transition: var(--transition); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .glass-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); color: var(--text-primary); border-color: var(--accent-color);}
-        .glass-btn.primary { background: var(--accent-color); border: none; color: white; box-shadow: 0 4px 15px var(--accent-glow); }
-        .glass-btn.primary:hover { background: var(--accent-hover); box-shadow: 0 6px 20px var(--accent-glow); color: white; }
-        .icon-btn { padding: 0.7rem; border-radius: 12px; }
-        .btn-logout { color: var(--danger); border: none; background: transparent; box-shadow: none; }
-        .btn-logout:hover { background: var(--danger-light); color: var(--danger); border-color: transparent;}
-        .btn-theme { color: var(--warning); border: none; background: transparent; box-shadow: none;}
-        .btn-theme:hover { background: var(--warning-light); color: #d97706; border-color: transparent;}
-        [data-theme="dark"] .btn-theme { color: #818cf8; }
-        [data-theme="dark"] .btn-theme:hover { background: rgba(129, 140, 248, 0.15); color: #a5b4fc;}
+        select, input, textarea { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.65rem 1rem; color: var(--text); font-size: 0.92rem; transition: var(--transition); }
+        select { appearance: none; cursor: pointer; min-width: 190px; box-shadow: none; background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%); background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 2.2rem; }
+        select:focus, input:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+        [data-theme="light"] select option { background: var(--surface); color: var(--text); }
 
-        .view-section { display: none; animation: fadeIn 0.4s ease-out forwards; flex: 1; }
+        .btn { background: var(--surface-2); border: 1px solid var(--border); color: var(--text-2); padding: 0.65rem 1.1rem; border-radius: var(--radius-sm); cursor: pointer; font-weight: 500; font-size: 0.88rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.55rem; transition: var(--transition); }
+        .btn:hover { transform: translateY(-1px); color: var(--text); border-color: var(--border-strong); background: var(--surface-3); }
+        .btn.primary { background: var(--accent); border-color: var(--accent); color: #14120B; font-weight: 600; box-shadow: 0 4px 14px var(--accent-glow); }
+        [data-theme="light"] .btn.primary { color: #fff; }
+        .btn.primary:hover { background: var(--accent-2); border-color: var(--accent-2); color: #14120B; }
+        [data-theme="light"] .btn.primary:hover { color: #fff; }
+        .btn.danger-ghost { color: var(--danger); }
+        .btn.danger-ghost:hover { background: var(--danger-dim); border-color: var(--danger); color: var(--danger); }
+        .icon-btn { padding: 0.65rem; }
+        .submit-btn { width: 100%; margin-top: 0.5rem; padding: 0.95rem; font-size: 1rem; font-weight: 600; border-radius: var(--radius-sm); }
+
+        .view-section { display: none; animation: fadeIn .35s ease-out forwards; flex: 1; }
         .view-section.active { display: flex; flex-direction: column; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- WIDGET RETRÁTIL POMODORO --- */
+        /* ============ WIDGET POMODORO ============ */
         .unified-widget {
-            position: fixed; top: 50%; left: 16px; transform: translateY(-50%);
-            background: radial-gradient(circle at 30% 30%, rgba(255, 107, 107, 0.75), rgba(220, 38, 38, 0.7), rgba(153, 27, 27, 0.7));
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2), inset -2px -2px 8px rgba(0,0,0,0.1), inset 2px 2px 8px rgba(255,255,255,0.2);
-            z-index: 9999; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: fixed; top: 50%; left: 18px; transform: translateY(-50%);
+            background: var(--surface-2); border: 1px solid var(--border-strong);
+            z-index: 9999; transition: all .35s cubic-bezier(.34,1.3,.64,1);
             overflow: hidden; display: flex; flex-direction: column; cursor: grab; align-items: center; justify-content: flex-start;
         }
-        .unified-widget:not(:hover):not(.expanded) { opacity: 0.25; }
+        .unified-widget:not(:hover):not(.expanded) { opacity: .35; }
         .unified-widget:active { cursor: grabbing; }
-        .unified-widget:not(.expanded) { width: 50px; height: 50px; border-radius: 50%; padding: 0; justify-content: center; }
-        .unified-widget:not(.expanded):hover { transform: translateY(-50%) scale(1.1) rotate(5deg); opacity: 1;}
-        .unified-widget:not(.expanded) .widget-body, .unified-widget:not(.expanded) .pomo-subject { display: none; }
-
-        .tomato-leaf { position: absolute; top: 2px; left: 50%; margin-left: -8px; width: 16px; height: 8px; background: rgba(34, 197, 94, 0.9); border-radius: 50px 0 50px 0; transform: rotate(-15deg); z-index: 2; transition: opacity 0.3s; }
-        .tomato-leaf::after { content: ''; position: absolute; top: 2px; left: 3px; width: 12px; height: 6px; background: rgba(22, 163, 74, 0.9); border-radius: 0 50px 0 50px; transform: rotate(40deg); }
-
-        .unified-widget.expanded { width: 210px; height: auto; padding: 15px; border-radius: 20px; background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(0,0,0,0.2), inset 0 0 0 1px var(--glass-border); border: 1px solid var(--glass-border); cursor: move; }
-        .unified-widget.expanded .tomato-leaf { opacity: 0; pointer-events: none; }
-        .unified-widget.pdf-mode:not(.expanded) { background: radial-gradient(circle at 30% 30%, rgba(96, 165, 250, 0.8), rgba(37, 99, 235, 0.75), rgba(30, 64, 175, 0.75)); }
+        .unified-widget:not(.expanded) { width: 52px; height: 52px; border-radius: 50%; padding: 0; justify-content: center; border-color: var(--accent); }
+        .unified-widget:not(.expanded):hover { transform: translateY(-50%) scale(1.08); opacity: 1; }
+        .unified-widget:not(.expanded) .widget-body { display: none; }
+        .unified-widget.expanded { width: 218px; height: auto; padding: 16px; border-radius: var(--radius-lg); background: var(--surface); cursor: move; box-shadow: 0 16px 44px rgba(0,0,0,.4); }
 
         .widget-header { display: flex; align-items: center; justify-content: center; width: 100%; transition: var(--transition); }
-        .unified-widget.expanded .widget-header { flex-direction: column; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px; }
-        .pomo-time-container { display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; z-index: 3;}
-        .pomodoro-time { font-size: 0.9rem; font-weight: 800; color: white; font-variant-numeric: tabular-nums; text-shadow: 1px 1px 2px rgba(0,0,0,0.4); font-family: monospace; }
-        .expanded .pomodoro-time { font-size: 2rem; color: var(--accent-color); text-shadow: none; margin-bottom: 2px; }
+        .unified-widget.expanded .widget-header { flex-direction: column; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .pomo-time-container { display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; z-index: 3; }
+        .pomodoro-time { font-size: 0.78rem; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+        .expanded .pomodoro-time { font-size: 1.9rem; margin-bottom: 2px; }
 
-        .widget-body { display: flex; flex-direction: column; opacity: 1; transition: opacity 0.3s; margin-top: 10px; gap: 10px; width: 100%; align-items: center; }
-        .pomo-subject-select { width: 100%; font-size: 0.75rem; padding: 6px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-base); color: var(--text-primary); text-align: center; font-weight: 700; text-transform: uppercase; cursor: pointer; min-width: auto; appearance: auto; box-shadow: none;}
-        .pomodoro-modes { display: flex; gap: 4px; background: rgba(0,0,0,0.05); padding: 4px; border-radius: 10px; width: 100%; justify-content: center; flex-wrap: wrap;}
-        [data-theme="dark"] .pomodoro-modes { background: rgba(255,255,255,0.05); }
-        .mode-btn { background: transparent; border: none; padding: 4px 6px; border-radius: 6px; font-size: 0.65rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: var(--transition); text-transform: uppercase; flex: 1;}
-        .mode-btn.active { background: var(--bg-base); color: var(--accent-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .widget-body { display: flex; flex-direction: column; opacity: 1; transition: opacity .3s; margin-top: 12px; gap: 10px; width: 100%; align-items: center; }
+        .pomo-subject { font-size: 0.62rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; font-family: 'JetBrains Mono', monospace; }
+        .pomo-subject-select { width: 100%; font-size: 0.68rem; padding: 6px; border-radius: 7px; min-width: auto; appearance: auto; box-shadow: none; text-align: center; font-weight: 700; text-transform: uppercase; }
+        .pomodoro-modes { display: flex; gap: 4px; background: var(--surface-2); border: 1px solid var(--border); padding: 4px; border-radius: 9px; width: 100%; }
+        .mode-btn { background: transparent; border: none; padding: 5px 4px; border-radius: 6px; font-size: 0.6rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: var(--muted); cursor: pointer; transition: var(--transition); flex: 1; letter-spacing: .5px; }
+        .mode-btn:hover { color: var(--text); }
+        .mode-btn.active { background: var(--accent-dim); color: var(--accent); }
         .pomodoro-controls { display: flex; gap: 8px; }
-        .circle-btn { background: var(--bg-base); border: 1px solid var(--glass-border); color: var(--text-secondary); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .circle-btn:hover { background: var(--accent-color); color: #fff; border-color: var(--accent-color); transform: scale(1.05); }
-        .circle-btn svg { width: 16px; height: 16px; }
+        .circle-btn { background: var(--surface-2); border: 1px solid var(--border); color: var(--text-2); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; }
+        .circle-btn:hover { background: var(--accent); color: #14120B; border-color: var(--accent); transform: scale(1.06); }
+        .circle-btn svg { width: 15px; height: 15px; }
 
-        .widget-music-sec { display: flex; flex-direction: column; align-items: center; width: 100%; gap: 6px; border-top: 1px solid var(--glass-border); padding-top: 10px;}
-        .music-select { width: 100%; min-width: unset; font-size: 0.75rem; padding: 4px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-base); color: var(--text-primary); text-align: center; font-weight: 600; outline: none; cursor: pointer; box-shadow: none; appearance: auto;}
+        .widget-music-sec { display: flex; flex-direction: column; align-items: center; width: 100%; gap: 6px; border-top: 1px solid var(--border); padding-top: 12px; }
+        .music-select { width: 100%; min-width: unset; font-size: 0.68rem; padding: 5px; border-radius: 7px; appearance: auto; box-shadow: none; text-align: center; font-weight: 600; }
         .music-controls { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
-        input[type=range] { -webkit-appearance: none; width: 50px; background: transparent; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 10px; width: 10px; border-radius: 50%; background: var(--accent-color); cursor: pointer; margin-top: -3px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: var(--glass-border); border-radius: 2px; }
+        input[type=range] { -webkit-appearance: none; width: 56px; background: transparent; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 11px; width: 11px; border-radius: 50%; background: var(--accent); cursor: pointer; margin-top: -3.5px; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: var(--border-strong); border-radius: 2px; }
 
-        /* --- FLASHCARD VIEWER --- */
-        .flashcard-container { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; perspective: 1500px; flex: 1; height: 100%; margin-top: 1rem; }        
-        .empty-state { text-align: center; padding: 3rem; max-width: 450px; background: var(--glass-bg); border-radius: var(--radius-lg); border: 1px dashed var(--glass-border); }
-        .empty-icon { margin-bottom: 1.5rem; display: inline-block; padding: 20px; background: var(--success-light); border-radius: 50%; color: var(--success); }
-        .empty-state h2 { font-size: 1.6rem; margin-bottom: 0.8rem; color: var(--text-primary); }
-        .empty-state p { color: var(--text-secondary); font-size: 1.05rem; }
-        .study-progress-wrapper { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 720px; gap: 1.5rem; margin-top: auto;}
-        .study-progress-bar { flex: 1; height: 8px; background: var(--glass-border); border-radius: 10px; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); }
-        .study-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-color), #8b5cf6); border-radius: 10px; transition: width 0.5s ease; width: 0%; }
-        .counter { font-size: 1rem; font-weight: 600; color: var(--text-secondary); min-width: 60px; text-align: right; font-variant-numeric: tabular-nums; }
-        .scene { width: 100%; max-width: 720px; flex: 1; min-height: 420px; perspective: 2000px; margin: 0 auto; z-index: 10; display: flex; }
-        .card { width: 100%; position: relative; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); transform-style: preserve-3d; cursor: pointer; border-radius: var(--radius-lg); display: flex; flex: 1;}
-        .card:hover:not(.is-flipped) { transform: translateY(-4px); }
+        /* ============ FLASHCARD ============ */
+        .flashcard-container { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.8rem; perspective: 1500px; flex: 1; height: 100%; }
+        .empty-state { text-align: center; padding: 3rem; max-width: 480px; background: var(--surface); border-radius: var(--radius-lg); border: 1px dashed var(--border-strong); margin: auto; }
+        .empty-icon { margin-bottom: 1.4rem; display: inline-flex; padding: 18px; background: var(--accent-dim); border-radius: 12px; color: var(--accent); border: 1px solid var(--border); }
+        .empty-state h2 { font-size: 1.5rem; margin-bottom: 0.7rem; }
+        .empty-state p { color: var(--text-2); font-size: 1rem; }
+        .study-progress-wrapper { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 740px; gap: 1.4rem; margin-top: auto; }
+        .study-progress-bar { flex: 1; height: 4px; background: var(--border); border-radius: 10px; overflow: hidden; }
+        .study-progress-fill { height: 100%; background: var(--accent); border-radius: 10px; transition: width .5s ease; width: 0%; }
+        .counter { font-size: 0.85rem; font-weight: 600; color: var(--muted); min-width: 64px; text-align: right; }
+        .scene { width: 100%; max-width: 740px; flex: 1; min-height: 440px; perspective: 2000px; margin: 0 auto; z-index: 10; display: flex; }
+        .card { width: 100%; position: relative; transition: transform .55s cubic-bezier(.2,.8,.2,1); transform-style: preserve-3d; cursor: pointer; border-radius: var(--radius-lg); display: flex; }
+        .card:hover:not(.is-flipped) { transform: translateY(-3px); }
         .card.is-flipped { transform: rotateX(180deg); }
-        .card__face { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: var(--radius-lg); padding: 3.5rem 4.5rem; display: flex; flex-direction: column; overflow-y: auto; border: 1px solid var(--glass-border); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .card__face { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: var(--radius-lg); padding: 3.2rem 4rem; display: flex; flex-direction: column; overflow-y: auto; border: 1px solid var(--border-strong); box-shadow: 0 24px 50px rgba(0,0,0,.35); }
         .card__face--front { justify-content: center; align-items: center; text-align: center; background: var(--card-bg-front); }
-        .card__face--back { background: var(--card-bg-back); border: 2px solid var(--accent-light); transform: rotateX(180deg); justify-content: center; align-items: center; text-align: center; }
-        .card-label { position: absolute; top: 1.8rem; left: 2.2rem; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
-        .subject-badge { background: var(--accent-light); color: var(--accent-hover); padding: 0.4rem 1.2rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; margin-left: 12px; border: 1px solid rgba(109, 40, 217, 0.1); }
-        .card-actions { position: absolute; top: 1.8rem; right: 1.8rem; display: flex; gap: 8px; z-index: 10; }
-        .card-action-btn { background: var(--bg-base); border: 1px solid transparent; color: var(--text-muted); padding: 6px; border-radius: 10px; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; }
-        .card-action-btn:hover { background: var(--bg-base); border-color: var(--accent-color); color: var(--text-primary); transform: translateY(-2px); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .card-action-btn.del:hover { background: var(--danger-light); color: var(--danger); border-color: transparent; }
-        .voice-btn { position: absolute; bottom: 1.8rem; left: 2.2rem; background: var(--bg-base); border: 1px solid var(--glass-border); color: var(--text-muted); padding: 8px; border-radius: 50%; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); z-index: 10;}
-        .voice-btn:hover { background: var(--info-light); color: var(--info); border-color: var(--info); transform: scale(1.1); }
-        .markdown-content { width: 100%; margin: auto 0; font-size: 1.6rem; font-weight: 500; line-height: 1.5; text-wrap: balance; color: var(--text-primary); }
-        .card__face--back .markdown-content { color: var(--accent-color); }
-        .markdown-content img { max-width: 100%; max-height: 220px; border-radius: 12px; object-fit: contain; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 10px 0; }
-        .markdown-content pre { text-align: left; font-size: 1rem; border-radius: 12px; padding: 15px; margin: 15px 0; max-width: 100%; overflow-x: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .markdown-content code { font-family: 'Consolas', 'Monaco', monospace; background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
-        [data-theme="dark"] .markdown-content code { background: rgba(255,255,255,0.1); }
+        .card__face--back { background: var(--card-bg-back); border: 1px solid var(--accent); transform: rotateX(180deg); justify-content: center; align-items: center; text-align: center; }
+        .card-label { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); font-family: 'JetBrains Mono', monospace; position: relative; top: 0; left: 0; display: flex; align-items: center; gap: 8px; }
+        .card-label-row { position: absolute; top: 1.7rem; left: 2rem; display: flex; align-items: center; }
+        .subject-badge { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--border); padding: 0.3rem 0.9rem; border-radius: 99px; font-size: 0.68rem; font-weight: 700; margin-left: 12px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: .5px; }
+        .card-actions { position: absolute; top: 1.6rem; right: 1.6rem; display: flex; gap: 6px; z-index: 10; }
+        .card-action-btn { background: var(--surface-2); border: 1px solid var(--border); color: var(--muted); padding: 6px; border-radius: 8px; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; }
+        .card-action-btn:hover { color: var(--accent); border-color: var(--accent); }
+        .card-action-btn.del:hover { color: var(--danger); background: var(--danger-dim); border-color: var(--danger); }
+        .voice-btn { position: absolute; bottom: 1.7rem; left: 2rem; background: var(--surface-2); border: 1px solid var(--border); color: var(--muted); padding: 8px; border-radius: 50%; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; z-index: 10; }
+        .voice-btn:hover { color: var(--accent); border-color: var(--accent); transform: scale(1.08); }
+        .markdown-content { width: 100%; margin: auto 0; font-size: 1.5rem; font-weight: 500; line-height: 1.55; text-wrap: balance; }
+        .card__face--back .markdown-content { color: var(--accent-2); }
+        .markdown-content img { max-width: 100%; max-height: 220px; border-radius: 12px; object-fit: contain; box-shadow: 0 4px 12px rgba(0,0,0,.2); margin: 10px 0; }
+        .markdown-content pre { text-align: left; font-size: 0.95rem; border-radius: 12px; padding: 15px; margin: 15px 0; max-width: 100%; overflow-x: auto; }
+        .markdown-content code { font-family: 'JetBrains Mono', monospace; background: rgba(255,255,255,.06); padding: 2px 6px; border-radius: 4px; font-size: 0.85em; }
+        [data-theme="light"] .markdown-content code { background: rgba(0,0,0,.06); }
         .markdown-content pre code { background: transparent; padding: 0; color: inherit; }
-        .markdown-content ul, .markdown-content ol { text-align: left; margin: 15px auto; display: inline-block; padding-left: 20px;}
+        .markdown-content ul, .markdown-content ol { text-align: left; margin: 15px auto; display: inline-block; padding-left: 20px; }
         .markdown-content li { margin-bottom: 8px; }
         .markdown-content p { margin-bottom: 10px; }
-        .flip-hint { position: absolute; bottom: 1.8rem; font-size: 0.9rem; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 0.6rem; opacity: 0; left: 50%; transform: translateX(-50%) translateY(10px); transition: var(--transition); background: var(--bg-base); padding: 8px 18px; border-radius: 99px; border: 1px solid var(--glass-border); }
+        .flip-hint { position: absolute; bottom: 1.7rem; font-size: 0.8rem; color: var(--muted); font-weight: 500; display: flex; align-items: center; gap: 0.5rem; opacity: 0; left: 50%; transform: translateX(-50%) translateY(8px); transition: var(--transition); background: var(--surface-2); padding: 7px 16px; border-radius: 99px; border: 1px solid var(--border); }
         .card:hover .flip-hint, .card:focus-visible .flip-hint { opacity: 1; transform: translateX(-50%) translateY(0); }
-        .controls { display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin-bottom: auto;}
-        .srs-controls { display: flex; gap: 1rem; justify-content: center; width: 100%; max-width: 720px; margin-bottom: auto;}
-        .srs-btn { flex: 1; background: var(--bg-base); border: 1px solid var(--glass-border); color: var(--text-primary); padding: 1.2rem 0.5rem; border-radius: 16px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: var(--transition); display: flex; flex-direction: column; align-items: center; gap: 0.6rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .srs-btn svg { transition: var(--transition); color: var(--text-muted); width: 26px; height: 26px; }
-        .srs-btn span { font-size: 0.8rem; font-weight: 500; color: var(--text-muted); }
-        .btn-again:hover { background: var(--danger-light); border-color: transparent; color: var(--danger); transform: translateY(-3px); }
-        .btn-again:hover svg { color: var(--danger); transform: scale(1.15); }
-        .btn-hard:hover { background: var(--warning-light); border-color: transparent; color: #d97706; transform: translateY(-3px); }
-        .btn-hard:hover svg { color: #d97706; transform: scale(1.15); }
-        .btn-good:hover { background: var(--info-light); border-color: transparent; color: var(--info); transform: translateY(-3px); }
-        .btn-good:hover svg { color: var(--info); transform: scale(1.15); }
-        .btn-easy:hover { background: var(--success-light); border-color: transparent; color: var(--success); transform: translateY(-3px); }
-        .btn-easy:hover svg { color: var(--success); transform: scale(1.15); }
+        .controls { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: auto; }
+        .srs-controls { display: flex; gap: 0.8rem; justify-content: center; width: 100%; max-width: 740px; margin-bottom: auto; }
+        .srs-btn { flex: 1; background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 1.1rem 0.5rem; border-radius: var(--radius); cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: var(--transition); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+        .srs-btn svg { transition: var(--transition); color: var(--muted); width: 22px; height: 22px; }
+        .srs-btn span { font-size: 0.72rem; font-weight: 500; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+        .btn-again:hover { background: var(--danger-dim); border-color: var(--danger); color: var(--danger); transform: translateY(-2px); }
+        .btn-again:hover svg, .btn-again:hover span { color: var(--danger); }
+        .btn-hard:hover { background: var(--warning-dim); border-color: var(--warning); color: var(--warning); transform: translateY(-2px); }
+        .btn-hard:hover svg, .btn-hard:hover span { color: var(--warning); }
+        .btn-good:hover { background: var(--info-dim); border-color: var(--info); color: var(--info); transform: translateY(-2px); }
+        .btn-good:hover svg, .btn-good:hover span { color: var(--info); }
+        .btn-easy:hover { background: var(--success-dim); border-color: var(--success); color: var(--success); transform: translateY(-2px); }
+        .btn-easy:hover svg, .btn-easy:hover span { color: var(--success); }
 
-        /* --- DASHBOARD PRO --- */
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .stat-card { display: flex; align-items: center; gap: 1.2rem; padding: 1.5rem; transition: var(--transition); }
-        .stat-card:hover { transform: translateY(-4px); border-color: var(--accent-color); }
-        .stat-icon { display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: var(--bg-base); border-radius: 18px; color: var(--icon-color, var(--text-primary)); flex-shrink: 0;}
-        .stat-info h3 { font-size: 0.8rem; color: var(--text-secondary); font-weight: 600; margin-bottom: 0.3rem; text-transform: uppercase; letter-spacing: 0.5px;}
-        .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); line-height: 1.1; }
-        .stat-sub { font-size: 0.75rem; color: var(--text-muted); }
-        .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;}
-        .chart-container { padding: 1.8rem; display: flex; flex-direction: column; min-width: 0; width: 100%; }
-        .chart-container h3 { font-size: 1.15rem; margin-bottom: 1.5rem; color: var(--text-primary); font-weight: 600; }
-        .canvas-wrapper { height: 260px; position: relative; width: 100%; flex: 1; min-width: 0; }
+        /* ============ DASHBOARD ============ */
+        .dashboard-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.6rem; }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.6rem; }
+        .stat-card { display: flex; align-items: center; gap: 1.1rem; padding: 1.3rem 1.4rem; transition: var(--transition); }
+        .stat-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+        .stat-icon { display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; color: var(--icon-color, var(--text-2)); flex-shrink: 0; }
+        .stat-info h3 { font-family: 'Inter', sans-serif; font-size: 0.66rem; color: var(--muted); font-weight: 700; margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 1.5px; }
+        .stat-number { font-size: 1.65rem; font-weight: 700; line-height: 1.1; }
+        .stat-sub { font-size: 0.72rem; color: var(--muted); }
+        .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.6rem; }
+        .chart-container { display: flex; flex-direction: column; min-width: 0; width: 100%; }
+        .chart-container h3 { font-family: 'Inter', sans-serif; font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 1.4rem; }
+        .canvas-wrapper { height: 250px; position: relative; width: 100%; flex: 1; min-width: 0; }
         canvas { max-width: 100% !important; }
         .plotly-box { width: 100%; height: 380px; }
-        .insights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
-        .insight-item { background: var(--bg-base); border: 1px solid var(--glass-border); border-left: 4px solid var(--accent-color); border-radius: 12px; padding: 1rem 1.2rem; }
+        .insights-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; }
+        .insight-item { background: var(--surface-2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius-sm); padding: 0.9rem 1.1rem; }
         .insight-item.warn { border-left-color: var(--warning); }
         .insight-item.good { border-left-color: var(--success); }
         .insight-item.info { border-left-color: var(--info); }
-        .insight-title { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 4px;}
-        .insight-value { font-size: 1.1rem; font-weight: 600; color: var(--text-primary); }
-        .dashboard-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 2rem; }
+        .insight-title { font-weight: 700; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 4px; font-family: 'JetBrains Mono', monospace; }
+        .insight-value { font-size: 1rem; font-weight: 600; }
+        .section-heading { font-size: 1.25rem; font-weight: 600; margin-bottom: 1.3rem; display: flex; align-items: center; gap: 0.7rem; }
 
-        .difficult-cards-list { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
-        .diff-card-item { background: var(--bg-base); border: 1px solid var(--glass-border); padding: 1.2rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .diff-card-item:hover { transform: translateX(4px); border-color: var(--accent-color); }
-        .diff-card-q { font-size: 1rem; font-weight: 500; color: var(--text-primary); flex: 1; margin-right: 1.5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .diff-badge { background: var(--danger-light); color: var(--danger); font-size: 0.85rem; font-weight: 600; padding: 0.4rem 0.8rem; border-radius: 99px; white-space: nowrap; }
+        .difficult-cards-list { display: flex; flex-direction: column; gap: 0.7rem; }
+        .diff-card-item { background: var(--surface-2); border: 1px solid var(--border); padding: 1rem 1.2rem; border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center; transition: var(--transition); }
+        .diff-card-item:hover { border-color: var(--border-strong); transform: translateX(3px); }
+        .diff-card-q { font-size: 0.95rem; font-weight: 500; flex: 1; margin-right: 1.5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .diff-badge { background: var(--danger-dim); color: var(--danger); font-size: 0.72rem; font-weight: 700; padding: 0.35rem 0.75rem; border-radius: 99px; white-space: nowrap; }
 
-        /* --- SOCIAL / COMMUNITY --- */
-        .like-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-base); border: 1px solid var(--glass-border); color: var(--text-secondary); padding: 6px 12px; border-radius: 99px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: var(--transition); }
-        .like-btn:hover { border-color: var(--danger); color: var(--danger); transform: scale(1.05); }
-        .like-btn.liked { background: var(--danger-light); color: var(--danger); border-color: transparent; }
-        .share-check { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: var(--text-secondary); cursor: pointer; margin-top: 8px;}
-        .share-check input { width: 18px; height: 18px; accent-color: var(--accent-color); cursor: pointer;}
-        .feed-meta { font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px;}
-        .exame-badge { background: var(--info-light); color: var(--info); font-size: 0.7rem; font-weight: 700; padding: 2px 10px; border-radius: 99px; text-transform: uppercase;}
+        /* ============ COMUNIDADE / LISTAS ============ */
+        .like-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--surface-2); border: 1px solid var(--border); color: var(--text-2); padding: 5px 11px; border-radius: 99px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: var(--transition); font-family: 'JetBrains Mono', monospace; }
+        .like-btn:hover { border-color: var(--danger); color: var(--danger); }
+        .like-btn.liked { background: var(--danger-dim); color: var(--danger); border-color: transparent; }
+        .share-check { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; color: var(--text-2); cursor: pointer; margin-top: 8px; }
+        .share-check input { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
+        .feed-meta { font-size: 0.72rem; color: var(--muted); display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; }
+        .exame-badge { background: var(--info-dim); color: var(--info); font-size: 0.62rem; font-weight: 700; padding: 2px 9px; border-radius: 99px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* --- ABA TODOS OS CARDS --- */
         .all-cards-wrapper { display: flex; flex-direction: column; gap: 1rem; padding-bottom: 2rem; }
         .subject-group { padding: 0; overflow: hidden; }
-        .subject-group-title { padding: 1.5rem; cursor: pointer; user-select: none; font-size: 1.2rem; color: var(--accent-color); font-weight: 700; margin: 0; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; background: var(--bg-base); transition: background 0.3s; }
-        .subject-group-title:hover { background: rgba(0,0,0,0.02); }
-        [data-theme="dark"] .subject-group-title:hover { background: rgba(255,255,255,0.02); }
-        .subject-group-title .chevron { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: var(--text-muted); }
+        .subject-group-title { padding: 1.1rem 1.4rem; cursor: pointer; user-select: none; font-size: 1.05rem; color: var(--text); font-weight: 600; margin: 0; display: flex; align-items: center; justify-content: space-between; background: var(--surface-2); transition: background .3s; font-family: 'Fraunces', serif; }
+        .subject-group-title:hover { background: var(--surface-3); }
+        .subject-group-title .chevron { transition: transform .3s cubic-bezier(.4,0,.2,1); color: var(--muted); }
         .subject-group-title.collapsed .chevron { transform: rotate(-90deg); }
-        .cards-grid { padding: 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; border-top: 1px solid var(--glass-border); }
+        .cards-grid { padding: 1.2rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 0.9rem; border-top: 1px solid var(--border); }
         .cards-grid.hidden { display: none; padding: 0; border: none; }
-        .list-card { background: var(--bg-base); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1.2rem; display: flex; flex-direction: column; gap: 0.8rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .list-card:hover { transform: translateY(-3px); border-color: var(--accent-color); }
-        .list-card-content { font-size: 0.95rem; line-height: 1.5; color: var(--text-primary); overflow-wrap: break-word; }
+        .list-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem; display: flex; flex-direction: column; gap: 0.7rem; transition: var(--transition); }
+        .list-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+        .list-card-content { font-size: 0.92rem; line-height: 1.55; overflow-wrap: break-word; }
         .list-card-content img { max-width: 100%; height: auto; max-height: 150px; border-radius: 8px; margin: 5px 0; }
         .list-card-content pre { background: #2d2d2d; color: #ccc; padding: 10px; border-radius: 8px; font-size: 0.8rem; overflow-x: auto; margin: 5px 0; }
-        .list-card-a-wrapper { background: rgba(0,0,0,0.03); padding: 10px; border-radius: 8px; border-left: 3px solid var(--accent-color); margin-top: 5px;}
-        [data-theme="dark"] .list-card-a-wrapper { background: rgba(255,255,255,0.03); }
-        .list-card-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: auto; border-top: 1px solid var(--glass-border); padding-top: 10px; align-items: center;}
+        .list-card-a-wrapper { background: var(--surface-3); padding: 10px; border-radius: 8px; border-left: 2px solid var(--accent); margin-top: 4px; }
+        .list-card-actions { display: flex; justify-content: flex-end; gap: 6px; margin-top: auto; border-top: 1px solid var(--border); padding-top: 10px; align-items: center; }
 
-        /* --- MODAIS --- */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; z-index: 10000; opacity: 1; transition: opacity 0.3s ease; padding: 1rem; }
+        /* ============ MODAIS ============ */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; z-index: 10000; opacity: 1; transition: opacity .3s ease; padding: 1rem; }
         .modal-overlay.hidden { opacity: 0; pointer-events: none; }
-        .modal-content { background: var(--card-bg-front); border: 1px solid var(--glass-border); width: 100%; max-width: 500px; padding: 2.5rem; transform: translateY(0) scale(1); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: var(--radius-lg); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto;}
-        .modal-overlay.hidden .modal-content { transform: translateY(30px) scale(0.95); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.8rem; }
-        .modal-header h2 { font-size: 1.5rem; color: var(--text-primary); font-weight: 700; }
-        .close-btn { background: var(--bg-base); border: none; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); padding: 0.6rem; border-radius: 50%; }
-        .close-btn:hover { color: var(--danger); background: var(--danger-light); transform: rotate(90deg); }
-        .format-toolbar { display: flex; gap: 4px; margin-bottom: 0.5rem; background: rgba(0,0,0,0.03); padding: 4px; border-radius: 8px; border: 1px solid var(--glass-border); animation: fadeIn 0.2s ease;}
-        [data-theme="dark"] .format-toolbar { background: rgba(255,255,255,0.03); }
+        .modal-content { background: var(--surface); border: 1px solid var(--border-strong); width: 100%; max-width: 520px; padding: 2.2rem; transform: translateY(0) scale(1); transition: all .35s cubic-bezier(.34,1.4,.64,1); border-radius: var(--radius-lg); box-shadow: 0 30px 60px rgba(0,0,0,.5); max-height: 90vh; overflow-y: auto; }
+        .modal-overlay.hidden .modal-content { transform: translateY(24px) scale(.97); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.7rem; }
+        .modal-header h2 { font-size: 1.35rem; font-weight: 600; }
+        .close-btn { background: var(--surface-2); border: 1px solid var(--border); color: var(--text-2); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); padding: 0.5rem; border-radius: 8px; }
+        .close-btn:hover { color: var(--danger); background: var(--danger-dim); border-color: var(--danger); transform: rotate(90deg); }
+        .format-toolbar { display: flex; gap: 4px; margin-bottom: 0.5rem; background: var(--surface-2); border: 1px solid var(--border); padding: 4px; border-radius: 8px; animation: fadeIn .2s ease; }
         .format-toolbar.hidden { display: none; }
-        .format-btn { background: transparent; border: none; color: var(--text-secondary); cursor: pointer; border-radius: 6px; padding: 4px 8px; font-size: 0.9rem; font-weight: 600; transition: var(--transition); display:flex; align-items:center; justify-content:center; }
-        .format-btn:hover { background: var(--bg-base); color: var(--accent-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
+        .format-btn { background: transparent; border: none; color: var(--text-2); cursor: pointer; border-radius: 6px; padding: 4px 9px; font-size: 0.85rem; font-weight: 600; transition: var(--transition); display: flex; align-items: center; justify-content: center; }
+        .format-btn:hover { background: var(--surface-3); color: var(--accent); }
         .subject-select-wrapper { display: flex; gap: 8px; align-items: center; }
-        .inline-add-btn { background: var(--accent-light); color: var(--accent-color); border: 1px solid transparent; width: 44px; height: 44px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); font-size: 1.5rem; font-weight: 300;}
-        .inline-add-btn:hover { background: var(--accent-color); color: white; transform: translateY(-2px);}
-        .inline-subject-input-group { display: flex; gap: 8px; margin-top: 8px; animation: fadeIn 0.3s ease;}
+        .inline-add-btn { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--border); width: 42px; height: 42px; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); font-size: 1.3rem; font-weight: 300; flex-shrink: 0; }
+        .inline-add-btn:hover { background: var(--accent); color: #14120B; border-color: var(--accent); }
+        .inline-subject-input-group { display: flex; gap: 8px; margin-top: 8px; animation: fadeIn .3s ease; }
         .inline-subject-input-group.hidden { display: none; }
-        .inline-subject-input-group input { margin-bottom: 0; }
-        .inline-subject-input-group button { padding: 0 1rem; margin-top: 0; white-space: nowrap;}
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label { display: block; margin-bottom: 0.6rem; font-size: 0.95rem; color: var(--text-primary); font-weight: 600; }
-        input, textarea, select { width: 100%; background: var(--bg-base); border: 1px solid var(--glass-border); border-radius: 12px; padding: 0.9rem 1.2rem; color: var(--text-primary); font-size: 16px; transition: var(--transition); resize: vertical; }
-        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 0 4px var(--accent-glow); }
-        .settings-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid var(--glass-border); }
-        .settings-row label { font-size: 0.95rem; color: var(--text-primary); font-weight: 500; margin: 0;}
-        .settings-row input[type=number], .settings-row input[type=text] { width: 90px; padding: 0.5rem; }
-        .settings-row input[type=range] { width: 120px; }
-        .summary-pre { background: var(--bg-base); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1.2rem; font-size: 0.85rem; white-space: pre-wrap; word-break: break-word; max-height: 300px; overflow-y: auto; color: var(--text-primary); line-height: 1.6; margin-bottom: 1rem;}
+        .form-group { margin-bottom: 1.4rem; }
+        .form-group label { display: block; margin-bottom: 0.55rem; font-size: 0.88rem; color: var(--text); font-weight: 600; }
+        .format-toggle { background: none; border: none; color: var(--accent); cursor: pointer; font-size: 0.8rem; font-weight: 600; }
+        .settings-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.65rem 0; border-bottom: 1px solid var(--border); }
+        .settings-row label { font-size: 0.9rem; color: var(--text); font-weight: 500; margin: 0; }
+        .settings-row input[type=number], .settings-row input[type=text] { width: 100px; padding: 0.45rem 0.7rem; }
+        .settings-row input[type=range] { width: 130px; }
+        .settings-hint { font-size: 0.78rem; color: var(--muted); margin: 0.8rem 0; }
+        .summary-pre { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem; font-size: 0.82rem; white-space: pre-wrap; word-break: break-word; max-height: 300px; overflow-y: auto; max-width: 100%; margin-bottom: 1rem; font-family: 'JetBrains Mono', monospace; line-height: 1.7; }
 
-        /* --- PDF READER --- */
-        .pdf-reader { position: fixed; inset: 0; z-index: 9500; background: var(--bg-base); display: flex; flex-direction: column; }
-        .pdf-reader-header { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; background: var(--glass-bg); border-bottom: 1px solid var(--glass-border); backdrop-filter: blur(10px); gap: 1rem; flex-wrap: wrap;}
-        .pdf-reader-header h3 { font-size: 1rem; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;}
+        /* ============ PDF READER ============ */
+        .pdf-reader { position: fixed; inset: 0; z-index: 9500; background: var(--bg); display: flex; flex-direction: column; }
+        .pdf-reader-header { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.5rem; background: var(--surface); border-bottom: 1px solid var(--border); gap: 1rem; }
+        .pdf-reader-header h3 { font-size: 0.95rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; font-family: 'Inter', sans-serif; font-weight: 600; }
         .pdf-frame { flex: 1; border: none; width: 100%; background: #525659; }
 
-        .submit-btn { width: 100%; margin-top: 0.5rem; padding: 1rem; font-size: 1.05rem; font-weight: 600; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: all 0.3s; }
-        .slide-in-right { animation: slideInR 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        .slide-in-left { animation: slideInL 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        @keyframes slideInR { from { transform: translateX(50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes slideInL { from { transform: translateX(-50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .slide-in-right { animation: slideInR .35s cubic-bezier(.2,.8,.2,1) forwards; }
+        .slide-in-left { animation: slideInL .35s cubic-bezier(.2,.8,.2,1) forwards; }
+        @keyframes slideInR { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideInL { from { transform: translateX(-40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         button *, .nav-btn * { pointer-events: none; }
 
-        @media (max-width: 768px) {
-            .app-container { padding: 1rem; gap: 1rem; }
-            header { flex-direction: column; gap: 1rem; align-items: center; padding-bottom: 1rem;}
-            .header-actions { justify-content: center; width: 100%; }
-            .user-profile { border-right: none; padding-right: 0; margin-right: 0; }
-            .nav-container { flex-direction: column; gap: 1rem; }
-            .app-nav { width: 100%; display: flex; justify-content: space-between; flex-wrap: wrap;}
-            .nav-btn { flex: 1; justify-content: center; padding: 0.7rem 0.2rem; font-size: 0.85rem; flex-direction: column; gap: 4px; border-radius: 10px;}
-            .nav-btn svg { width: 20px; height: 20px; margin: 0; }
-            .subject-filter { width: 100%; justify-content: space-between; }
-            .subject-filter select { flex: 1; }
-            .scene { min-height: 60vh; height: auto; max-height: none; }
-            .card__face { padding: 1.5rem 1.2rem; }
-            .card-label { top: 1.2rem; left: 1.2rem; }
-            .subject-badge { top: 0.9rem; left: 6rem; }
-            .card-actions { top: 1.2rem; right: 1.2rem; }
-            .voice-btn { bottom: 1.2rem; left: 1.2rem; }
-            .flip-hint { bottom: 1.2rem; font-size: 0.8rem; padding: 6px 12px; opacity: 1; transform: translateX(-50%);}
-            .markdown-content { font-size: 1.3rem !important; }
-            .srs-controls { flex-wrap: wrap; gap: 0.5rem; }
-            .srs-btn { min-width: calc(50% - 0.5rem); padding: 0.8rem 0.5rem; flex-direction: row; justify-content: center;}
-            .srs-btn svg { width: 20px; height: 20px; }
-            .charts-row { grid-template-columns: 1fr; }
-            .modal-content { padding: 1.5rem; }
-            .list-card-actions { flex-wrap: wrap; }
-            .subject-group-title { font-size: 1rem; padding: 1rem;}
-            .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem;}
-            .stat-card { padding: 1rem; }
-            .stat-number { font-size: 1.3rem; }
-        }
-        @media (max-width: 480px) {
-            .icon-btn span { display: none !important; }
-            .glass-btn { padding: 0.6rem; }
-            .logo h1 { font-size: 1.5rem; }
-            .unified-widget.expanded { width: 180px; padding: 10px; }
-            .expanded .pomodoro-time { font-size: 1.5rem; }
-            .pomo-subject-select { font-size: 0.65rem; }
-        }
-
-        .onboarding-steps { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; text-align: left; }
-        .step-item { display: flex; align-items: center; gap: 1rem; background: var(--bg-base); padding: 1rem; border-radius: 12px; border: 1px solid var(--glass-border); }
-        .step-number { background: var(--accent-color); color: white; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
-        .step-text { font-size: 0.95rem; color: var(--text-primary); font-weight: 500; }
+        .onboarding-steps { display: flex; flex-direction: column; gap: 0.8rem; margin-top: 1.4rem; text-align: left; }
+        .step-item { display: flex; align-items: center; gap: 1rem; background: var(--surface-2); border: 1px solid var(--border); padding: 0.9rem 1rem; border-radius: var(--radius-sm); }
+        .step-number { background: var(--accent); color: #14120B; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 700; font-size: 0.8rem; flex-shrink: 0; font-family: 'JetBrains Mono', monospace; }
+        .step-text { font-size: 0.9rem; font-weight: 500; }
     </style>
+<base target="_blank">
 <base target="_blank">
 </head>
 <body>
-    <div class="bg-animations" id="bg-animations"></div>
+
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon-bg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path>
+                </svg>
+            </div>
+            <h1>FlashLearn <span>PRO</span></h1>
+        </div>
+
+        <div class="nav-label">Menu</div>
+        <nav class="app-nav" aria-label="Navegação Principal">
+            <button id="tab-dashboard" class="nav-btn">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+                Progresso
+            </button>
+            <button id="tab-study" class="nav-btn">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                Estudar
+            </button>
+            <button id="tab-all-cards" class="nav-btn">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="8" y1="12" x2="16" y2="12"></line><line x1="8" y1="8" x2="16" y2="8"></line><line x1="8" y1="16" x2="16" y2="16"></line></svg>
+                Meus Cards
+            </button>
+            <button id="tab-community" class="nav-btn">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                Comunidade
+            </button>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-chip">
+                <div class="user-avatar" id="user-avatar">U</div>
+                <span class="user-email" id="user-display-email">usuario@email.com</span>
+            </div>
+            <div class="sidebar-btns">
+                <button id="theme-toggle" class="icon-btn-mini" title="Alternar tema">
+                    <svg id="theme-icon-sun" class="hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    <svg id="theme-icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    <span style="font-size:0.72rem" id="theme-label">Tema</span>
+                </button>
+                <button id="logout-btn" class="icon-btn-mini btn-logout" title="Sair da conta">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    <span style="font-size:0.72rem">Sair</span>
+                </button>
+            </div>
+        </div>
+    </aside>
 
     <div class="app-container">
 
         <div id="auth-view" class="view-section active">
             <div class="auth-box glass-panel">
-                <div class="logo" style="justify-content: center; margin-bottom: 2.5rem;">
+                <div class="logo" style="justify-content: center;">
                     <div class="logo-icon-bg">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path>
                         </svg>
                     </div>
-                    <h1>FlashLearn <span style="color:var(--accent-color); font-size:0.9rem; vertical-align:super;">PRO</span></h1>
+                    <h1>FlashLearn <span>PRO</span></h1>
                 </div>
+                <p class="auth-tagline">Domine qualquer assunto com repetição espaçada.</p>
 
                 <div class="auth-tabs">
-                    <button class="auth-tab active" id="tab-login">Login</button>
-                    <button class="auth-tab" id="tab-register">Criar Conta</button>
+                    <button class="auth-tab active" id="tab-login">Entrar</button>
+                    <button class="auth-tab" id="tab-register">Criar conta</button>
                 </div>
 
                 <form id="auth-form" class="auth-form">
@@ -428,78 +439,39 @@
                         <input type="password" id="auth-password" placeholder="Sua senha" required minlength="6">
                     </div>
                     <div id="auth-error" class="auth-error"></div>
-                    <button type="submit" class="glass-btn primary submit-btn" id="auth-submit-btn">Entrar</button>
+                    <button type="submit" class="btn primary submit-btn" id="auth-submit-btn">Entrar</button>
                 </form>
             </div>
         </div>
 
         <div id="app-wrapper" class="hidden" style="display: flex; flex-direction: column; flex: 1;">
-            <header>
-                <div class="logo">
-                    <div class="logo-icon-bg">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path>
-                        </svg>
+
+            <div class="topbar">
+                <div class="topbar-left">
+                    <h2 class="view-title" id="view-title">Progresso</h2>
+                    <div class="shortcut-hint" id="shortcut-hint">
+                        <span><kbd>ESPAÇO</kbd> virar</span>
+                        <span><kbd>←</kbd><kbd>→</kbd> navegar</span>
                     </div>
-                    <h1>FlashLearn <span style="color:var(--accent-color); font-size:0.9rem; vertical-align:super;">PRO</span></h1>
                 </div>
-
-                <div class="header-actions">
-                    <div class="user-profile">
-                        <span class="user-email" id="user-display-email">usuario@email.com</span>
-
-                        <button id="theme-toggle" class="glass-btn icon-btn btn-theme" title="Alternar Tema Escuro">
-                            <svg id="theme-icon-sun" class="hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                            <svg id="theme-icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                        </button>
-
-                        <button id="logout-btn" class="glass-btn icon-btn btn-logout" title="Sair da conta">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                        </button>
+                <div class="topbar-actions">
+                    <div class="filter-wrap" id="subject-filter-container">
+                        <select id="study-subject-filter">
+                            <option value="all">Todas as matérias</option>
+                        </select>
                     </div>
-
-                    <button id="btn-pdf-study" class="glass-btn icon-btn" title="Estudar PDF com cronômetro">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                        <span>PDF</span>
+                    <button id="btn-pdf-study" class="btn icon-btn" title="Estudar PDF com cronômetro">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        <span style="font-size:0.85rem">PDF</span>
                     </button>
-
-                    <button id="add-subject-btn" class="glass-btn icon-btn" title="Nova Matéria">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                        <span>Matéria</span>
+                    <button id="add-subject-btn" class="btn" title="Nova matéria">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                        Matéria
                     </button>
-
-                    <button id="add-btn" class="glass-btn primary" title="Adicionar novo flashcard">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        <span>Card</span>
+                    <button id="add-btn" class="btn primary" title="Adicionar flashcard">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Novo card
                     </button>
-                </div>
-            </header>
-
-            <div class="nav-container">
-                <nav class="app-nav" aria-label="Navegação Principal">
-                    <button id="tab-dashboard" class="nav-btn">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-                        Progresso
-                    </button>
-                    <button id="tab-study" class="nav-btn">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                        Estudar
-                    </button>
-                    <button id="tab-all-cards" class="nav-btn">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="8" y1="12" x2="16" y2="12"></line><line x1="8" y1="8" x2="16" y2="8"></line><line x1="8" y1="16" x2="16" y2="16"></line></svg>
-                        Meus Cards
-                    </button>
-                    <button id="tab-community" class="nav-btn">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                        Comunidade
-                    </button>
-                </nav>
-
-                <div class="subject-filter" id="subject-filter-container">
-                    <label for="study-subject-filter" style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 600;">Filtrar:</label>
-                    <select id="study-subject-filter">
-                        <option value="all">Todas as Matérias</option>
-                    </select>
                 </div>
             </div>
 
@@ -507,57 +479,57 @@
 
                 <div id="view-dashboard" class="view-section hidden">
                     <div class="dashboard-actions">
-                        <button id="dash-btn-pdf" class="glass-btn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                            📄 Estudar PDF
+                        <button id="dash-btn-pdf" class="btn">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                            Estudar PDF
                         </button>
-                        <button id="dash-btn-summary" class="glass-btn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                            📧 Resumo Semanal
+                        <button id="dash-btn-summary" class="btn">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            Resumo semanal
                         </button>
-                        <button id="dash-btn-settings" class="glass-btn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                            ⚙️ Configurações
+                        <button id="dash-btn-settings" class="btn">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                            Configurações
                         </button>
                     </div>
 
                     <div class="dashboard-grid">
                         <div class="stat-card glass-panel">
-                            <div class="stat-icon" style="--icon-color: var(--info); background: var(--info-light);">
-                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            <div class="stat-icon" style="--icon-color: var(--info);">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                             </div>
                             <div class="stat-info">
                                 <h3>Hoje</h3>
-                                <p id="stat-hours-today" class="stat-number">0h</p>
-                                <div class="stat-sub" id="stat-hours-week-sub">0h esta semana</div>
+                                <p id="stat-hours-today" class="stat-number">0min</p>
+                                <div class="stat-sub" id="stat-hours-week-sub">0min esta semana</div>
                             </div>
                         </div>
                         <div class="stat-card glass-panel">
-                            <div class="stat-icon" style="--icon-color: var(--accent-color); background: var(--accent-light);">
-                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            <div class="stat-icon" style="--icon-color: var(--accent);">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                             </div>
                             <div class="stat-info">
-                                <h3>Este Mês</h3>
-                                <p id="stat-hours-month" class="stat-number">0h</p>
-                                <div class="stat-sub" id="stat-hours-total-sub">0h no total</div>
+                                <h3>Este mês</h3>
+                                <p id="stat-hours-month" class="stat-number">0min</p>
+                                <div class="stat-sub" id="stat-hours-total-sub">0min no total</div>
                             </div>
                         </div>
                         <div class="stat-card glass-panel">
-                            <div class="stat-icon" style="--icon-color: var(--warning); background: var(--warning-light);">
-                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                            <div class="stat-icon" style="--icon-color: var(--warning);">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
                             </div>
                             <div class="stat-info">
                                 <h3>Sequência</h3>
                                 <p id="stat-streak" class="stat-number">0</p>
-                                <div class="stat-sub">dias seguidos estudando</div>
+                                <div class="stat-sub">dias seguidos</div>
                             </div>
                         </div>
                         <div class="stat-card glass-panel">
-                            <div class="stat-icon" style="--icon-color: var(--success); background: var(--success-light);">
-                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            <div class="stat-icon" style="--icon-color: var(--success);">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                             </div>
                             <div class="stat-info">
-                                <h3>Taxa de Acerto</h3>
+                                <h3>Precisão</h3>
                                 <p id="stat-accuracy" class="stat-number">0%</p>
                                 <div class="stat-sub" id="stat-forecast-sub">0 revisões próx. 7 dias</div>
                             </div>
@@ -566,13 +538,13 @@
 
                     <div class="charts-row">
                         <div class="chart-container glass-panel">
-                            <h3>📈 Minutos Estudados — Últimos 30 Dias</h3>
+                            <h3>Minutos estudados — últimos 30 dias</h3>
                             <div class="canvas-wrapper">
                                 <canvas id="dailyChart"></canvas>
                             </div>
                         </div>
                         <div class="chart-container glass-panel">
-                            <h3>🎯 Aproveitamento Global</h3>
+                            <h3>Aproveitamento global</h3>
                             <div class="canvas-wrapper">
                                 <canvas id="progressChart"></canvas>
                             </div>
@@ -581,35 +553,35 @@
 
                     <div class="charts-row">
                         <div class="chart-container glass-panel">
-                            <h3>⏱️ Tempo por Matéria (Minutos)</h3>
+                            <h3>Tempo por matéria (minutos)</h3>
                             <div class="canvas-wrapper">
                                 <canvas id="timeChart"></canvas>
                             </div>
                         </div>
                         <div class="chart-container glass-panel">
-                            <h3>🧠 Desempenho por Matéria (Acurácia SRS)</h3>
+                            <h3>Desempenho por matéria (acurácia SRS)</h3>
                             <div class="canvas-wrapper">
                                 <canvas id="radarChart"></canvas>
                             </div>
                         </div>
                     </div>
 
-                    <div class="chart-container glass-panel" style="margin-bottom: 2rem;">
-                        <h3>🔥 Mapa de Calor de Estudo (Dia da Semana × Hora) — 3D</h3>
+                    <div class="chart-container glass-panel" style="margin-bottom: 1.6rem;">
+                        <h3>Mapa de calor de estudo — dia da semana × hora</h3>
                         <div id="plotly-3d" class="plotly-box"></div>
                     </div>
 
-                    <div class="glass-panel" style="margin-bottom: 2rem;">
-                        <h3 style="font-size: 1.3rem; color: var(--text-primary); margin-bottom: 1.5rem;">💡 Análises e Insights Inteligentes</h3>
+                    <div class="glass-panel" style="margin-bottom: 1.6rem;">
+                        <h3 class="section-heading">Análises inteligentes</h3>
                         <div class="insights-grid" id="insights-grid"></div>
                     </div>
 
-                    <div class="glass-panel" style="margin-bottom: 2rem; padding: 2rem;">
-                        <h3 style="font-size: 1.3rem; color: var(--text-primary); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem;">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                            Cards com Maior Dificuldade
+                    <div class="glass-panel" style="margin-bottom: 1.6rem; padding: 1.8rem;">
+                        <h3 class="section-heading" style="color: var(--danger);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                            Maior dificuldade
                         </h3>
-                        <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Os cards que você mais marcou como "Errei" ou "Difícil":</p>
+                        <p style="font-size: 0.9rem; color: var(--text-2); margin-bottom: 1.3rem;">Cards mais marcados como "Errei" ou "Difícil":</p>
                         <div class="difficult-cards-list" id="difficult-cards-list"></div>
                     </div>
                 </div>
@@ -625,46 +597,46 @@
                         </div>
 
                         <div class="scene" id="scene">
-                            <div class="card" id="card" tabindex="0" aria-label="Flashcard: Clique para virar">
+                            <div class="card" id="card" tabindex="0" aria-label="Flashcard: clique para virar">
 
                                 <div class="card__face card__face--front">
-                                    <div style="position: absolute; top: 1.8rem; left: 2.2rem; display: flex; align-items: center;">
-                                        <span class="card-label" style="position: relative; top: 0; left: 0;">Pergunta</span>
+                                    <div class="card-label-row">
+                                        <span class="card-label">Pergunta</span>
                                         <span class="subject-badge" id="card-subject-badge">Matéria</span>
                                     </div>
 
                                     <div class="card-actions">
-                                        <button id="btn-edit-card" class="card-action-btn" title="Editar Card">
-                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                        <button id="btn-edit-card" class="card-action-btn" title="Editar card">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                                         </button>
-                                        <button id="btn-delete-card" class="card-action-btn del" title="Excluir Card">
-                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                        <button id="btn-delete-card" class="card-action-btn del" title="Excluir card">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                                         </button>
                                     </div>
 
                                     <div id="card-question" class="markdown-content">...</div>
 
-                                    <button class="voice-btn" id="btn-voice-q" title="Ouvir Pergunta">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                                    <button class="voice-btn" id="btn-voice-q" title="Ouvir pergunta">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
                                     </button>
 
                                     <div class="flip-hint">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.92-10.24l-3.42 3.42"></path></svg>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.92-10.24l-3.42 3.42"></path></svg>
                                         Clique para virar
                                     </div>
                                 </div>
 
                                 <div class="card__face card__face--back">
-                                    <span class="card-label">Resposta</span>
+                                    <span class="card-label" style="position: absolute; top: 1.7rem; left: 2rem;">Resposta</span>
 
                                     <div id="card-answer" class="markdown-content">...</div>
 
-                                    <button class="voice-btn" id="btn-voice-a" title="Ouvir Resposta">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                                    <button class="voice-btn" id="btn-voice-a" title="Ouvir resposta">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
                                     </button>
 
-                                    <div class="flip-hint" style="bottom: 1.8rem;">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2.5 2v6h6M2.66 15.57a10 10 0 1 0 .92-10.24l3.42 3.42"></path></svg>
+                                    <div class="flip-hint">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2.5 2v6h6M2.66 15.57a10 10 0 1 0 .92-10.24l3.42 3.42"></path></svg>
                                         Clique para voltar
                                     </div>
                                 </div>
@@ -674,30 +646,30 @@
                         <div class="empty-state hidden" id="empty-state"></div>
 
                         <div class="controls" id="controls">
-                            <button id="prev-btn" class="glass-btn icon-btn" title="Card Anterior">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg>
+                            <button id="prev-btn" class="btn icon-btn" title="Card anterior">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg>
                             </button>
-                            <button id="next-btn" class="glass-btn icon-btn" title="Próximo Card">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                            <button id="next-btn" class="btn icon-btn" title="Próximo card">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
                             </button>
                         </div>
 
                         <div class="srs-controls hidden" id="srs-controls">
                             <button class="srs-btn btn-again" data-rating="1">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                                Errei <span>(Repetir)</span>
+                                Errei <span>repetir</span>
                             </button>
                             <button class="srs-btn btn-hard" data-rating="2">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                Difícil <span>(Em breve)</span>
+                                Difícil <span>&lt; 10 min</span>
                             </button>
                             <button class="srs-btn btn-good" data-rating="3">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                Bom <span>(Amanhã)</span>
+                                Bom <span>amanhã</span>
                             </button>
                             <button class="srs-btn btn-easy" data-rating="4">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                                Fácil <span>(Longe)</span>
+                                Fácil <span>intervalo longo</span>
                             </button>
                         </div>
                     </div>
@@ -708,16 +680,15 @@
                 </div>
 
                 <div id="view-community" class="view-section hidden">
-                    <div class="glass-panel" style="margin-bottom: 2rem;">
-                        <h2 style="margin-bottom: 0.5rem; color: var(--accent-color);">🎓 Rede Social de Estudos</h2>
-                        <p style="color: var(--text-secondary);">Compartilhe e estude resoluções de ENEM, vestibulares e concursos publicadas pela comunidade. Marque ❤️ nas melhores soluções!</p>
-                        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.8rem;">💡 Dica: ao criar um card, marque "Compartilhar na comunidade" para publicar sua resolução.</p>
+                    <div class="glass-panel" style="margin-bottom: 1.4rem;">
+                        <h2 style="margin-bottom: 0.4rem; font-size: 1.35rem;">Rede social de estudos</h2>
+                        <p style="color: var(--text-2); font-size: 0.95rem;">Resoluções de ENEM, vestibulares e concursos publicadas pela comunidade. Curta as melhores soluções para destacá-las.</p>
+                        <p style="color: var(--muted); font-size: 0.82rem; margin-top: 0.7rem;">Ao criar um card, marque "Tornar público na comunidade" para publicar sua resolução.</p>
                     </div>
                     <div id="community-cards-container" class="all-cards-wrapper"></div>
                 </div>
 
                 <div class="unified-widget" id="unified-widget" title="Arraste ou clique para expandir">
-                    <div class="tomato-leaf"></div> 
                     <div class="widget-header">
                         <div class="pomo-time-container">
                             <div class="pomodoro-time" id="pomodoro-display">25:00</div>
@@ -725,16 +696,16 @@
                     </div>
 
                     <div class="widget-body">
-                        <div class="pomo-subject" style="font-size:0.65rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;" id="pomo-mode-label">Foco</div>
+                        <div class="pomo-subject" id="pomo-mode-label">FOCO</div>
                         <select id="pomo-subject-select" class="pomo-subject-select">
-                            <option value="all">Todas as Matérias</option>
+                            <option value="all">Todas as matérias</option>
                         </select>
 
                         <div class="pomodoro-modes">
-                            <button class="mode-btn active" id="btn-mode-focus" title="Foco">🍅</button>
-                            <button class="mode-btn" id="btn-mode-break" title="Pausa Curta">☕</button>
-                            <button class="mode-btn" id="btn-mode-longbreak" title="Pausa Longa">🛋️</button>
-                            <button class="mode-btn" id="btn-mode-pdf" title="PDF">📄</button>
+                            <button class="mode-btn active" id="btn-mode-focus" title="Foco">FOCO</button>
+                            <button class="mode-btn" id="btn-mode-break" title="Pausa curta">PAUSA</button>
+                            <button class="mode-btn" id="btn-mode-longbreak" title="Pausa longa">LONGA</button>
+                            <button class="mode-btn" id="btn-mode-pdf" title="PDF">PDF</button>
                         </div>
 
                         <div class="pomodoro-controls">
@@ -751,14 +722,14 @@
 
                         <div class="widget-music-sec">
                             <select id="music-theme" class="music-select">
-                                <option value="lofi">📻 Rádio Lo-Fi</option>
-                                <option value="classical">📻 Rádio Clássica</option>
+                                <option value="lofi">Rádio Lo-Fi</option>
+                                <option value="classical">Rádio Clássica</option>
                             </select>
                             <div class="music-controls">
-                                <button id="music-play" class="circle-btn" style="width: 28px; height: 28px;" title="Tocar Música">
+                                <button id="music-play" class="circle-btn" style="width: 28px; height: 28px;" title="Tocar música">
                                     <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                                 </button>
-                                <button id="music-pause" class="circle-btn hidden" style="width: 28px; height: 28px;" title="Pausar Música">
+                                <button id="music-pause" class="circle-btn hidden" style="width: 28px; height: 28px;" title="Pausar música">
                                     <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
                                 </button>
                                 <input type="range" id="music-volume" min="0" max="1" step="0.1" value="0.3" title="Volume">
@@ -772,92 +743,92 @@
         </div>
 
         <div id="subject-modal" class="modal-overlay hidden" role="dialog">
-            <div class="modal-content glass-panel">
+            <div class="modal-content">
                 <div class="modal-header">
-                    <h2>Nova Matéria</h2>
+                    <h2>Nova matéria</h2>
                     <button id="close-subject-modal" class="close-btn" aria-label="Fechar">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
                 </div>
                 <form id="add-subject-form">
                     <div class="form-group">
-                        <label>Nome da Matéria</label>
-                        <input type="text" id="new-subject-name" required placeholder="Ex: Biologia Celular, Inglês...">
+                        <label>Nome da matéria</label>
+                        <input type="text" id="new-subject-name" required placeholder="Ex: Biologia celular, Inglês...">
                     </div>
-                    <button type="submit" class="glass-btn submit-btn primary">Criar Matéria</button>
+                    <button type="submit" class="btn primary submit-btn">Criar matéria</button>
                 </form>
             </div>
         </div>
 
         <div id="add-modal" class="modal-overlay hidden" role="dialog">
-            <div class="modal-content glass-panel">
+            <div class="modal-content">
                 <div class="modal-header">
-                    <h2>Criar Flashcard</h2>
+                    <h2>Criar flashcard</h2>
                     <button id="close-modal-btn" class="close-btn" aria-label="Fechar">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
                 </div>
                 <form id="add-card-form">
                     <div class="form-group">
-                        <label>Matéria de Destino</label>
+                        <label>Matéria de destino</label>
                         <div class="subject-select-wrapper">
                             <select id="card-subject-select" required>
                                 <option value="" disabled selected>Selecione uma matéria...</option>
                             </select>
-                            <button type="button" class="inline-add-btn" id="toggle-inline-subject" title="Nova Matéria Rápida">+</button>
+                            <button type="button" class="inline-add-btn" id="toggle-inline-subject" title="Nova matéria rápida">+</button>
                         </div>
                         <div class="inline-subject-input-group hidden" id="inline-subject-group">
                             <input type="text" id="inline-subject-name" placeholder="Nome da nova matéria...">
-                            <button type="button" class="glass-btn primary" id="save-inline-subject">Salvar</button>
+                            <button type="button" class="btn primary" id="save-inline-subject">Salvar</button>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.6rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.55rem;">
                             <label for="question" style="margin-bottom:0;">Pergunta</label>
-                            <button type="button" style="background:none; border:none; color:var(--accent-color); cursor:pointer; font-size:0.85rem; font-weight:600;" onclick="document.getElementById('toolbar-q').classList.toggle('hidden')">🪄 Mostrar Formatação</button>
+                            <button type="button" class="format-toggle" onclick="document.getElementById('toolbar-q').classList.toggle('hidden')">Formatação</button>
                         </div>
                         <div class="format-toolbar hidden" id="toolbar-q">
                             <button type="button" class="format-btn" onclick="insertFormat('question', '**', '**')" title="Negrito"><b>B</b></button>
                             <button type="button" class="format-btn" onclick="insertFormat('question', '*', '*')" title="Itálico"><i>I</i></button>
-                            <button type="button" class="format-btn" onclick="insertFormat('question', '$$ ', ' $$')" title="Fórmula Matemática KaTeX">∑</button>
+                            <button type="button" class="format-btn" onclick="insertFormat('question', '$$ ', ' $$')" title="Fórmula KaTeX">&Sigma;</button>
                             <button type="button" class="format-btn" onclick="insertFormat('question', '`', '`')" title="Código">&lt;/&gt;</button>
-                            <button type="button" class="format-btn" onclick="insertFormat('question', '![Imagem](', ')')" title="Imagem por Link">🖼️</button>
+                            <button type="button" class="format-btn" onclick="insertFormat('question', '![Imagem](', ')')" title="Imagem por link">IMG</button>
                         </div>
                         <textarea id="question" rows="3" required placeholder="Ex: Qual é a fórmula de Bhaskara?"></textarea>
                     </div>
 
                     <div class="form-group">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.6rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.55rem;">
                             <label for="answer" style="margin-bottom:0;">Resposta</label>
-                            <button type="button" style="background:none; border:none; color:var(--accent-color); cursor:pointer; font-size:0.85rem; font-weight:600;" onclick="document.getElementById('toolbar-a').classList.toggle('hidden')">🪄 Mostrar Formatação</button>
+                            <button type="button" class="format-toggle" onclick="document.getElementById('toolbar-a').classList.toggle('hidden')">Formatação</button>
                         </div>
                         <div class="format-toolbar hidden" id="toolbar-a">
                             <button type="button" class="format-btn" onclick="insertFormat('answer', '**', '**')" title="Negrito"><b>B</b></button>
                             <button type="button" class="format-btn" onclick="insertFormat('answer', '*', '*')" title="Itálico"><i>I</i></button>
-                            <button type="button" class="format-btn" onclick="insertFormat('answer', '$$ ', ' $$')" title="Fórmula Matemática KaTeX">∑</button>
+                            <button type="button" class="format-btn" onclick="insertFormat('answer', '$$ ', ' $$')" title="Fórmula KaTeX">&Sigma;</button>
                             <button type="button" class="format-btn" onclick="insertFormat('answer', '`', '`')" title="Código">&lt;/&gt;</button>
-                            <button type="button" class="format-btn" onclick="insertFormat('answer', '![Imagem](', ')')" title="Imagem por Link">🖼️</button>
+                            <button type="button" class="format-btn" onclick="insertFormat('answer', '![Imagem](', ')')" title="Imagem por link">IMG</button>
                         </div>
                         <textarea id="answer" rows="3" required placeholder="Ex: $$ x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} $$"></textarea>
                     </div>
 
                     <label class="share-check">
                         <input type="checkbox" id="card-share-community">
-                        🌍 Compartilhar na comunidade (ENEM / Vestibular / Concursos)
+                        Tornar público na comunidade (ENEM / vestibular / concursos)
                     </label>
 
-                    <button type="submit" class="glass-btn submit-btn primary" id="submit-card-btn">Salvar Flashcard</button>
+                    <button type="submit" class="btn primary submit-btn" id="submit-card-btn">Salvar flashcard</button>
                 </form>
             </div>
         </div>
 
         <div id="edit-modal" class="modal-overlay hidden" role="dialog">
-            <div class="modal-content glass-panel">
+            <div class="modal-content">
                 <div class="modal-header">
-                    <h2>Editar Flashcard</h2>
+                    <h2>Editar flashcard</h2>
                     <button id="close-edit-modal-btn" class="close-btn" aria-label="Fechar">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
                 </div>
                 <form id="edit-card-form">
@@ -875,24 +846,24 @@
                     </div>
                     <label class="share-check" style="margin-bottom: 1rem;">
                         <input type="checkbox" id="edit-share-community">
-                        🌍 Visível na comunidade
+                        Visível na comunidade
                     </label>
-                    <button type="submit" class="glass-btn submit-btn primary" id="submit-edit-btn">Salvar Alterações</button>
+                    <button type="submit" class="btn primary submit-btn" id="submit-edit-btn">Salvar alterações</button>
                 </form>
             </div>
         </div>
 
         <div id="pdf-modal" class="modal-overlay hidden" role="dialog">
-            <div class="modal-content glass-panel">
+            <div class="modal-content">
                 <div class="modal-header">
-                    <h2>📄 Estudar PDF com Cronômetro</h2>
+                    <h2>Estudar PDF com cronômetro</h2>
                     <button id="close-pdf-modal-btn" class="close-btn" aria-label="Fechar">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
                 </div>
                 <div class="form-group">
                     <label>Arquivo PDF (fica no seu dispositivo — não é enviado)</label>
-                    <input type="file" id="pdf-file-input" accept="application/pdf" style="padding: 0.6rem;">
+                    <input type="file" id="pdf-file-input" accept="application/pdf" style="padding: 0.5rem;">
                 </div>
                 <div class="form-group">
                     <label>Matéria</label>
@@ -902,56 +873,56 @@
                     <label>Duração da sessão (minutos)</label>
                     <input type="number" id="pdf-duration-input" min="1" max="600" value="25">
                 </div>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">⏱️ O PDF abre em tela cheia e o cronômetro fica flutuante no canto. Ao terminar, um alarme sonoro configuraável toca e o tempo é registrado no seu dashboard.</p>
-                <button id="btn-pdf-start" class="glass-btn submit-btn primary">Iniciar Sessão de Leitura</button>
+                <p class="settings-hint">O PDF abre em tela cheia e o cronômetro fica flutuante. Ao terminar, um alarme toca e o tempo é registrado no dashboard.</p>
+                <button id="btn-pdf-start" class="btn primary submit-btn">Iniciar sessão de leitura</button>
             </div>
         </div>
 
         <div id="settings-modal" class="modal-overlay hidden" role="dialog">
-            <div class="modal-content glass-panel">
+            <div class="modal-content">
                 <div class="modal-header">
-                    <h2>⚙️ Configurações do Cronômetro</h2>
+                    <h2>Configurações do cronômetro</h2>
                     <button id="close-settings-modal-btn" class="close-btn" aria-label="Fechar">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
                 </div>
-                <div class="settings-row"><label>🍅 Foco (min)</label><input type="number" id="set-focus" min="1" max="180"></div>
-                <div class="settings-row"><label>☕ Pausa curta (min)</label><input type="number" id="set-short" min="1" max="60"></div>
-                <div class="settings-row"><label>🛋️ Pausa longa (min)</label><input type="number" id="set-long" min="1" max="120"></div>
-                <div class="settings-row"><label>🔔 Alarme sonoro ao terminar</label><input type="checkbox" id="set-sound" style="width:20px;height:20px;accent-color:var(--accent-color);"></div>
-                <div class="settings-row"><label>🔊 Volume do alarme</label><input type="range" id="set-volume" min="0" max="1" step="0.05"></div>
-                <div class="settings-row"><label>📳 Notificação do navegador</label><input type="checkbox" id="set-notify" style="width:20px;height:20px;accent-color:var(--accent-color);"></div>
-                <div style="margin-top: 1.5rem; border-top: 1px solid var(--glass-border); padding-top: 1rem;">
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.8rem;">📧 Envio automático de resumo semanal (EmailJS — opcional):</p>
+                <div class="settings-row"><label>Foco (min)</label><input type="number" id="set-focus" min="1" max="180"></div>
+                <div class="settings-row"><label>Pausa curta (min)</label><input type="number" id="set-short" min="1" max="60"></div>
+                <div class="settings-row"><label>Pausa longa (min)</label><input type="number" id="set-long" min="1" max="120"></div>
+                <div class="settings-row"><label>Alarme sonoro ao terminar</label><input type="checkbox" id="set-sound" style="width:18px;height:18px;accent-color:var(--accent);"></div>
+                <div class="settings-row"><label>Volume do alarme</label><input type="range" id="set-volume" min="0" max="1" step="0.05"></div>
+                <div class="settings-row"><label>Notificação do navegador</label><input type="checkbox" id="set-notify" style="width:18px;height:18px;accent-color:var(--accent);"></div>
+                <div style="margin-top: 1.4rem; border-top: 1px solid var(--border); padding-top: 1rem;">
+                    <p class="settings-hint">Envio automático de resumo semanal (EmailJS — opcional):</p>
                     <div class="settings-row"><label>Public Key</label><input type="text" id="set-emailjs-key" placeholder="EmailJS"></div>
                     <div class="settings-row"><label>Service ID</label><input type="text" id="set-emailjs-service"></div>
                     <div class="settings-row"><label>Template ID</label><input type="text" id="set-emailjs-template"></div>
                 </div>
-                <button id="btn-save-settings" class="glass-btn submit-btn primary" style="margin-top: 1.5rem;">Salvar Configurações</button>
+                <button id="btn-save-settings" class="btn primary submit-btn" style="margin-top: 1.4rem;">Salvar configurações</button>
             </div>
         </div>
 
         <div id="summary-modal" class="modal-overlay hidden" role="dialog">
-            <div class="modal-content glass-panel">
+            <div class="modal-content">
                 <div class="modal-header">
-                    <h2>📧 Resumo Semanal</h2>
+                    <h2>Resumo semanal</h2>
                     <button id="close-summary-modal-btn" class="close-btn" aria-label="Fechar">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
                 </div>
                 <pre class="summary-pre" id="summary-text">Gerando resumo...</pre>
-                <button id="btn-send-summary" class="glass-btn submit-btn primary" style="margin-bottom: 0.6rem;">📧 Enviar por E-mail</button>
-                <button id="btn-copy-summary" class="glass-btn submit-btn" style="margin-bottom: 0.6rem;">📋 Copiar Resumo</button>
-                <p style="font-size: 0.78rem; color: var(--text-muted);">Para envio 100% automático toda semana, configure o EmailJS em ⚙️ Configurações (chaves gratuitas em emailjs.com) ou use um agendador com este app aberto.</p>
+                <button id="btn-send-summary" class="btn primary submit-btn" style="margin-bottom: 0.6rem;">Enviar por e-mail</button>
+                <button id="btn-copy-summary" class="btn submit-btn" style="margin-bottom: 0.6rem;">Copiar resumo</button>
+                <p class="settings-hint">Para envio 100% automático toda semana, configure o EmailJS em Configurações (chaves gratuitas em emailjs.com) ou use um agendador com este app aberto.</p>
             </div>
         </div>
 
         <div id="pdf-reader" class="pdf-reader hidden">
             <div class="pdf-reader-header">
-                <h3 id="pdf-reader-title">📄 Estudando PDF</h3>
+                <h3 id="pdf-reader-title">Estudando PDF</h3>
                 <div style="display:flex; gap: 0.6rem; align-items:center;">
-                    <span id="pdf-timer-chip" style="font-family: monospace; font-weight: 700; color: var(--accent-color); font-size: 1.1rem;">25:00</span>
-                    <button id="btn-pdf-close" class="glass-btn" style="padding: 0.5rem 1rem;">Encerrar Sessão</button>
+                    <span id="pdf-timer-chip" style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--accent); font-size: 1.05rem;">25:00</span>
+                    <button id="btn-pdf-close" class="btn" style="padding: 0.5rem 1rem;">Encerrar sessão</button>
                 </div>
             </div>
             <iframe class="pdf-frame" id="pdf-frame" title="Leitor de PDF"></iframe>
@@ -991,10 +962,10 @@
 
         let pomoInterval;
         let isPomoRunning = false;
-        let pomoMode = 'focus'; 
+        let pomoMode = 'focus';
         let pomoTimeLeft = 25 * 60;
         let pomoElapsed = 0;
-        let pendingTimeUpdates = {}; 
+        let pendingTimeUpdates = {};
 
         let settings = JSON.parse(localStorage.getItem('flSettings') || '{}');
         settings = Object.assign({ focusMin: 25, shortMin: 5, longMin: 15, soundOn: true, volume: 0.8, notifyOn: true, emailjsKey: '', emailjsService: '', emailjsTemplate: '' }, settings);
@@ -1016,10 +987,12 @@
             tabLogin: document.getElementById('tab-login'),
             tabRegister: document.getElementById('tab-register'),
             userDisplayEmail: document.getElementById('user-display-email'),
+            userAvatar: document.getElementById('user-avatar'),
             logoutBtn: document.getElementById('logout-btn'),
             themeToggle: document.getElementById('theme-toggle'),
             iconSun: document.getElementById('theme-icon-sun'),
             iconMoon: document.getElementById('theme-icon-moon'),
+            themeLabel: document.getElementById('theme-label'),
             tabStudy: document.getElementById('tab-study'),
             tabAllCards: document.getElementById('tab-all-cards'),
             tabDashboard: document.getElementById('tab-dashboard'),
@@ -1028,6 +1001,8 @@
             viewAllCards: document.getElementById('view-all-cards'),
             viewDashboard: document.getElementById('view-dashboard'),
             viewCommunity: document.getElementById('view-community'),
+            viewTitle: document.getElementById('view-title'),
+            shortcutHint: document.getElementById('shortcut-hint'),
             subjectFilterContainer: document.getElementById('subject-filter-container'),
             studySubjectFilter: document.getElementById('study-subject-filter'),
             allCardsContainer: document.getElementById('all-cards-container'),
@@ -1128,18 +1103,18 @@
         };
 
         const AUDIO_TRACKS = {
-            lofi: "https://stream.zeno.fm/f3wvbbqmdg8uv", 
-            classical: "http://stream.srg-ssr.ch/m/rsc_de/mp3_128" 
+            lofi: "https://stream.zeno.fm/f3wvbbqmdg8uv",
+            classical: "http://stream.srg-ssr.ch/m/rsc_de/mp3_128"
         };
 
         const WEEKDAY_NAMES = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
+        const VIEW_TITLES = { tabDashboard: 'Progresso', tabStudy: 'Estudar', tabAllCards: 'Meus cards', tabCommunity: 'Comunidade' };
 
         function fmtHours(sec) {
             if (sec < 3600) return Math.round(sec / 60) + 'min';
             const h = sec / 3600;
             return (h < 10 ? h.toFixed(1) : Math.round(h)) + 'h';
         }
-        function fmtMinutes(sec) { return Math.round(sec / 60); }
         function fmtClock(totalSec) {
             const m = Math.floor(totalSec / 60).toString().padStart(2, '0');
             const s = (totalSec % 60).toString().padStart(2, '0');
@@ -1148,27 +1123,6 @@
         function todayKey(offsetDays = 0) {
             const d = new Date(Date.now() + offsetDays * DAY_MS);
             return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-        }
-
-        function createBackgroundAnimations() {
-            const container = document.getElementById('bg-animations');
-            const svgs = [
-                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>',
-                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>',
-                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="22" x2="14" y2="22"></line><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg>'
-            ];
-            for (let i = 0; i < 15; i++) {
-                const el = document.createElement('div');
-                el.className = 'floating-icon';
-                el.innerHTML = svgs[Math.floor(Math.random() * svgs.length)];
-                el.style.left = Math.random() * 100 + 'vw';
-                const size = 30 + Math.random() * 40;
-                el.style.width = size + 'px';
-                el.style.height = size + 'px';
-                el.style.animationDuration = 25 + Math.random() * 30 + 's';
-                el.style.animationDelay = -Math.random() * 30 + 's';
-                container.appendChild(el);
-            }
         }
 
         window.insertFormat = function(elementId, prefix, suffix) {
@@ -1267,14 +1221,23 @@
             } catch (e) { console.error('Erro ao registrar revisão', e); }
         }
 
-        function init() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.body.setAttribute('data-theme', 'dark');
+        function applyTheme(theme) {
+            if (theme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                DOM.iconSun.classList.add('hidden');
+                DOM.iconMoon.classList.remove('hidden');
+                DOM.themeLabel.textContent = 'Claro';
+            } else {
+                document.body.removeAttribute('data-theme');
                 DOM.iconSun.classList.remove('hidden');
                 DOM.iconMoon.classList.add('hidden');
+                DOM.themeLabel.textContent = 'Escuro';
             }
-            createBackgroundAnimations();
+        }
+
+        function init() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            applyTheme(savedTheme);
             setupEventListeners();
             setupDraggablePomodoro();
             pomoTimeLeft = settings.focusMin * 60;
@@ -1287,6 +1250,7 @@
                 if (user) {
                     currentUser = user;
                     DOM.userDisplayEmail.textContent = user.email;
+                    DOM.userAvatar.textContent = (user.email[0] || 'U').toUpperCase();
                     DOM.authView.classList.add('hidden');
                     DOM.appWrapper.classList.remove('hidden');
                     await loadSubjects();
@@ -1337,7 +1301,7 @@
             document.addEventListener('mouseup', () => {
                 if (isDraggingWidget) {
                     isDraggingWidget = false;
-                    DOM.unifiedWidget.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                    DOM.unifiedWidget.style.transition = 'all .35s cubic-bezier(.34,1.3,.64,1)';
                 }
             });
             DOM.unifiedWidget.addEventListener('touchstart', (e) => {
@@ -1352,7 +1316,7 @@
             document.addEventListener('touchend', () => {
                 if (isDraggingWidget) {
                     isDraggingWidget = false;
-                    DOM.unifiedWidget.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                    DOM.unifiedWidget.style.transition = 'all .35s cubic-bezier(.34,1.3,.64,1)';
                 }
             });
         }
@@ -1441,7 +1405,7 @@
             selects.forEach(el => {
                 if (!el) return;
                 const isFilter = (el.id === 'study-subject-filter' || el.id === 'pomo-subject-select');
-                el.innerHTML = isFilter ? '<option value="all">Todas as Matérias</option>' : '<option value="" disabled selected>Selecione uma matéria...</option>';
+                el.innerHTML = isFilter ? '<option value="all">Todas as matérias</option>' : '<option value="" disabled selected>Selecione uma matéria...</option>';
                 subjects.forEach(sub => {
                     el.innerHTML += '<option value="' + sub.id + '">' + sub.name + '</option>';
                 });
@@ -1451,14 +1415,14 @@
 
         function getSubjectName(id) {
             const sub = subjects.find(s => s.id === id);
-            return sub ? sub.name : (id ? 'Sem Matéria' : 'Geral');
+            return sub ? sub.name : (id ? 'Sem matéria' : 'Geral');
         }
 
         function updatePomoDisplay() {
             const clock = fmtClock(pomoTimeLeft);
             DOM.pomoDisplay.textContent = clock;
             if (pdfSession.active) DOM.pdfTimerChip.textContent = clock;
-            document.title = isPomoRunning ? clock + ' • FlashLearn' : 'FlashLearn Pro - Domine Qualquer Assunto';
+            document.title = isPomoRunning ? clock + ' · FlashLearn' : 'FlashLearn Pro';
         }
 
         function flushPomoSession() {
@@ -1476,9 +1440,8 @@
             const mins = customMinutes !== undefined ? customMinutes : (mode === 'focus' ? settings.focusMin : mode === 'break' ? settings.shortMin : mode === 'longbreak' ? settings.longMin : settings.focusMin);
             pomoTimeLeft = mins * 60;
 
-            const labels = { focus: '🍅 Foco', break: '☕ Pausa Curta', longbreak: '🛋️ Pausa Longa', pdf: '📄 PDF' };
-            DOM.pomoModeLabel.textContent = labels[mode] || mode;
-            DOM.unifiedWidget.classList.toggle('pdf-mode', mode === 'pdf');
+            const labels = { focus: 'FOCO', break: 'PAUSA', longbreak: 'LONGA', pdf: 'PDF' };
+            DOM.pomoModeLabel.textContent = labels[mode] || mode.toUpperCase();
 
             const btns = { focus: DOM.btnModeFocus, break: DOM.btnModeBreak, longbreak: DOM.btnModeLongBreak, pdf: DOM.btnModePdf };
             Object.values(btns).forEach(b => b.classList.remove('active'));
@@ -1508,13 +1471,13 @@
                     pauseTimer(true);
                     const isFocus = pomoMode === 'focus' || pomoMode === 'pdf';
                     playAlarmBeep();
-                    notifyUser(isFocus ? '⏰ Sessão concluída!' : '☕ Pausa concluída!', isFocus ? 'Hora de descansar um pouco.' : 'Hora de voltar aos estudos!');
+                    notifyUser(isFocus ? 'Sessão concluída' : 'Pausa concluída', isFocus ? 'Hora de descansar um pouco.' : 'Hora de voltar aos estudos.');
                     if (pomoMode === 'pdf') {
-                        alert('📄 Sessão de leitura de PDF concluída! Tempo registrado no dashboard.');
+                        alert('Sessão de leitura de PDF concluída. Tempo registrado no dashboard.');
                         closePdfReader(true);
                         switchPomoMode('focus');
                     } else {
-                        alert(pomoMode === 'focus' ? 'Sessão de Foco concluída! Hora de descansar.' : 'Pausa concluída! Voltando aos estudos.');
+                        alert(pomoMode === 'focus' ? 'Sessão de foco concluída. Hora de descansar.' : 'Pausa concluída. Voltando aos estudos.');
                         switchPomoMode(pomoMode === 'focus' ? 'break' : 'focus');
                     }
                 }
@@ -1544,7 +1507,7 @@
                     } catch (e) { console.error("Erro sincronizando tempo", e); }
                 }
             }
-            pendingTimeUpdates = {}; 
+            pendingTimeUpdates = {};
             if (DOM.viewDashboard.classList.contains('active')) updateDashboard();
         }
 
@@ -1638,6 +1601,8 @@
             const toReviewCount = allCards.filter(c => !c.nextReviewDate || c.nextReviewDate <= nowIso).length;
             const learnedCount = allCards.filter(c => c.interval > 0).length;
 
+            const cssVar = (n) => getComputedStyle(document.body).getPropertyValue(n).trim();
+
             if (document.getElementById('dailyChart')) {
                 const ctx = document.getElementById('dailyChart').getContext('2d');
                 const labels = Object.keys(stats.perDay).map(k => k.slice(5));
@@ -1645,8 +1610,11 @@
                 if (!dailyChart) {
                     dailyChart = new Chart(ctx, {
                         type: 'line',
-                        data: { labels, datasets: [{ label: 'Minutos', data, borderColor: '#6d28d9', backgroundColor: 'rgba(109,40,217,0.15)', fill: true, tension: 0.4, pointRadius: 2 }] },
-                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                        data: { labels, datasets: [{ label: 'Minutos', data, borderColor: cssVar('--accent') || '#C9A254', backgroundColor: 'rgba(201,162,84,0.10)', fill: true, tension: 0.4, pointRadius: 2, borderWidth: 2 }] },
+                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: {
+                            y: { beginAtZero: true, grid: { color: cssVar('--border') }, ticks: { color: cssVar('--muted') } },
+                            x: { grid: { display: false }, ticks: { color: cssVar('--muted'), maxTicksLimit: 10 } }
+                        } }
                     });
                 } else {
                     dailyChart.data.labels = labels;
@@ -1658,11 +1626,11 @@
             if (document.getElementById('progressChart')) {
                 const ctx = document.getElementById('progressChart').getContext('2d');
                 if (!progressChart) {
-                    const textColor = getComputedStyle(document.body).getPropertyValue('--text-secondary');
+                    const textColor = cssVar('--text-2');
                     progressChart = new Chart(ctx, {
                         type: 'doughnut',
-                        data: { labels: ['Para Revisar', 'Aprendidos'], datasets: [{ data: [toReviewCount, learnedCount], backgroundColor: ['#f59e0b', '#10b981'], borderWidth: 0, hoverOffset: 4 }] },
-                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: textColor, font: { family: 'Inter' } } } } }
+                        data: { labels: ['Para revisar', 'Aprendidos'], datasets: [{ data: [toReviewCount, learnedCount], backgroundColor: ['#5F626C', cssVar('--accent') || '#C9A254'], borderWidth: 0, hoverOffset: 4 }] },
+                        options: { responsive: true, maintainAspectRatio: false, cutout: '68%', plugins: { legend: { position: 'bottom', labels: { color: textColor, font: { family: 'Inter' }, padding: 16, usePointStyle: true, boxWidth: 8 } } } }
                     });
                 } else {
                     progressChart.data.datasets[0].data = [toReviewCount, learnedCount];
@@ -1677,8 +1645,11 @@
                 if (!timeChart) {
                     timeChart = new Chart(ctx, {
                         type: 'bar',
-                        data: { labels, datasets: [{ label: 'Minutos', data, backgroundColor: '#6d28d9', borderRadius: 6 }] },
-                        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
+                        data: { labels, datasets: [{ label: 'Minutos', data, backgroundColor: 'rgba(201,162,84,0.75)', borderRadius: 4, maxBarThickness: 34 }] },
+                        options: { responsive: true, maintainAspectRatio: false, scales: {
+                            y: { beginAtZero: true, grid: { color: cssVar('--border') }, ticks: { color: cssVar('--muted') } },
+                            x: { grid: { display: false }, ticks: { color: cssVar('--muted') } }
+                        }, plugins: { legend: { display: false } } }
                     });
                 } else {
                     timeChart.data.labels = labels;
@@ -1695,8 +1666,8 @@
                 if (!radarChart) {
                     radarChart = new Chart(ctx, {
                         type: 'radar',
-                        data: { labels, datasets: [{ label: 'Acurácia %', data, backgroundColor: 'rgba(109,40,217,0.2)', borderColor: '#6d28d9', pointBackgroundColor: '#6d28d9' }] },
-                        options: { responsive: true, maintainAspectRatio: false, scales: { r: { min: 0, max: 100, ticks: { display: false } } }, plugins: { legend: { display: false } } }
+                        data: { labels, datasets: [{ label: 'Acurácia %', data, backgroundColor: 'rgba(201,162,84,0.15)', borderColor: cssVar('--accent') || '#C9A254', pointBackgroundColor: cssVar('--accent') || '#C9A254', borderWidth: 2 }] },
+                        options: { responsive: true, maintainAspectRatio: false, scales: { r: { min: 0, max: 100, ticks: { display: false }, grid: { color: cssVar('--border') }, angleLines: { color: cssVar('--border') }, pointLabels: { color: cssVar('--muted'), font: { family: 'Inter', size: 11 } } } }, plugins: { legend: { display: false } } }
                     });
                 } else {
                     radarChart.data.labels = labels;
@@ -1710,10 +1681,10 @@
             const diffCards = allCards.filter(c => c.mistakes > 0).sort((a, b) => b.mistakes - a.mistakes).slice(0, 5);
             DOM.diffList.innerHTML = '';
             if (diffCards.length === 0) {
-                DOM.diffList.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 1rem;">Você ainda não registrou dificuldades. Continue estudando!</p>';
+                DOM.diffList.innerHTML = '<p style="color: var(--muted); text-align: center; padding: 1rem; font-size: 0.9rem;">Nenhuma dificuldade registrada. Continue estudando.</p>';
             } else {
                 diffCards.forEach(c => {
-                    DOM.diffList.innerHTML += '<div class="diff-card-item"><span class="diff-card-q">' + c.question.replace(/</g, '&lt;') + '</span><span class="diff-badge">' + c.mistakes + 'x Erros</span></div>';
+                    DOM.diffList.innerHTML += '<div class="diff-card-item"><span class="diff-card-q">' + c.question.replace(/</g, '&lt;') + '</span><span class="diff-badge">' + c.mistakes + ' ERROS</span></div>';
                 });
             }
         }
@@ -1723,24 +1694,25 @@
             if (!el || !window.Plotly) return;
             try {
                 const z = stats.heat.map(row => row.map(v => Math.round(v * 10) / 10));
+                const cssVar = (n) => getComputedStyle(document.body).getPropertyValue(n).trim();
                 const data = [{
                     type: 'surface',
                     z: z,
                     x: Array.from({ length: 24 }, (_, i) => i),
                     y: WEEKDAY_NAMES,
-                    colorscale: 'Purples',
+                    colorscale: [[0, cssVar('--surface-2') || '#191B20'], [1, '#C9A254']],
                     showscale: false,
-                    contours: { z: { show: true, usecolormap: true, highlightcolor: '#6d28d9', project: { z: true } } }
+                    contours: { z: { show: true, usecolormap: true, highlightcolor: '#E2C078', project: { z: true } } }
                 }];
                 const layout = {
                     margin: { l: 0, r: 0, b: 0, t: 10 },
                     scene: {
-                        xaxis: { title: 'Hora do Dia', ticktext: ['0h','6h','12h','18h','23h'], tickvals: [0,6,12,18,23] },
-                        yaxis: { title: 'Dia da Semana' },
-                        zaxis: { title: 'Minutos' }
+                        xaxis: { title: { text: 'Hora' }, ticktext: ['0h','6h','12h','18h','23h'], tickvals: [0,6,12,18,23], color: cssVar('--muted'), gridcolor: cssVar('--border') },
+                        yaxis: { title: { text: 'Dia' }, color: cssVar('--muted'), gridcolor: cssVar('--border') },
+                        zaxis: { title: { text: 'Min' }, color: cssVar('--muted'), gridcolor: cssVar('--border') }
                     },
                     paper_bgcolor: 'rgba(0,0,0,0)',
-                    font: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') }
+                    font: { color: cssVar('--text-2'), family: 'Inter' }
                 };
                 Plotly.react(el, data, layout, { displayModeBar: false, responsive: true });
             } catch (e) { console.error('Plotly erro', e); }
@@ -1748,21 +1720,20 @@
 
         function renderInsights(stats, forecast, accuracy) {
             const items = [];
-            const weekMinutes = stats.weekByDay.map(d => Math.round(d.minutes));
             const busiest = stats.busiestDay;
             const bestSubj = computeSubjectAccuracy().sort((a, b) => b.accuracy - a.accuracy)[0];
 
-            items.push({ cls: 'good', title: '📅 Dia mais produtivo', value: busiest.minutes > 0 ? busiest.day + ' (' + fmtHours(busiest.minutes * 60) + ' acumulados)' : 'Ainda sem dados — comece o cronômetro!' });
-            items.push({ cls: 'info', title: '🕐 Melhor horário para estudar', value: stats.hourTotals[stats.busiestHour] > 0 ? 'Entre ' + stats.busiestHour + 'h e ' + (stats.busiestHour + 1) + 'h' : 'Sem padrão detectado ainda' });
-            items.push({ cls: 'warn', title: '📚 Matéria forte', value: bestSubj ? bestSubj.name + ' — ' + bestSubj.accuracy + '% de acerto' : 'Responda cards para calcular' });
-            items.push({ cls: '', title: '⏳ Carga de revisão (7 dias)', value: forecast.count7 + ' cards (' + forecast.overdue + ' vencidos agora)' });
+            items.push({ cls: 'good', title: 'Dia mais produtivo', value: busiest.minutes > 0 ? busiest.day + ' (' + fmtHours(busiest.minutes * 60) + ' acumulados)' : 'Sem dados — inicie o cronômetro' });
+            items.push({ cls: 'info', title: 'Melhor horário', value: stats.hourTotals[stats.busiestHour] > 0 ? 'Entre ' + stats.busiestHour + 'h e ' + (stats.busiestHour + 1) + 'h' : 'Padrão ainda não detectado' });
+            items.push({ cls: 'warn', title: 'Matéria forte', value: bestSubj ? bestSubj.name + ' — ' + bestSubj.accuracy + '% de acerto' : 'Responda cards para calcular' });
+            items.push({ cls: '', title: 'Carga de revisão (7d)', value: forecast.count7 + ' cards (' + forecast.overdue + ' vencidos)' });
 
             const weekGoal = 10 * 3600;
             const pctGoal = Math.min(100, Math.round(100 * stats.week / weekGoal));
-            items.push({ cls: stats.week >= weekGoal ? 'good' : '', title: '🎯 Meta semanal (10h)', value: pctGoal + '% — ' + fmtHours(stats.week) + ' de 10h' });
+            items.push({ cls: stats.week >= weekGoal ? 'good' : '', title: 'Meta semanal (10h)', value: pctGoal + '% — ' + fmtHours(stats.week) + ' de 10h' });
 
             const avgEase = allCards.length ? (allCards.reduce((s, c) => s + (c.easeFactor || 2.5), 0) / allCards.length) : 2.5;
-            items.push({ cls: avgEase >= 2.5 ? 'good' : 'warn', title: '🧠 Fator de facilidade médio (SRS)', value: avgEase.toFixed(2) + ' — ' + (avgEase >= 2.5 ? 'memória retendo bem' : 'considere revisões mais frequentes') });
+            items.push({ cls: avgEase >= 2.5 ? 'good' : 'warn', title: 'Facilidade média (SRS)', value: avgEase.toFixed(2) + ' — ' + (avgEase >= 2.5 ? 'boa retenção' : 'revise com mais frequência') });
 
             DOM.insightsGrid.innerHTML = items.map(i =>
                 '<div class="insight-item ' + i.cls + '"><div class="insight-title">' + i.title + '</div><div class="insight-value">' + i.value + '</div></div>'
@@ -1791,26 +1762,28 @@
 
                 if (allCards.length === 0) {
                     DOM.emptyState.innerHTML = `
-                        <div class="empty-icon" style="background: var(--accent-light); color: var(--accent-color);">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                        <div class="empty-icon">
+                            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path>
+                            </svg>
                         </div>
-                        <h2>Bem-vindo ao FlashLearn PRO!</h2>
-                        <p>Siga os passos abaixo para começar:</p>
+                        <h2>Bem-vindo ao FlashLearn Pro</h2>
+                        <p>Comece em três passos:</p>
                         <div class="onboarding-steps">
                             <div class="step-item"><div class="step-number">1</div><div class="step-text">Clique em <strong>Matéria</strong> para criar sua primeira disciplina.</div></div>
-                            <div class="step-item"><div class="step-number">2</div><div class="step-text">Clique em <strong>Card</strong> para adicionar perguntas e respostas.</div></div>
-                            <div class="step-item"><div class="step-number">3</div><div class="step-text">Use o <strong>cronômetro</strong> flutuante e a aba <strong>📄 PDF</strong> para registrar seu tempo de estudo.</div></div>
+                            <div class="step-item"><div class="step-number">2</div><div class="step-text">Clique em <strong>Novo card</strong> para adicionar perguntas e respostas.</div></div>
+                            <div class="step-item"><div class="step-number">3</div><div class="step-text">Use o <strong>cronômetro</strong> flutuante e o modo <strong>PDF</strong> para registrar seu tempo de estudo.</div></div>
                         </div>
                     `;
                 } else {
                     DOM.emptyState.innerHTML = `
                         <div class="empty-icon">
-                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>
                             </svg>
                         </div>
-                        <h2>Tudo limpo por aqui!</h2>
-                        <p>Você revisou todos os cards programados para agora. Aproveite para estudar um PDF com o cronômetro!</p>
+                        <h2>Fila de revisão vazia</h2>
+                        <p>Todos os cards programados foram revisados. Que tal uma sessão de leitura de PDF com o cronômetro?</p>
                     `;
                 }
                 return;
@@ -1844,7 +1817,7 @@
                 applyMathAndCode('card-answer');
             }, 10);
 
-            DOM.subjectBadgeEl.textContent = (card.isPublic ? '🌍 ' : '') + currentSub;
+            DOM.subjectBadgeEl.textContent = (card.isPublic ? 'PÚBLICO · ' : '') + currentSub;
 
             const canEdit = !card.isPublic || currentUser.email === ADMIN_EMAIL;
             DOM.btnEditCard.classList.toggle('hidden', !canEdit);
@@ -1861,16 +1834,16 @@
             DOM.counter.textContent = (currentIndex + 1) + ' / ' + dueCards.length;
             DOM.progressFill.style.width = ((currentIndex + 1) / dueCards.length) * 100 + '%';
 
-            DOM.prevBtn.style.opacity = currentIndex === 0 ? '0.5' : '1';
-            DOM.prevBtn.style.cursor = currentIndex === 0 ? 'not-allowed' : 'pointer';
-            DOM.nextBtn.style.opacity = currentIndex === dueCards.length - 1 ? '0.5' : '1';
-            DOM.nextBtn.style.cursor = currentIndex === dueCards.length - 1 ? 'not-allowed' : 'pointer';
+            DOM.prevBtn.style.opacity = currentIndex === 0 ? '0.35' : '1';
+            DOM.prevBtn.style.pointerEvents = currentIndex === 0 ? 'none' : 'auto';
+            DOM.nextBtn.style.opacity = currentIndex === dueCards.length - 1 ? '0.35' : '1';
+            DOM.nextBtn.style.pointerEvents = currentIndex === dueCards.length - 1 ? 'none' : 'auto';
         }
 
         function buildCardListHTML(cardsList, container) {
             container.innerHTML = '';
             if (cardsList.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding: 3rem; color: var(--text-muted);">Nenhum card disponível.</div>';
+                container.innerHTML = '<div style="text-align:center; padding: 3rem; color: var(--muted); font-size: 0.92rem;">Nenhum card disponível.</div>';
                 return;
             }
 
@@ -1887,13 +1860,13 @@
                 const subCards = grouped[subName];
 
                 containerHtml += `
-                <div class="subject-group glass-panel" style="margin-bottom: 1rem;">
+                <div class="subject-group glass-panel" style="margin-bottom: 1rem; padding: 0;">
                     <h3 class="subject-group-title collapsed" onclick="this.classList.toggle('collapsed'); this.nextElementSibling.classList.toggle('hidden')">
-                        <span style="display:flex; align-items:center; gap:0.5rem;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                            ${subName} <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: normal;">(${subCards.length} cards)</span>
+                        <span style="display:flex; align-items:center; gap:0.6rem;">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                            ${subName} <span style="font-size: 0.8rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; font-weight: 400;">${subCards.length} cards</span>
                         </span>
-                        <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </h3>
                     <div class="cards-grid hidden">
                 `;
@@ -1909,32 +1882,32 @@
                     containerHtml += `
                         <div class="list-card">
                             <div class="feed-meta">
-                                <span class="exame-badge">🎓 Comunidade</span>
+                                <span class="exame-badge">Comunidade</span>
                                 <span>por ${author}</span>
                             </div>
                             <div class="list-card-q list-card-content">
-                                <span style="color: var(--accent-color); font-weight: bold; margin-right: 5px;">P:</span> 
+                                <span style="color: var(--accent); font-weight: 700; margin-right: 5px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;">P.</span>
                                 <div style="display:inline;" id="list-q-${card.id}">${cleanQ}</div>
                             </div>
                             <div class="list-card-a-wrapper">
                                 <div class="list-card-a list-card-content">
-                                    <strong style="margin-right: 5px;">R:</strong> 
+                                    <span style="color: var(--accent); font-weight: 700; margin-right: 5px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;">R.</span>
                                     <div style="display:inline;" id="list-a-${card.id}">${cleanA}</div>
                                 </div>
                             </div>
                             <div class="list-card-actions">
                                 <button class="like-btn ${liked ? 'liked' : ''}" title="Curtir resolução" onclick="window.toggleLikeGlobal('${card.id}')">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="${liked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="${liked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                                     <span id="like-count-${card.id}">${likes}</span>
                                 </button>
                                 <button class="card-action-btn" title="Ouvir" onclick="window.speakText(document.getElementById('list-q-${card.id}').innerHTML + ' . Resposta. ' + document.getElementById('list-a-${card.id}').innerHTML, event)">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
                                 </button>
                                 <button class="card-action-btn ${hideActions}" title="Editar" onclick="window.openEditModalGlobal('${card.id}')">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                                 </button>
                                 <button class="card-action-btn del ${hideActions}" title="Excluir" onclick="window.deleteCardGlobal('${card.id}')">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                                 </button>
                             </div>
                         </div>
@@ -2042,7 +2015,7 @@
         }
 
         window.deleteCardGlobal = async function(id) {
-            if (confirm('Tem certeza que deseja excluir este flashcard definitivamente?')) {
+            if (confirm('Excluir este flashcard definitivamente?')) {
                 try {
                     await deleteDoc(doc(db, "flashcards", id));
                     allCards = allCards.filter(c => c.id !== id);
@@ -2103,7 +2076,7 @@
             } catch (error) {
                 alert('Erro ao salvar alterações.');
             } finally {
-                DOM.submitEditBtn.textContent = 'Salvar Alterações';
+                DOM.submitEditBtn.textContent = 'Salvar alterações';
                 DOM.submitEditBtn.disabled = false;
                 editingCardId = null;
             }
@@ -2125,6 +2098,8 @@
                 }
             });
 
+            DOM.viewTitle.textContent = VIEW_TITLES[clickedTabStr] || '';
+            DOM.shortcutHint.classList.toggle('hidden', clickedTabStr !== 'tabStudy');
             DOM.subjectFilterContainer.classList.toggle('hidden', clickedTabStr !== 'tabStudy');
         }
 
@@ -2136,29 +2111,29 @@
             const bestSubj = subjAcc[0];
             const worstSubj = subjAcc[subjAcc.length - 1];
 
-            const weekLines = stats.weekByDay.map(d => '  • ' + d.day + ': ' + fmtHours(d.minutes * 60)).join('\n');
+            const weekLines = stats.weekByDay.map(d => '  - ' + d.day + ': ' + fmtHours(d.minutes * 60)).join('\n');
 
-            return '📊 RESUMO SEMANAL — FlashLearn PRO\n' +
+            return 'RESUMO SEMANAL — FlashLearn Pro\n' +
                 'Aluno: ' + currentUser.email + '\n' +
-                'Período: semana atual (até ' + new Date().toLocaleDateString('pt-BR') + ')\n\n' +
-                '⏱️ TEMPO DE ESTUDO\n' +
-                '  • Hoje: ' + fmtHours(stats.today) + '\n' +
-                '  • Esta semana: ' + fmtHours(stats.week) + '\n' +
-                '  • Este mês: ' + fmtHours(stats.month) + '\n' +
-                '  • Total: ' + fmtHours(stats.total) + '\n\n' +
-                '📅 DISTRIBUIÇÃO NA SEMANA\n' + weekLines + '\n\n' +
-                '💡 INSIGHTS\n' +
-                '  • Dia mais produtivo: ' + (stats.busiestDay.minutes > 0 ? stats.busiestDay.day : 'sem dados') + '\n' +
-                '  • Melhor horário: ' + (stats.hourTotals[stats.busiestHour] > 0 ? stats.busiestHour + 'h–' + (stats.busiestHour + 1) + 'h' : 'sem padrão') + '\n' +
-                '  • Sequência de dias: ' + stats.streak + '\n\n' +
-                '🧠 DESEMPENHO NOS CARDS\n' +
-                '  • Total de cards: ' + allCards.length + '\n' +
-                '  • Taxa de acerto (SRS): ' + accuracy + '% (' + reviewStats.good + '/' + reviewStats.total + ')\n' +
-                '  • Revisões previstas (7 dias): ' + forecast.count7 + '\n' +
-                (bestSubj ? '  • Melhor matéria: ' + bestSubj.name + ' (' + bestSubj.accuracy + '%)\n' : '') +
-                (worstSubj && worstSubj !== bestSubj ? '  • Foco recomendado: ' + worstSubj.name + ' (' + worstSubj.accuracy + '%)\n' : '') +
-                '\n🎯 META SEMANAL (10h): ' + Math.min(100, Math.round(100 * stats.week / (10 * 3600))) + '%\n' +
-                '\nGerado automaticamente pelo FlashLearn PRO.';
+                'Periodo: semana atual (ate ' + new Date().toLocaleDateString('pt-BR') + ')\n\n' +
+                'TEMPO DE ESTUDO\n' +
+                '  - Hoje: ' + fmtHours(stats.today) + '\n' +
+                '  - Esta semana: ' + fmtHours(stats.week) + '\n' +
+                '  - Este mes: ' + fmtHours(stats.month) + '\n' +
+                '  - Total: ' + fmtHours(stats.total) + '\n\n' +
+                'DISTRIBUICAO NA SEMANA\n' + weekLines + '\n\n' +
+                'INSIGHTS\n' +
+                '  - Dia mais produtivo: ' + (stats.busiestDay.minutes > 0 ? stats.busiestDay.day : 'sem dados') + '\n' +
+                '  - Melhor horario: ' + (stats.hourTotals[stats.busiestHour] > 0 ? stats.busiestHour + 'h-' + (stats.busiestHour + 1) + 'h' : 'sem padrao') + '\n' +
+                '  - Sequencia de dias: ' + stats.streak + '\n\n' +
+                'DESEMPENHO NOS CARDS\n' +
+                '  - Total de cards: ' + allCards.length + '\n' +
+                '  - Taxa de acerto (SRS): ' + accuracy + '% (' + reviewStats.good + '/' + reviewStats.total + ')\n' +
+                '  - Revisoes previstas (7 dias): ' + forecast.count7 + '\n' +
+                (bestSubj ? '  - Melhor materia: ' + bestSubj.name + ' (' + bestSubj.accuracy + '%)\n' : '') +
+                (worstSubj && worstSubj !== bestSubj ? '  - Foco recomendado: ' + worstSubj.name + ' (' + worstSubj.accuracy + '%)\n' : '') +
+                '\nMETA SEMANAL (10h): ' + Math.min(100, Math.round(100 * stats.week / (10 * 3600))) + '%\n' +
+                '\nGerado automaticamente pelo FlashLearn Pro.';
         }
 
         function openSummaryModal() {
@@ -2173,19 +2148,19 @@
                 DOM.btnSendSummary.textContent = 'Enviando...';
                 emailjs.send(settings.emailjsService, settings.emailjsTemplate, {
                     to_email: currentUser.email,
-                    subject: '📊 Resumo Semanal — FlashLearn PRO',
+                    subject: 'Resumo semanal — FlashLearn Pro',
                     message: text
                 }).then(() => {
-                    alert('✅ Resumo enviado para ' + currentUser.email + '!');
-                    DOM.btnSendSummary.textContent = '📧 Enviar por E-mail';
+                    alert('Resumo enviado para ' + currentUser.email + '.');
+                    DOM.btnSendSummary.textContent = 'Enviar por e-mail';
                 }).catch((err) => {
                     console.error(err);
-                    alert('❌ Falha no EmailJS. Verifique as chaves em ⚙️ Configurações. Abrindo e-mail padrão...');
-                    window.location.href = 'mailto:' + currentUser.email + '?subject=' + encodeURIComponent('📊 Resumo Semanal — FlashLearn PRO') + '&body=' + encodeURIComponent(text);
-                    DOM.btnSendSummary.textContent = '📧 Enviar por E-mail';
+                    alert('Falha no EmailJS. Verifique as chaves em Configuracoes. Abrindo e-mail padrao...');
+                    window.location.href = 'mailto:' + currentUser.email + '?subject=' + encodeURIComponent('Resumo semanal — FlashLearn Pro') + '&body=' + encodeURIComponent(text);
+                    DOM.btnSendSummary.textContent = 'Enviar por e-mail';
                 });
             } else {
-                window.location.href = 'mailto:' + currentUser.email + '?subject=' + encodeURIComponent('📊 Resumo Semanal — FlashLearn PRO') + '&body=' + encodeURIComponent(text + '\n\n(Dica: configure o EmailJS em ⚙️ para envio automático direto.)');
+                window.location.href = 'mailto:' + currentUser.email + '?subject=' + encodeURIComponent('Resumo semanal — FlashLearn Pro') + '&body=' + encodeURIComponent(text + '\n\n(Dica: configure o EmailJS em Configuracoes para envio automatico direto.)');
             }
         }
 
@@ -2213,29 +2188,27 @@
             settings.emailjsTemplate = DOM.setEmailjsTemplate.value.trim();
             localStorage.setItem('flSettings', JSON.stringify(settings));
             if (settings.emailjsKey && window.emailjs) emailjs.init({ publicKey: settings.emailjsKey });
-            if (!pomoModeLockedToCustom()) switchPomoMode(pomoMode);
-            alert('✅ Configurações salvas!');
+            switchPomoMode(pomoMode);
+            alert('Configuracoes salvas.');
         }
 
-        function pomoModeLockedToCustom() { return false; }
-
         function openPdfModal() {
-            if (subjects.length === 0) { alert('⚠️ Crie uma matéria antes de estudar PDF.'); return; }
+            if (subjects.length === 0) { alert('Crie uma materia antes de estudar PDF.'); return; }
             DOM.pdfModal.classList.remove('hidden');
         }
 
         function startPdfSession() {
             const file = DOM.pdfFileInput.files[0];
-            if (!file) { alert('⚠️ Selecione um arquivo PDF primeiro.'); return; }
-            if (file.type !== 'application/pdf') { alert('⚠️ O arquivo precisa ser um PDF.'); return; }
+            if (!file) { alert('Selecione um arquivo PDF primeiro.'); return; }
+            if (file.type !== 'application/pdf') { alert('O arquivo precisa ser um PDF.'); return; }
             const subjectId = DOM.pdfSubjectSelect.value;
-            if (!subjectId) { alert('⚠️ Selecione a matéria.'); return; }
+            if (!subjectId) { alert('Selecione a materia.'); return; }
             const minutes = Math.max(1, parseInt(DOM.pdfDurationInput.value) || 25);
 
             if (pdfObjectUrl) URL.revokeObjectURL(pdfObjectUrl);
             pdfObjectUrl = URL.createObjectURL(file);
             DOM.pdfFrame.src = pdfObjectUrl;
-            DOM.pdfReaderTitle.textContent = '📄 ' + file.name;
+            DOM.pdfReaderTitle.textContent = file.name;
             pdfSession = { active: true, subjectId, name: file.name };
             DOM.pdfModal.classList.add('hidden');
             DOM.pdfReader.classList.remove('hidden');
@@ -2243,7 +2216,7 @@
 
             switchPomoMode('pdf', minutes);
             startTimer();
-            notifyUser('📄 Sessão PDF iniciada', minutes + ' minutos de leitura. Bom estudo!');
+            notifyUser('Sessao PDF iniciada', minutes + ' minutos de leitura. Bom estudo.');
         }
 
         function closePdfReader(logTime) {
@@ -2268,18 +2241,9 @@
 
         function setupEventListeners() {
             DOM.themeToggle.onclick = () => {
-                const currentTheme = document.body.getAttribute('data-theme');
-                if (currentTheme === 'dark') {
-                    document.body.removeAttribute('data-theme');
-                    localStorage.setItem('theme', 'light');
-                    DOM.iconSun.classList.add('hidden');
-                    DOM.iconMoon.classList.remove('hidden');
-                } else {
-                    document.body.setAttribute('data-theme', 'dark');
-                    localStorage.setItem('theme', 'dark');
-                    DOM.iconSun.classList.remove('hidden');
-                    DOM.iconMoon.classList.add('hidden');
-                }
+                const isLight = document.body.getAttribute('data-theme') === 'light';
+                applyTheme(isLight ? 'dark' : 'light');
+                localStorage.setItem('theme', isLight ? 'dark' : 'light');
                 if (DOM.viewDashboard.classList.contains('active')) {
                     [progressChart, timeChart, dailyChart, radarChart].forEach(c => c && c.destroy());
                     progressChart = timeChart = dailyChart = radarChart = null;
@@ -2291,7 +2255,7 @@
             DOM.btnVoiceA.onclick = (e) => window.speakText(DOM.answerEl.innerHTML, e);
 
             DOM.tabLogin.onclick = () => { isLoginMode = true; DOM.tabLogin.classList.add('active'); DOM.tabRegister.classList.remove('active'); DOM.authSubmitBtn.textContent = 'Entrar'; };
-            DOM.tabRegister.onclick = () => { isLoginMode = false; DOM.tabRegister.classList.add('active'); DOM.tabLogin.classList.remove('active'); DOM.authSubmitBtn.textContent = 'Criar Conta'; };
+            DOM.tabRegister.onclick = () => { isLoginMode = false; DOM.tabRegister.classList.add('active'); DOM.tabLogin.classList.remove('active'); DOM.authSubmitBtn.textContent = 'Criar conta'; };
 
             DOM.authForm.onsubmit = async (e) => {
                 e.preventDefault();
@@ -2300,7 +2264,7 @@
                     if (isLoginMode) await signInWithEmailAndPassword(auth, DOM.authEmail.value, DOM.authPassword.value);
                     else await createUserWithEmailAndPassword(auth, DOM.authEmail.value, DOM.authPassword.value);
                 } catch (error) {
-                    DOM.authError.textContent = 'Erro de Autenticação. Verifique os dados e a senha.';
+                    DOM.authError.textContent = 'Erro de autenticacao. Verifique os dados e a senha.';
                 } finally {
                     DOM.authSubmitBtn.disabled = false;
                 }
@@ -2313,7 +2277,7 @@
                 DOM.unifiedWidget.classList.toggle('expanded');
             });
             document.addEventListener('click', (e) => {
-                if (!DOM.unifiedWidget.contains(e.target) && DOM.unifiedWidget.classList.contains('expanded') && !pdfSession.active) {
+                if (!DOM.unifiedWidget.contains(e.target) && DOM.unifiedWidget.classList.contains('expanded') && !pdfSession.active && !isPomoRunning) {
                     DOM.unifiedWidget.classList.remove('expanded');
                 }
             });
@@ -2392,12 +2356,10 @@
                 if (success) {
                     DOM.questionInput.value = '';
                     DOM.answerInput.value = '';
-                    DOM.submitCardBtn.textContent = 'Salvo! Adicionar outro?';
-                    DOM.submitCardBtn.style.backgroundColor = 'var(--success)';
+                    DOM.submitCardBtn.textContent = 'Salvo. Adicionar outro?';
 
                     setTimeout(() => {
-                        DOM.submitCardBtn.textContent = 'Salvar Flashcard';
-                        DOM.submitCardBtn.style.backgroundColor = 'var(--accent-color)';
+                        DOM.submitCardBtn.textContent = 'Salvar flashcard';
                         DOM.submitCardBtn.disabled = false;
                     }, 1500);
 
@@ -2425,13 +2387,12 @@
                     DOM.inlineSubjectName.value = '';
                     DOM.inlineSubjectGroup.classList.add('hidden');
                 } catch (e) {
-                    alert('Erro ao criar matéria');
+                    alert('Erro ao criar materia');
                 } finally {
                     DOM.saveInlineSubject.textContent = 'Salvar';
                 }
             };
 
-            /* --- NOVOS RECURSOS PRO --- */
             DOM.btnPdfStudy.onclick = openPdfModal;
             DOM.dashBtnPdf.onclick = openPdfModal;
             DOM.closePdfModalBtn.onclick = () => DOM.pdfModal.classList.add('hidden');
@@ -2447,8 +2408,8 @@
             DOM.btnSendSummary.onclick = sendSummaryEmail;
             DOM.btnCopySummary.onclick = () => {
                 navigator.clipboard.writeText(DOM.summaryText.textContent).then(() => {
-                    DOM.btnCopySummary.textContent = '✅ Copiado!';
-                    setTimeout(() => DOM.btnCopySummary.textContent = '📋 Copiar Resumo', 1500);
+                    DOM.btnCopySummary.textContent = 'Copiado';
+                    setTimeout(() => DOM.btnCopySummary.textContent = 'Copiar resumo', 1500);
                 });
             };
 
@@ -2466,6 +2427,11 @@
                     } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
                         e.preventDefault();
                         if (dueCards.length > 0) toggleFlip();
+                    } else if (e.key === '1' || e.key === '2' || e.key === '3' || e.key === '4') {
+                        if (DOM.card.classList.contains('is-flipped')) {
+                            DOM.card.classList.remove('is-flipped');
+                            processSRSRating(parseInt(e.key));
+                        }
                     }
                 }
             });
