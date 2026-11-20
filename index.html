@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FlashLearn - Domine Qualquer Assunto</title>
+    <title>FlashLearn Pro - Domine Qualquer Assunto</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
@@ -17,28 +19,27 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-    
+
     <style>
         :root {
-            /* TEMA LIGHT (Padrão) */
             --bg-base: #f4f4f9; 
             --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
             --glass-bg: rgba(255, 255, 255, 0.85);
             --glass-border: rgba(255, 255, 255, 0.5);
             --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
-            
+
             --accent-color: #6d28d9; 
             --accent-hover: #5b21b6;
             --accent-glow: rgba(109, 40, 217, 0.2);
             --accent-light: #ede9fe;
-            
+
             --text-primary: #1e293b; 
             --text-secondary: #475569; 
             --text-muted: #94a3b8;
-            
+
             --card-bg-front: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
             --card-bg-back: linear-gradient(145deg, #faf5ff 0%, #ffffff 100%);
-            
+
             --success: #10b981; --success-light: #d1fae5;
             --warning: #f59e0b; --warning-light: #fef3c7;
             --danger:  #ef4444; --danger-light:  #fee2e2;
@@ -49,26 +50,25 @@
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* TEMA DARK */
         [data-theme="dark"] {
             --bg-base: #0f172a; 
             --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             --glass-bg: rgba(30, 41, 59, 0.7);
             --glass-border: rgba(255, 255, 255, 0.1);
             --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            
+
             --accent-color: #8b5cf6; 
             --accent-hover: #a78bfa;
             --accent-glow: rgba(139, 92, 246, 0.3);
             --accent-light: rgba(139, 92, 246, 0.15);
-            
+
             --text-primary: #f8fafc; 
             --text-secondary: #cbd5e1; 
             --text-muted: #64748b;
-            
+
             --card-bg-front: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
             --card-bg-back: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
-            
+
             --success-light: rgba(16, 185, 129, 0.15);
             --warning-light: rgba(245, 158, 11, 0.15);
             --danger-light: rgba(239, 68, 68, 0.15);
@@ -89,17 +89,13 @@
         *:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 2px; }
 
         body { background: var(--bg-gradient); color: var(--text-primary); min-height: 100vh; display: flex; justify-content: center; overflow-x: hidden; position: relative; line-height: 1.6; }
-           /* --- CLASSE GLOBAL DE OCULTAÇÃO --- */
-        .hidden {
-         display: none !important;
-        }
-        /* EFEITOS BACKGROUND */
+        .hidden { display: none !important; }
+
         body::before, body::after { content: ''; position: fixed; border-radius: 50%; filter: blur(120px); z-index: -2; opacity: 0.4; pointer-events: none; }
         body::before { top: -10%; left: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, var(--accent-color) 0%, transparent 60%); animation: float 30s infinite alternate ease-in-out; }
         body::after { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: radial-gradient(circle, #3b82f6 0%, transparent 60%); animation: float 25s infinite alternate ease-in-out reverse; }
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(50px, 50px) scale(1.1); } }
 
-        /* ANIMAÇÕES FLUTUANTES MINIMALISTAS */
         .bg-animations { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
         .floating-icon { position: absolute; color: var(--accent-color); opacity: 0.05; animation: floatUp linear infinite; }
         [data-theme="dark"] .floating-icon { opacity: 0.08; color: var(--text-muted); }
@@ -113,7 +109,6 @@
         .glass-panel { background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--glass-shadow); }
         .app-container { width: 100%; max-width: 1000px; padding: 2rem 1.5rem; display: flex; flex-direction: column; gap: 2rem; z-index: 1; flex: 1;}
 
-        /* --- AUTENTICAÇÃO --- */
         #auth-view { display: flex; justify-content: center; align-items: center; min-height: 85vh; }
         .auth-box { width: 100%; max-width: 420px; padding: 3rem 2.5rem; text-align: center; }
         .auth-tabs { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid var(--glass-border); }
@@ -123,12 +118,11 @@
         .auth-form { display: flex; flex-direction: column; gap: 1.5rem; text-align: left; }
         .auth-error { color: var(--danger); font-size: 0.9rem; text-align: center; min-height: 20px; font-weight: 500; }
 
-        /* --- HEADER --- */
         header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1.5rem; flex-wrap: wrap; gap: 1.5rem; }
         .logo { display: flex; align-items: center; gap: 1rem; }
         .logo-icon-bg { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: linear-gradient(135deg, var(--accent-color), #8b5cf6); border-radius: 14px; box-shadow: 0 4px 15px var(--accent-glow); color: white; }
         .logo h1 { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.5px; }
-        
+
         .header-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
         .user-profile { display: flex; align-items: center; gap: 0.8rem; margin-right: 0.5rem; padding-right: 1.5rem; border-right: 1px solid var(--glass-border); }
         .user-email { font-size: 0.9rem; color: var(--text-secondary); font-weight: 500; display: none; } 
@@ -145,22 +139,18 @@
         [data-theme="dark"] select option { background: var(--bg-base); color: var(--text-primary); }
         .subject-filter { display: flex; align-items: center; gap: 1rem; }
 
-        /* --- BOTÕES GLOBAIS --- */
         .glass-btn { background: var(--bg-base); border: 1px solid var(--glass-border); color: var(--text-secondary); padding: 0.7rem 1.2rem; border-radius: 12px; cursor: pointer; font-weight: 500; font-size: 0.95rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; transition: var(--transition); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         .glass-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); color: var(--text-primary); border-color: var(--accent-color);}
         .glass-btn.primary { background: var(--accent-color); border: none; color: white; box-shadow: 0 4px 15px var(--accent-glow); }
         .glass-btn.primary:hover { background: var(--accent-hover); box-shadow: 0 6px 20px var(--accent-glow); color: white; }
-        
         .icon-btn { padding: 0.7rem; border-radius: 12px; }
-        @media(min-width: 768px) { .icon-btn span { display: inline; } } 
-        
         .btn-logout { color: var(--danger); border: none; background: transparent; box-shadow: none; }
         .btn-logout:hover { background: var(--danger-light); color: var(--danger); border-color: transparent;}
         .btn-theme { color: var(--warning); border: none; background: transparent; box-shadow: none;}
         .btn-theme:hover { background: var(--warning-light); color: #d97706; border-color: transparent;}
         [data-theme="dark"] .btn-theme { color: #818cf8; }
         [data-theme="dark"] .btn-theme:hover { background: rgba(129, 140, 248, 0.15); color: #a5b4fc;}
-        
+
         .view-section { display: none; animation: fadeIn 0.4s ease-out forwards; flex: 1; }
         .view-section.active { display: flex; flex-direction: column; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -174,7 +164,6 @@
             z-index: 9999; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             overflow: hidden; display: flex; flex-direction: column; cursor: grab; align-items: center; justify-content: flex-start;
         }
-        
         .unified-widget:not(:hover):not(.expanded) { opacity: 0.25; }
         .unified-widget:active { cursor: grabbing; }
         .unified-widget:not(.expanded) { width: 50px; height: 50px; border-radius: 50%; padding: 0; justify-content: center; }
@@ -184,8 +173,9 @@
         .tomato-leaf { position: absolute; top: 2px; left: 50%; margin-left: -8px; width: 16px; height: 8px; background: rgba(34, 197, 94, 0.9); border-radius: 50px 0 50px 0; transform: rotate(-15deg); z-index: 2; transition: opacity 0.3s; }
         .tomato-leaf::after { content: ''; position: absolute; top: 2px; left: 3px; width: 12px; height: 6px; background: rgba(22, 163, 74, 0.9); border-radius: 0 50px 0 50px; transform: rotate(40deg); }
 
-        .unified-widget.expanded { width: 190px; height: auto; padding: 15px; border-radius: 20px; background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(0,0,0,0.2), inset 0 0 0 1px var(--glass-border); border: 1px solid var(--glass-border); cursor: move; }
+        .unified-widget.expanded { width: 210px; height: auto; padding: 15px; border-radius: 20px; background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(0,0,0,0.2), inset 0 0 0 1px var(--glass-border); border: 1px solid var(--glass-border); cursor: move; }
         .unified-widget.expanded .tomato-leaf { opacity: 0; pointer-events: none; }
+        .unified-widget.pdf-mode:not(.expanded) { background: radial-gradient(circle at 30% 30%, rgba(96, 165, 250, 0.8), rgba(37, 99, 235, 0.75), rgba(30, 64, 175, 0.75)); }
 
         .widget-header { display: flex; align-items: center; justify-content: center; width: 100%; transition: var(--transition); }
         .unified-widget.expanded .widget-header { flex-direction: column; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px; }
@@ -195,9 +185,9 @@
 
         .widget-body { display: flex; flex-direction: column; opacity: 1; transition: opacity 0.3s; margin-top: 10px; gap: 10px; width: 100%; align-items: center; }
         .pomo-subject-select { width: 100%; font-size: 0.75rem; padding: 6px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-base); color: var(--text-primary); text-align: center; font-weight: 700; text-transform: uppercase; cursor: pointer; min-width: auto; appearance: auto; box-shadow: none;}
-        .pomodoro-modes { display: flex; gap: 4px; background: rgba(0,0,0,0.05); padding: 4px; border-radius: 10px; width: 100%; justify-content: center; }
+        .pomodoro-modes { display: flex; gap: 4px; background: rgba(0,0,0,0.05); padding: 4px; border-radius: 10px; width: 100%; justify-content: center; flex-wrap: wrap;}
         [data-theme="dark"] .pomodoro-modes { background: rgba(255,255,255,0.05); }
-        .mode-btn { background: transparent; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: var(--transition); text-transform: uppercase; width: 50%; }
+        .mode-btn { background: transparent; border: none; padding: 4px 6px; border-radius: 6px; font-size: 0.65rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: var(--transition); text-transform: uppercase; flex: 1;}
         .mode-btn.active { background: var(--bg-base); color: var(--accent-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .pomodoro-controls { display: flex; gap: 8px; }
         .circle-btn { background: var(--bg-base); border: 1px solid var(--glass-border); color: var(--text-secondary); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -213,37 +203,29 @@
 
         /* --- FLASHCARD VIEWER --- */
         .flashcard-container { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; perspective: 1500px; flex: 1; height: 100%; margin-top: 1rem; }        
-        
         .empty-state { text-align: center; padding: 3rem; max-width: 450px; background: var(--glass-bg); border-radius: var(--radius-lg); border: 1px dashed var(--glass-border); }
         .empty-icon { margin-bottom: 1.5rem; display: inline-block; padding: 20px; background: var(--success-light); border-radius: 50%; color: var(--success); }
         .empty-state h2 { font-size: 1.6rem; margin-bottom: 0.8rem; color: var(--text-primary); }
         .empty-state p { color: var(--text-secondary); font-size: 1.05rem; }
-
         .study-progress-wrapper { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 720px; gap: 1.5rem; margin-top: auto;}
         .study-progress-bar { flex: 1; height: 8px; background: var(--glass-border); border-radius: 10px; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); }
         .study-progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-color), #8b5cf6); border-radius: 10px; transition: width 0.5s ease; width: 0%; }
         .counter { font-size: 1rem; font-weight: 600; color: var(--text-secondary); min-width: 60px; text-align: right; font-variant-numeric: tabular-nums; }
-
         .scene { width: 100%; max-width: 720px; flex: 1; min-height: 420px; perspective: 2000px; margin: 0 auto; z-index: 10; display: flex; }
         .card { width: 100%; position: relative; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); transform-style: preserve-3d; cursor: pointer; border-radius: var(--radius-lg); display: flex; flex: 1;}
         .card:hover:not(.is-flipped) { transform: translateY(-4px); }
         .card.is-flipped { transform: rotateX(180deg); }
-
         .card__face { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: var(--radius-lg); padding: 3.5rem 4.5rem; display: flex; flex-direction: column; overflow-y: auto; border: 1px solid var(--glass-border); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
         .card__face--front { justify-content: center; align-items: center; text-align: center; background: var(--card-bg-front); }
         .card__face--back { background: var(--card-bg-back); border: 2px solid var(--accent-light); transform: rotateX(180deg); justify-content: center; align-items: center; text-align: center; }
-
         .card-label { position: absolute; top: 1.8rem; left: 2.2rem; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
         .subject-badge { background: var(--accent-light); color: var(--accent-hover); padding: 0.4rem 1.2rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; margin-left: 12px; border: 1px solid rgba(109, 40, 217, 0.1); }
-        
         .card-actions { position: absolute; top: 1.8rem; right: 1.8rem; display: flex; gap: 8px; z-index: 10; }
         .card-action-btn { background: var(--bg-base); border: 1px solid transparent; color: var(--text-muted); padding: 6px; border-radius: 10px; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; }
         .card-action-btn:hover { background: var(--bg-base); border-color: var(--accent-color); color: var(--text-primary); transform: translateY(-2px); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .card-action-btn.del:hover { background: var(--danger-light); color: var(--danger); border-color: transparent; }
-
         .voice-btn { position: absolute; bottom: 1.8rem; left: 2.2rem; background: var(--bg-base); border: 1px solid var(--glass-border); color: var(--text-muted); padding: 8px; border-radius: 50%; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); z-index: 10;}
         .voice-btn:hover { background: var(--info-light); color: var(--info); border-color: var(--info); transform: scale(1.1); }
-
         .markdown-content { width: 100%; margin: auto 0; font-size: 1.6rem; font-weight: 500; line-height: 1.5; text-wrap: balance; color: var(--text-primary); }
         .card__face--back .markdown-content { color: var(--accent-color); }
         .markdown-content img { max-width: 100%; max-height: 220px; border-radius: 12px; object-fit: contain; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 10px 0; }
@@ -254,16 +236,13 @@
         .markdown-content ul, .markdown-content ol { text-align: left; margin: 15px auto; display: inline-block; padding-left: 20px;}
         .markdown-content li { margin-bottom: 8px; }
         .markdown-content p { margin-bottom: 10px; }
-
-        .flip-hint { position: absolute; bottom: 1.8rem; font-size: 0.9rem; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 0.6rem; opacity: 0; transform: translateY(10px); transition: var(--transition); left: 50%; transform: translateX(-50%) translateY(10px); background: var(--bg-base); padding: 8px 18px; border-radius: 99px; border: 1px solid var(--glass-border); }
+        .flip-hint { position: absolute; bottom: 1.8rem; font-size: 0.9rem; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 0.6rem; opacity: 0; left: 50%; transform: translateX(-50%) translateY(10px); transition: var(--transition); background: var(--bg-base); padding: 8px 18px; border-radius: 99px; border: 1px solid var(--glass-border); }
         .card:hover .flip-hint, .card:focus-visible .flip-hint { opacity: 1; transform: translateX(-50%) translateY(0); }
-
         .controls { display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin-bottom: auto;}
         .srs-controls { display: flex; gap: 1rem; justify-content: center; width: 100%; max-width: 720px; margin-bottom: auto;}
         .srs-btn { flex: 1; background: var(--bg-base); border: 1px solid var(--glass-border); color: var(--text-primary); padding: 1.2rem 0.5rem; border-radius: 16px; cursor: pointer; font-weight: 600; font-size: 1rem; transition: var(--transition); display: flex; flex-direction: column; align-items: center; gap: 0.6rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .srs-btn svg { transition: var(--transition); color: var(--text-muted); width: 26px; height: 26px; }
         .srs-btn span { font-size: 0.8rem; font-weight: 500; color: var(--text-muted); }
-        
         .btn-again:hover { background: var(--danger-light); border-color: transparent; color: var(--danger); transform: translateY(-3px); }
         .btn-again:hover svg { color: var(--danger); transform: scale(1.15); }
         .btn-hard:hover { background: var(--warning-light); border-color: transparent; color: #d97706; transform: translateY(-3px); }
@@ -273,19 +252,28 @@
         .btn-easy:hover { background: var(--success-light); border-color: transparent; color: var(--success); transform: translateY(-3px); }
         .btn-easy:hover svg { color: var(--success); transform: scale(1.15); }
 
-        /* --- DASHBOARD --- */
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .stat-card { display: flex; align-items: center; gap: 1.5rem; padding: 2rem; transition: var(--transition); }
+        /* --- DASHBOARD PRO --- */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { display: flex; align-items: center; gap: 1.2rem; padding: 1.5rem; transition: var(--transition); }
         .stat-card:hover { transform: translateY(-4px); border-color: var(--accent-color); }
-        .stat-icon { display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: var(--bg-base); border-radius: 18px; color: var(--icon-color, var(--text-primary)); }
-        .stat-info h3 { font-size: 0.95rem; color: var(--text-secondary); font-weight: 600; margin-bottom: 0.3rem; text-transform: uppercase; letter-spacing: 0.5px;}
-        .stat-number { font-size: 2.8rem; font-weight: 700; color: var(--text-primary); line-height: 1; }
-        
+        .stat-icon { display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: var(--bg-base); border-radius: 18px; color: var(--icon-color, var(--text-primary)); flex-shrink: 0;}
+        .stat-info h3 { font-size: 0.8rem; color: var(--text-secondary); font-weight: 600; margin-bottom: 0.3rem; text-transform: uppercase; letter-spacing: 0.5px;}
+        .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); line-height: 1.1; }
+        .stat-sub { font-size: 0.75rem; color: var(--text-muted); }
         .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;}
         .chart-container { padding: 1.8rem; display: flex; flex-direction: column; min-width: 0; width: 100%; }
         .chart-container h3 { font-size: 1.15rem; margin-bottom: 1.5rem; color: var(--text-primary); font-weight: 600; }
         .canvas-wrapper { height: 260px; position: relative; width: 100%; flex: 1; min-width: 0; }
         canvas { max-width: 100% !important; }
+        .plotly-box { width: 100%; height: 380px; }
+        .insights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+        .insight-item { background: var(--bg-base); border: 1px solid var(--glass-border); border-left: 4px solid var(--accent-color); border-radius: 12px; padding: 1rem 1.2rem; }
+        .insight-item.warn { border-left-color: var(--warning); }
+        .insight-item.good { border-left-color: var(--success); }
+        .insight-item.info { border-left-color: var(--info); }
+        .insight-title { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 4px;}
+        .insight-value { font-size: 1.1rem; font-weight: 600; color: var(--text-primary); }
+        .dashboard-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 2rem; }
 
         .difficult-cards-list { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
         .diff-card-item { background: var(--bg-base); border: 1px solid var(--glass-border); padding: 1.2rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
@@ -293,7 +281,16 @@
         .diff-card-q { font-size: 1rem; font-weight: 500; color: var(--text-primary); flex: 1; margin-right: 1.5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .diff-badge { background: var(--danger-light); color: var(--danger); font-size: 0.85rem; font-weight: 600; padding: 0.4rem 0.8rem; border-radius: 99px; white-space: nowrap; }
 
-        /* --- ABA TODOS OS CARDS (ACORDEÃO MINIMIZADO) --- */
+        /* --- SOCIAL / COMMUNITY --- */
+        .like-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-base); border: 1px solid var(--glass-border); color: var(--text-secondary); padding: 6px 12px; border-radius: 99px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: var(--transition); }
+        .like-btn:hover { border-color: var(--danger); color: var(--danger); transform: scale(1.05); }
+        .like-btn.liked { background: var(--danger-light); color: var(--danger); border-color: transparent; }
+        .share-check { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: var(--text-secondary); cursor: pointer; margin-top: 8px;}
+        .share-check input { width: 18px; height: 18px; accent-color: var(--accent-color); cursor: pointer;}
+        .feed-meta { font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px;}
+        .exame-badge { background: var(--info-light); color: var(--info); font-size: 0.7rem; font-weight: 700; padding: 2px 10px; border-radius: 99px; text-transform: uppercase;}
+
+        /* --- ABA TODOS OS CARDS --- */
         .all-cards-wrapper { display: flex; flex-direction: column; gap: 1rem; padding-bottom: 2rem; }
         .subject-group { padding: 0; overflow: hidden; }
         .subject-group-title { padding: 1.5rem; cursor: pointer; user-select: none; font-size: 1.2rem; color: var(--accent-color); font-weight: 700; margin: 0; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; background: var(--bg-base); transition: background 0.3s; }
@@ -301,10 +298,8 @@
         [data-theme="dark"] .subject-group-title:hover { background: rgba(255,255,255,0.02); }
         .subject-group-title .chevron { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: var(--text-muted); }
         .subject-group-title.collapsed .chevron { transform: rotate(-90deg); }
-        
         .cards-grid { padding: 1.5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; border-top: 1px solid var(--glass-border); }
         .cards-grid.hidden { display: none; padding: 0; border: none; }
-        
         .list-card { background: var(--bg-base); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1.2rem; display: flex; flex-direction: column; gap: 0.8rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .list-card:hover { transform: translateY(-3px); border-color: var(--accent-color); }
         .list-card-content { font-size: 0.95rem; line-height: 1.5; color: var(--text-primary); overflow-wrap: break-word; }
@@ -312,50 +307,52 @@
         .list-card-content pre { background: #2d2d2d; color: #ccc; padding: 10px; border-radius: 8px; font-size: 0.8rem; overflow-x: auto; margin: 5px 0; }
         .list-card-a-wrapper { background: rgba(0,0,0,0.03); padding: 10px; border-radius: 8px; border-left: 3px solid var(--accent-color); margin-top: 5px;}
         [data-theme="dark"] .list-card-a-wrapper { background: rgba(255,255,255,0.03); }
-        .list-card-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: auto; border-top: 1px solid var(--glass-border); padding-top: 10px;}
+        .list-card-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: auto; border-top: 1px solid var(--glass-border); padding-top: 10px; align-items: center;}
 
-        /* --- MODAIS E FORMULÁRIOS --- */
+        /* --- MODAIS --- */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; z-index: 10000; opacity: 1; transition: opacity 0.3s ease; padding: 1rem; }
         .modal-overlay.hidden { opacity: 0; pointer-events: none; }
         .modal-content { background: var(--card-bg-front); border: 1px solid var(--glass-border); width: 100%; max-width: 500px; padding: 2.5rem; transform: translateY(0) scale(1); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: var(--radius-lg); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto;}
         .modal-overlay.hidden .modal-content { transform: translateY(30px) scale(0.95); }
-        
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.8rem; }
         .modal-header h2 { font-size: 1.5rem; color: var(--text-primary); font-weight: 700; }
         .close-btn { background: var(--bg-base); border: none; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); padding: 0.6rem; border-radius: 50%; }
         .close-btn:hover { color: var(--danger); background: var(--danger-light); transform: rotate(90deg); }
-
-        /* NOVA BARRA DE FORMATAÇÃO E ADIÇÃO INLINE */
         .format-toolbar { display: flex; gap: 4px; margin-bottom: 0.5rem; background: rgba(0,0,0,0.03); padding: 4px; border-radius: 8px; border: 1px solid var(--glass-border); animation: fadeIn 0.2s ease;}
         [data-theme="dark"] .format-toolbar { background: rgba(255,255,255,0.03); }
         .format-toolbar.hidden { display: none; }
         .format-btn { background: transparent; border: none; color: var(--text-secondary); cursor: pointer; border-radius: 6px; padding: 4px 8px; font-size: 0.9rem; font-weight: 600; transition: var(--transition); display:flex; align-items:center; justify-content:center; }
         .format-btn:hover { background: var(--bg-base); color: var(--accent-color); box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
-        
         .subject-select-wrapper { display: flex; gap: 8px; align-items: center; }
-        #card-subject-select { flex: 1; margin-bottom: 0;}
         .inline-add-btn { background: var(--accent-light); color: var(--accent-color); border: 1px solid transparent; width: 44px; height: 44px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); font-size: 1.5rem; font-weight: 300;}
         .inline-add-btn:hover { background: var(--accent-color); color: white; transform: translateY(-2px);}
         .inline-subject-input-group { display: flex; gap: 8px; margin-top: 8px; animation: fadeIn 0.3s ease;}
         .inline-subject-input-group.hidden { display: none; }
         .inline-subject-input-group input { margin-bottom: 0; }
         .inline-subject-input-group button { padding: 0 1rem; margin-top: 0; white-space: nowrap;}
-
         .form-group { margin-bottom: 1.5rem; }
         .form-group label { display: block; margin-bottom: 0.6rem; font-size: 0.95rem; color: var(--text-primary); font-weight: 600; }
         input, textarea, select { width: 100%; background: var(--bg-base); border: 1px solid var(--glass-border); border-radius: 12px; padding: 0.9rem 1.2rem; color: var(--text-primary); font-size: 16px; transition: var(--transition); resize: vertical; }
         input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 0 4px var(--accent-glow); }
-        
-        .submit-btn { width: 100%; margin-top: 0.5rem; padding: 1rem; font-size: 1.05rem; font-weight: 600; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: all 0.3s; }
+        .settings-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid var(--glass-border); }
+        .settings-row label { font-size: 0.95rem; color: var(--text-primary); font-weight: 500; margin: 0;}
+        .settings-row input[type=number], .settings-row input[type=text] { width: 90px; padding: 0.5rem; }
+        .settings-row input[type=range] { width: 120px; }
+        .summary-pre { background: var(--bg-base); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1.2rem; font-size: 0.85rem; white-space: pre-wrap; word-break: break-word; max-height: 300px; overflow-y: auto; color: var(--text-primary); line-height: 1.6; margin-bottom: 1rem;}
 
+        /* --- PDF READER --- */
+        .pdf-reader { position: fixed; inset: 0; z-index: 9500; background: var(--bg-base); display: flex; flex-direction: column; }
+        .pdf-reader-header { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; background: var(--glass-bg); border-bottom: 1px solid var(--glass-border); backdrop-filter: blur(10px); gap: 1rem; flex-wrap: wrap;}
+        .pdf-reader-header h3 { font-size: 1rem; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;}
+        .pdf-frame { flex: 1; border: none; width: 100%; background: #525659; }
+
+        .submit-btn { width: 100%; margin-top: 0.5rem; padding: 1rem; font-size: 1.05rem; font-weight: 600; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: all 0.3s; }
         .slide-in-right { animation: slideInR 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         .slide-in-left { animation: slideInL 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         @keyframes slideInR { from { transform: translateX(50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes slideInL { from { transform: translateX(-50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
         button *, .nav-btn * { pointer-events: none; }
 
-        /* --- RESPONSIVIDADE NATIVA MOBILE --- */
         @media (max-width: 768px) {
             .app-container { padding: 1rem; gap: 1rem; }
             header { flex-direction: column; gap: 1rem; align-items: center; padding-bottom: 1rem;}
@@ -382,13 +379,15 @@
             .modal-content { padding: 1.5rem; }
             .list-card-actions { flex-wrap: wrap; }
             .subject-group-title { font-size: 1rem; padding: 1rem;}
+            .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem;}
+            .stat-card { padding: 1rem; }
+            .stat-number { font-size: 1.3rem; }
         }
-
         @media (max-width: 480px) {
             .icon-btn span { display: none !important; }
             .glass-btn { padding: 0.6rem; }
             .logo h1 { font-size: 1.5rem; }
-            .unified-widget.expanded { width: 160px; padding: 10px; }
+            .unified-widget.expanded { width: 180px; padding: 10px; }
             .expanded .pomodoro-time { font-size: 1.5rem; }
             .pomo-subject-select { font-size: 0.65rem; }
         }
@@ -397,9 +396,8 @@
         .step-item { display: flex; align-items: center; gap: 1rem; background: var(--bg-base); padding: 1rem; border-radius: 12px; border: 1px solid var(--glass-border); }
         .step-number { background: var(--accent-color); color: white; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
         .step-text { font-size: 0.95rem; color: var(--text-primary); font-weight: 500; }
-        
-        
     </style>
+<base target="_blank">
 </head>
 <body>
     <div class="bg-animations" id="bg-animations"></div>
@@ -414,9 +412,9 @@
                             <path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path>
                         </svg>
                     </div>
-                    <h1>FlashLearn</h1>
+                    <h1>FlashLearn <span style="color:var(--accent-color); font-size:0.9rem; vertical-align:super;">PRO</span></h1>
                 </div>
-                
+
                 <div class="auth-tabs">
                     <button class="auth-tab active" id="tab-login">Login</button>
                     <button class="auth-tab" id="tab-register">Criar Conta</button>
@@ -443,28 +441,33 @@
                             <path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path>
                         </svg>
                     </div>
-                    <h1>FlashLearn</h1>
+                    <h1>FlashLearn <span style="color:var(--accent-color); font-size:0.9rem; vertical-align:super;">PRO</span></h1>
                 </div>
-                
+
                 <div class="header-actions">
                     <div class="user-profile">
                         <span class="user-email" id="user-display-email">usuario@email.com</span>
-                        
+
                         <button id="theme-toggle" class="glass-btn icon-btn btn-theme" title="Alternar Tema Escuro">
                             <svg id="theme-icon-sun" class="hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                             <svg id="theme-icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                         </button>
-                        
+
                         <button id="logout-btn" class="glass-btn icon-btn btn-logout" title="Sair da conta">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                         </button>
                     </div>
 
+                    <button id="btn-pdf-study" class="glass-btn icon-btn" title="Estudar PDF com cronômetro">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        <span>PDF</span>
+                    </button>
+
                     <button id="add-subject-btn" class="glass-btn icon-btn" title="Nova Matéria">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
                         <span>Matéria</span>
                     </button>
-                    
+
                     <button id="add-btn" class="glass-btn primary" title="Adicionar novo flashcard">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                         <span>Card</span>
@@ -491,7 +494,7 @@
                         Comunidade
                     </button>
                 </nav>
-                
+
                 <div class="subject-filter" id="subject-filter-container">
                     <label for="study-subject-filter" style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 600;">Filtrar:</label>
                     <select id="study-subject-filter">
@@ -503,43 +506,105 @@
             <main style="display: flex; flex-direction: column; flex: 1;">
 
                 <div id="view-dashboard" class="view-section hidden">
+                    <div class="dashboard-actions">
+                        <button id="dash-btn-pdf" class="glass-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                            📄 Estudar PDF
+                        </button>
+                        <button id="dash-btn-summary" class="glass-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            📧 Resumo Semanal
+                        </button>
+                        <button id="dash-btn-settings" class="glass-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                            ⚙️ Configurações
+                        </button>
+                    </div>
+
                     <div class="dashboard-grid">
                         <div class="stat-card glass-panel">
-                            <div class="stat-icon" style="--icon-color: var(--warning); background: var(--warning-light);">
-                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            <div class="stat-icon" style="--icon-color: var(--info); background: var(--info-light);">
+                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                             </div>
                             <div class="stat-info">
-                                <h3>Para Revisar</h3>
-                                <p id="stat-to-review" class="stat-number">0</p>
+                                <h3>Hoje</h3>
+                                <p id="stat-hours-today" class="stat-number">0h</p>
+                                <div class="stat-sub" id="stat-hours-week-sub">0h esta semana</div>
+                            </div>
+                        </div>
+                        <div class="stat-card glass-panel">
+                            <div class="stat-icon" style="--icon-color: var(--accent-color); background: var(--accent-light);">
+                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Este Mês</h3>
+                                <p id="stat-hours-month" class="stat-number">0h</p>
+                                <div class="stat-sub" id="stat-hours-total-sub">0h no total</div>
+                            </div>
+                        </div>
+                        <div class="stat-card glass-panel">
+                            <div class="stat-icon" style="--icon-color: var(--warning); background: var(--warning-light);">
+                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Sequência</h3>
+                                <p id="stat-streak" class="stat-number">0</p>
+                                <div class="stat-sub">dias seguidos estudando</div>
                             </div>
                         </div>
                         <div class="stat-card glass-panel">
                             <div class="stat-icon" style="--icon-color: var(--success); background: var(--success-light);">
-                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                             </div>
                             <div class="stat-info">
-                                <h3>Já Aprendidos</h3>
-                                <p id="stat-learned" class="stat-number">0</p>
+                                <h3>Taxa de Acerto</h3>
+                                <p id="stat-accuracy" class="stat-number">0%</p>
+                                <div class="stat-sub" id="stat-forecast-sub">0 revisões próx. 7 dias</div>
                             </div>
                         </div>
                     </div>
 
                     <div class="charts-row">
                         <div class="chart-container glass-panel">
-                            <h3>Aproveitamento Global</h3>
+                            <h3>📈 Minutos Estudados — Últimos 30 Dias</h3>
+                            <div class="canvas-wrapper">
+                                <canvas id="dailyChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-container glass-panel">
+                            <h3>🎯 Aproveitamento Global</h3>
                             <div class="canvas-wrapper">
                                 <canvas id="progressChart"></canvas>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="charts-row">
                         <div class="chart-container glass-panel">
-                            <h3>Tempo por Matéria (Minutos)</h3>
+                            <h3>⏱️ Tempo por Matéria (Minutos)</h3>
                             <div class="canvas-wrapper">
                                 <canvas id="timeChart"></canvas>
                             </div>
                         </div>
+                        <div class="chart-container glass-panel">
+                            <h3>🧠 Desempenho por Matéria (Acurácia SRS)</h3>
+                            <div class="canvas-wrapper">
+                                <canvas id="radarChart"></canvas>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="glass-panel" style="padding: 2rem;">
+                    <div class="chart-container glass-panel" style="margin-bottom: 2rem;">
+                        <h3>🔥 Mapa de Calor de Estudo (Dia da Semana × Hora) — 3D</h3>
+                        <div id="plotly-3d" class="plotly-box"></div>
+                    </div>
+
+                    <div class="glass-panel" style="margin-bottom: 2rem;">
+                        <h3 style="font-size: 1.3rem; color: var(--text-primary); margin-bottom: 1.5rem;">💡 Análises e Insights Inteligentes</h3>
+                        <div class="insights-grid" id="insights-grid"></div>
+                    </div>
+
+                    <div class="glass-panel" style="margin-bottom: 2rem; padding: 2rem;">
                         <h3 style="font-size: 1.3rem; color: var(--text-primary); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem;">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
                             Cards com Maior Dificuldade
@@ -561,7 +626,7 @@
 
                         <div class="scene" id="scene">
                             <div class="card" id="card" tabindex="0" aria-label="Flashcard: Clique para virar">
-                                
+
                                 <div class="card__face card__face--front">
                                     <div style="position: absolute; top: 1.8rem; left: 2.2rem; display: flex; align-items: center;">
                                         <span class="card-label" style="position: relative; top: 0; left: 0;">Pergunta</span>
@@ -578,7 +643,7 @@
                                     </div>
 
                                     <div id="card-question" class="markdown-content">...</div>
-                                    
+
                                     <button class="voice-btn" id="btn-voice-q" title="Ouvir Pergunta">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
                                     </button>
@@ -591,9 +656,9 @@
 
                                 <div class="card__face card__face--back">
                                     <span class="card-label">Resposta</span>
-                                    
+
                                     <div id="card-answer" class="markdown-content">...</div>
-                                    
+
                                     <button class="voice-btn" id="btn-voice-a" title="Ouvir Resposta">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
                                     </button>
@@ -606,8 +671,7 @@
                             </div>
                         </div>
 
-                        <div class="empty-state hidden" id="empty-state">
-                            </div>
+                        <div class="empty-state hidden" id="empty-state"></div>
 
                         <div class="controls" id="controls">
                             <button id="prev-btn" class="glass-btn icon-btn" title="Card Anterior">
@@ -645,8 +709,9 @@
 
                 <div id="view-community" class="view-section hidden">
                     <div class="glass-panel" style="margin-bottom: 2rem;">
-                        <h2 style="margin-bottom: 0.5rem; color: var(--accent-color);">📚 Flashcards da Comunidade</h2>
-                        <p style="color: var(--text-secondary);">Explore e estude os cards públicos criados pelo administrador (mauriciomts99@gmail.com).</p>
+                        <h2 style="margin-bottom: 0.5rem; color: var(--accent-color);">🎓 Rede Social de Estudos</h2>
+                        <p style="color: var(--text-secondary);">Compartilhe e estude resoluções de ENEM, vestibulares e concursos publicadas pela comunidade. Marque ❤️ nas melhores soluções!</p>
+                        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.8rem;">💡 Dica: ao criar um card, marque "Compartilhar na comunidade" para publicar sua resolução.</p>
                     </div>
                     <div id="community-cards-container" class="all-cards-wrapper"></div>
                 </div>
@@ -658,17 +723,20 @@
                             <div class="pomodoro-time" id="pomodoro-display">25:00</div>
                         </div>
                     </div>
-                    
+
                     <div class="widget-body">
+                        <div class="pomo-subject" style="font-size:0.65rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;" id="pomo-mode-label">Foco</div>
                         <select id="pomo-subject-select" class="pomo-subject-select">
                             <option value="all">Todas as Matérias</option>
                         </select>
-                        
+
                         <div class="pomodoro-modes">
-                            <button class="mode-btn active" id="btn-mode-focus">Foco</button>
-                            <button class="mode-btn" id="btn-mode-break">Pausa</button>
+                            <button class="mode-btn active" id="btn-mode-focus" title="Foco">🍅</button>
+                            <button class="mode-btn" id="btn-mode-break" title="Pausa Curta">☕</button>
+                            <button class="mode-btn" id="btn-mode-longbreak" title="Pausa Longa">🛋️</button>
+                            <button class="mode-btn" id="btn-mode-pdf" title="PDF">📄</button>
                         </div>
-                        
+
                         <div class="pomodoro-controls">
                             <button class="circle-btn" id="btn-pomo-play" title="Iniciar">
                                 <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
@@ -743,7 +811,7 @@
                             <button type="button" class="glass-btn primary" id="save-inline-subject">Salvar</button>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.6rem;">
                             <label for="question" style="margin-bottom:0;">Pergunta</label>
@@ -758,7 +826,7 @@
                         </div>
                         <textarea id="question" rows="3" required placeholder="Ex: Qual é a fórmula de Bhaskara?"></textarea>
                     </div>
-                    
+
                     <div class="form-group">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.6rem;">
                             <label for="answer" style="margin-bottom:0;">Resposta</label>
@@ -773,6 +841,12 @@
                         </div>
                         <textarea id="answer" rows="3" required placeholder="Ex: $$ x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} $$"></textarea>
                     </div>
+
+                    <label class="share-check">
+                        <input type="checkbox" id="card-share-community">
+                        🌍 Compartilhar na comunidade (ENEM / Vestibular / Concursos)
+                    </label>
+
                     <button type="submit" class="glass-btn submit-btn primary" id="submit-card-btn">Salvar Flashcard</button>
                 </form>
             </div>
@@ -799,17 +873,95 @@
                         <label for="edit-answer">Resposta</label>
                         <textarea id="edit-answer" rows="3" required></textarea>
                     </div>
+                    <label class="share-check" style="margin-bottom: 1rem;">
+                        <input type="checkbox" id="edit-share-community">
+                        🌍 Visível na comunidade
+                    </label>
                     <button type="submit" class="glass-btn submit-btn primary" id="submit-edit-btn">Salvar Alterações</button>
                 </form>
             </div>
         </div>
 
-    </div>
+        <div id="pdf-modal" class="modal-overlay hidden" role="dialog">
+            <div class="modal-content glass-panel">
+                <div class="modal-header">
+                    <h2>📄 Estudar PDF com Cronômetro</h2>
+                    <button id="close-pdf-modal-btn" class="close-btn" aria-label="Fechar">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label>Arquivo PDF (fica no seu dispositivo — não é enviado)</label>
+                    <input type="file" id="pdf-file-input" accept="application/pdf" style="padding: 0.6rem;">
+                </div>
+                <div class="form-group">
+                    <label>Matéria</label>
+                    <select id="pdf-subject-select"></select>
+                </div>
+                <div class="form-group">
+                    <label>Duração da sessão (minutos)</label>
+                    <input type="number" id="pdf-duration-input" min="1" max="600" value="25">
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">⏱️ O PDF abre em tela cheia e o cronômetro fica flutuante no canto. Ao terminar, um alarme sonoro configuraável toca e o tempo é registrado no seu dashboard.</p>
+                <button id="btn-pdf-start" class="glass-btn submit-btn primary">Iniciar Sessão de Leitura</button>
+            </div>
+        </div>
 
-    <script type="module">
+        <div id="settings-modal" class="modal-overlay hidden" role="dialog">
+            <div class="modal-content glass-panel">
+                <div class="modal-header">
+                    <h2>⚙️ Configurações do Cronômetro</h2>
+                    <button id="close-settings-modal-btn" class="close-btn" aria-label="Fechar">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </div>
+                <div class="settings-row"><label>🍅 Foco (min)</label><input type="number" id="set-focus" min="1" max="180"></div>
+                <div class="settings-row"><label>☕ Pausa curta (min)</label><input type="number" id="set-short" min="1" max="60"></div>
+                <div class="settings-row"><label>🛋️ Pausa longa (min)</label><input type="number" id="set-long" min="1" max="120"></div>
+                <div class="settings-row"><label>🔔 Alarme sonoro ao terminar</label><input type="checkbox" id="set-sound" style="width:20px;height:20px;accent-color:var(--accent-color);"></div>
+                <div class="settings-row"><label>🔊 Volume do alarme</label><input type="range" id="set-volume" min="0" max="1" step="0.05"></div>
+                <div class="settings-row"><label>📳 Notificação do navegador</label><input type="checkbox" id="set-notify" style="width:20px;height:20px;accent-color:var(--accent-color);"></div>
+                <div style="margin-top: 1.5rem; border-top: 1px solid var(--glass-border); padding-top: 1rem;">
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.8rem;">📧 Envio automático de resumo semanal (EmailJS — opcional):</p>
+                    <div class="settings-row"><label>Public Key</label><input type="text" id="set-emailjs-key" placeholder="EmailJS"></div>
+                    <div class="settings-row"><label>Service ID</label><input type="text" id="set-emailjs-service"></div>
+                    <div class="settings-row"><label>Template ID</label><input type="text" id="set-emailjs-template"></div>
+                </div>
+                <button id="btn-save-settings" class="glass-btn submit-btn primary" style="margin-top: 1.5rem;">Salvar Configurações</button>
+            </div>
+        </div>
+
+        <div id="summary-modal" class="modal-overlay hidden" role="dialog">
+            <div class="modal-content glass-panel">
+                <div class="modal-header">
+                    <h2>📧 Resumo Semanal</h2>
+                    <button id="close-summary-modal-btn" class="close-btn" aria-label="Fechar">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </div>
+                <pre class="summary-pre" id="summary-text">Gerando resumo...</pre>
+                <button id="btn-send-summary" class="glass-btn submit-btn primary" style="margin-bottom: 0.6rem;">📧 Enviar por E-mail</button>
+                <button id="btn-copy-summary" class="glass-btn submit-btn" style="margin-bottom: 0.6rem;">📋 Copiar Resumo</button>
+                <p style="font-size: 0.78rem; color: var(--text-muted);">Para envio 100% automático toda semana, configure o EmailJS em ⚙️ Configurações (chaves gratuitas em emailjs.com) ou use um agendador com este app aberto.</p>
+            </div>
+        </div>
+
+        <div id="pdf-reader" class="pdf-reader hidden">
+            <div class="pdf-reader-header">
+                <h3 id="pdf-reader-title">📄 Estudando PDF</h3>
+                <div style="display:flex; gap: 0.6rem; align-items:center;">
+                    <span id="pdf-timer-chip" style="font-family: monospace; font-weight: 700; color: var(--accent-color); font-size: 1.1rem;">25:00</span>
+                    <button id="btn-pdf-close" class="glass-btn" style="padding: 0.5rem 1rem;">Encerrar Sessão</button>
+                </div>
+            </div>
+            <iframe class="pdf-frame" id="pdf-frame" title="Leitor de PDF"></iframe>
+        </div>
+
+    </div>
+<script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, query, where, doc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, doc, updateDoc, deleteDoc, setDoc, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDbUU7pBaPzNzG_IOgGvxiCg5zUX_H-udU",
@@ -829,18 +981,29 @@
         let dueCards = [];
         let subjects = [];
         let publicCards = [];
+        let studySessions = [];
+        let reviewStats = { total: 0, good: 0 };
         let currentIndex = 0;
         let currentFilter = 'all';
         let isLoginMode = true;
-        let progressChart = null;
-        let timeChart = null;
+        let progressChart = null, timeChart = null, dailyChart = null, radarChart = null;
         let editingCardId = null;
 
         let pomoInterval;
         let isPomoRunning = false;
         let pomoMode = 'focus'; 
-        let pomoTimeLeft = 25 * 60; 
+        let pomoTimeLeft = 25 * 60;
+        let pomoElapsed = 0;
         let pendingTimeUpdates = {}; 
+
+        let settings = JSON.parse(localStorage.getItem('flSettings') || '{}');
+        settings = Object.assign({ focusMin: 25, shortMin: 5, longMin: 15, soundOn: true, volume: 0.8, notifyOn: true, emailjsKey: '', emailjsService: '', emailjsTemplate: '' }, settings);
+
+        let pdfObjectUrl = null;
+        let pdfSession = { active: false, subjectId: null, name: '' };
+
+        const ADMIN_EMAIL = "mauriciomts99@gmail.com";
+        const DAY_MS = 86400000;
 
         const DOM = {
             authView: document.getElementById('auth-view'),
@@ -854,50 +1017,44 @@
             tabRegister: document.getElementById('tab-register'),
             userDisplayEmail: document.getElementById('user-display-email'),
             logoutBtn: document.getElementById('logout-btn'),
-            
             themeToggle: document.getElementById('theme-toggle'),
             iconSun: document.getElementById('theme-icon-sun'),
             iconMoon: document.getElementById('theme-icon-moon'),
-
             tabStudy: document.getElementById('tab-study'),
             tabAllCards: document.getElementById('tab-all-cards'),
             tabDashboard: document.getElementById('tab-dashboard'),
             tabCommunity: document.getElementById('tab-community'),
-            
             viewStudy: document.getElementById('view-study'),
             viewAllCards: document.getElementById('view-all-cards'),
             viewDashboard: document.getElementById('view-dashboard'),
             viewCommunity: document.getElementById('view-community'),
-            
             subjectFilterContainer: document.getElementById('subject-filter-container'),
             studySubjectFilter: document.getElementById('study-subject-filter'),
             allCardsContainer: document.getElementById('all-cards-container'),
             communityCardsContainer: document.getElementById('community-cards-container'),
-
             unifiedWidget: document.getElementById('unified-widget'),
             pomoDisplay: document.getElementById('pomodoro-display'),
-            pomoSubjectSelect: document.getElementById('pomo-subject-select'), 
+            pomoModeLabel: document.getElementById('pomo-mode-label'),
+            pomoSubjectSelect: document.getElementById('pomo-subject-select'),
             btnPomoPlay: document.getElementById('btn-pomo-play'),
             btnPomoPause: document.getElementById('btn-pomo-pause'),
             btnPomoReset: document.getElementById('btn-pomo-reset'),
             btnModeFocus: document.getElementById('btn-mode-focus'),
             btnModeBreak: document.getElementById('btn-mode-break'),
-
+            btnModeLongBreak: document.getElementById('btn-mode-longbreak'),
+            btnModePdf: document.getElementById('btn-mode-pdf'),
             musicTheme: document.getElementById('music-theme'),
             musicPlay: document.getElementById('music-play'),
             musicPause: document.getElementById('music-pause'),
             musicVolume: document.getElementById('music-volume'),
             bgAudio: document.getElementById('bg-audio'),
-
             scene: document.getElementById('scene'),
             card: document.getElementById('card'),
             questionEl: document.getElementById('card-question'),
             answerEl: document.getElementById('card-answer'),
             subjectBadgeEl: document.getElementById('card-subject-badge'),
-            
             btnVoiceQ: document.getElementById('btn-voice-q'),
             btnVoiceA: document.getElementById('btn-voice-a'),
-
             emptyState: document.getElementById('empty-state'),
             controls: document.getElementById('controls'),
             counter: document.getElementById('counter'),
@@ -906,20 +1063,15 @@
             srsControls: document.getElementById('srs-controls'),
             prevBtn: document.getElementById('prev-btn'),
             nextBtn: document.getElementById('next-btn'),
-
             btnEditCard: document.getElementById('btn-edit-card'),
             btnDeleteCard: document.getElementById('btn-delete-card'),
-
-            statToReview: document.getElementById('stat-to-review'),
-            statLearned: document.getElementById('stat-learned'),
             diffList: document.getElementById('difficult-cards-list'),
-
+            insightsGrid: document.getElementById('insights-grid'),
             addSubjectBtn: document.getElementById('add-subject-btn'),
             subjectModal: document.getElementById('subject-modal'),
             closeSubjectModal: document.getElementById('close-subject-modal'),
             addSubjectForm: document.getElementById('add-subject-form'),
             newSubjectName: document.getElementById('new-subject-name'),
-
             addBtn: document.getElementById('add-btn'),
             addModal: document.getElementById('add-modal'),
             closeModalBtn: document.getElementById('close-modal-btn'),
@@ -928,25 +1080,75 @@
             questionInput: document.getElementById('question'),
             answerInput: document.getElementById('answer'),
             submitCardBtn: document.getElementById('submit-card-btn'),
-
+            shareCommunity: document.getElementById('card-share-community'),
             editModal: document.getElementById('edit-modal'),
             closeEditModalBtn: document.getElementById('close-edit-modal-btn'),
             editCardForm: document.getElementById('edit-card-form'),
             editSubjectSelect: document.getElementById('edit-subject-select'),
             editQuestion: document.getElementById('edit-question'),
             editAnswer: document.getElementById('edit-answer'),
+            editShareCommunity: document.getElementById('edit-share-community'),
             submitEditBtn: document.getElementById('submit-edit-btn'),
-            
             toggleInlineSubject: document.getElementById('toggle-inline-subject'),
             inlineSubjectGroup: document.getElementById('inline-subject-group'),
             inlineSubjectName: document.getElementById('inline-subject-name'),
-            saveInlineSubject: document.getElementById('save-inline-subject')
+            saveInlineSubject: document.getElementById('save-inline-subject'),
+            btnPdfStudy: document.getElementById('btn-pdf-study'),
+            dashBtnPdf: document.getElementById('dash-btn-pdf'),
+            dashBtnSummary: document.getElementById('dash-btn-summary'),
+            dashBtnSettings: document.getElementById('dash-btn-settings'),
+            pdfModal: document.getElementById('pdf-modal'),
+            closePdfModalBtn: document.getElementById('close-pdf-modal-btn'),
+            pdfFileInput: document.getElementById('pdf-file-input'),
+            pdfSubjectSelect: document.getElementById('pdf-subject-select'),
+            pdfDurationInput: document.getElementById('pdf-duration-input'),
+            btnPdfStart: document.getElementById('btn-pdf-start'),
+            pdfReader: document.getElementById('pdf-reader'),
+            pdfFrame: document.getElementById('pdf-frame'),
+            pdfReaderTitle: document.getElementById('pdf-reader-title'),
+            pdfTimerChip: document.getElementById('pdf-timer-chip'),
+            btnPdfClose: document.getElementById('btn-pdf-close'),
+            settingsModal: document.getElementById('settings-modal'),
+            closeSettingsModalBtn: document.getElementById('close-settings-modal-btn'),
+            btnSaveSettings: document.getElementById('btn-save-settings'),
+            setFocus: document.getElementById('set-focus'),
+            setShort: document.getElementById('set-short'),
+            setLong: document.getElementById('set-long'),
+            setSound: document.getElementById('set-sound'),
+            setVolume: document.getElementById('set-volume'),
+            setNotify: document.getElementById('set-notify'),
+            setEmailjsKey: document.getElementById('set-emailjs-key'),
+            setEmailjsService: document.getElementById('set-emailjs-service'),
+            setEmailjsTemplate: document.getElementById('set-emailjs-template'),
+            summaryModal: document.getElementById('summary-modal'),
+            closeSummaryModalBtn: document.getElementById('close-summary-modal-btn'),
+            summaryText: document.getElementById('summary-text'),
+            btnSendSummary: document.getElementById('btn-send-summary'),
+            btnCopySummary: document.getElementById('btn-copy-summary')
         };
 
         const AUDIO_TRACKS = {
             lofi: "https://stream.zeno.fm/f3wvbbqmdg8uv", 
             classical: "http://stream.srg-ssr.ch/m/rsc_de/mp3_128" 
         };
+
+        const WEEKDAY_NAMES = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
+
+        function fmtHours(sec) {
+            if (sec < 3600) return Math.round(sec / 60) + 'min';
+            const h = sec / 3600;
+            return (h < 10 ? h.toFixed(1) : Math.round(h)) + 'h';
+        }
+        function fmtMinutes(sec) { return Math.round(sec / 60); }
+        function fmtClock(totalSec) {
+            const m = Math.floor(totalSec / 60).toString().padStart(2, '0');
+            const s = (totalSec % 60).toString().padStart(2, '0');
+            return m + ':' + s;
+        }
+        function todayKey(offsetDays = 0) {
+            const d = new Date(Date.now() + offsetDays * DAY_MS);
+            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        }
 
         function createBackgroundAnimations() {
             const container = document.getElementById('bg-animations');
@@ -955,17 +1157,16 @@
                 '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>',
                 '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="22" x2="14" y2="22"></line><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg>'
             ];
-
             for (let i = 0; i < 15; i++) {
                 const el = document.createElement('div');
                 el.className = 'floating-icon';
                 el.innerHTML = svgs[Math.floor(Math.random() * svgs.length)];
-                el.style.left = `${Math.random() * 100}vw`;
+                el.style.left = Math.random() * 100 + 'vw';
                 const size = 30 + Math.random() * 40;
-                el.style.width = `${size}px`;
-                el.style.height = `${size}px`;
-                el.style.animationDuration = `${25 + Math.random() * 30}s`;
-                el.style.animationDelay = `-${Math.random() * 30}s`;
+                el.style.width = size + 'px';
+                el.style.height = size + 'px';
+                el.style.animationDuration = 25 + Math.random() * 30 + 's';
+                el.style.animationDelay = -Math.random() * 30 + 's';
                 container.appendChild(el);
             }
         }
@@ -976,11 +1177,9 @@
             const end = el.selectionEnd;
             const text = el.value;
             const selectedText = text.substring(start, end);
-            const newText = text.substring(0, start) + prefix + selectedText + suffix + text.substring(end);
-            el.value = newText;
+            el.value = text.substring(0, start) + prefix + selectedText + suffix + text.substring(end);
             el.focus();
-            
-            if(selectedText.length === 0) {
+            if (selectedText.length === 0) {
                 el.selectionStart = start + prefix.length;
                 el.selectionEnd = start + prefix.length;
             } else {
@@ -989,17 +1188,14 @@
             }
         };
 
-        function processContent(text) {
-            if(!text) return "";
-            return marked.parse(text);
-        }
+        function processContent(text) { return text ? marked.parse(text) : ""; }
 
         function applyMathAndCode(elementId) {
             const el = document.getElementById(elementId);
-            if(!el) return;
+            if (!el) return;
             if (window.renderMathInElement) {
                 renderMathInElement(el, {
-                    delimiters: [ {left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false}, {left: "\\(", right: "\\)", display: false}, {left: "\\[", right: "\\]", display: true} ],
+                    delimiters: [ {left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false} ],
                     throwOnError: false
                 });
             }
@@ -1007,21 +1203,69 @@
         }
 
         window.speakText = function(htmlContent, e) {
-            if(e) e.stopPropagation();
-            window.speechSynthesis.cancel(); 
-            
+            if (e) e.stopPropagation();
+            window.speechSynthesis.cancel();
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = htmlContent;
-            const mathTags = tempDiv.querySelectorAll('.katex');
-            mathTags.forEach(el => el.remove());
-
+            tempDiv.querySelectorAll('.katex').forEach(el => el.remove());
             const text = tempDiv.textContent || tempDiv.innerText || "";
-            if(!text.trim()) return;
-
+            if (!text.trim()) return;
             const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'pt-BR'; 
+            utterance.lang = 'pt-BR';
             window.speechSynthesis.speak(utterance);
         };
+
+        function playAlarmBeep() {
+            if (!settings.soundOn) return;
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                let t = ctx.currentTime;
+                for (let i = 0; i < 3; i++) {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.value = 880;
+                    gain.gain.setValueAtTime(0.0001, t);
+                    gain.gain.exponentialRampToValueAtTime(settings.volume, t + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
+                    osc.connect(gain).connect(ctx.destination);
+                    osc.start(t);
+                    osc.stop(t + 0.4);
+                    t += 0.5;
+                }
+            } catch (e) { console.warn('Audio indisponível', e); }
+        }
+
+        function notifyUser(title, body) {
+            if (!settings.notifyOn) return;
+            if (!('Notification' in window)) return;
+            if (Notification.permission === 'granted') {
+                new Notification(title, { body: body });
+            } else if (Notification.permission !== 'denied') {
+                Notification.requestPermission().then(p => { if (p === 'granted') new Notification(title, { body: body }); });
+            }
+        }
+
+        async function logStudySession(subjectId, seconds, mode) {
+            if (!currentUser || seconds < 5) return;
+            const session = { userId: currentUser.uid, subjectId: subjectId || null, durationSeconds: Math.round(seconds), mode: mode || 'focus', startedAt: serverTimestamp() };
+            try {
+                await addDoc(collection(db, "studySessions"), session);
+                studySessions.push({ ...session, startedAtMs: Date.now() });
+            } catch (e) { console.error('Erro ao registrar sessão', e); }
+        }
+
+        async function logReview(ratingGood) {
+            if (!currentUser) return;
+            reviewStats.total++;
+            if (ratingGood) reviewStats.good++;
+            try {
+                await setDoc(doc(db, 'users', currentUser.uid), {
+                    reviewTotal: increment(1),
+                    reviewGood: ratingGood ? increment(1) : increment(0)
+                }, { merge: true });
+            } catch (e) { console.error('Erro ao registrar revisão', e); }
+        }
 
         function init() {
             const savedTheme = localStorage.getItem('theme');
@@ -1030,14 +1274,14 @@
                 DOM.iconSun.classList.remove('hidden');
                 DOM.iconMoon.classList.add('hidden');
             }
-
             createBackgroundAnimations();
             setupEventListeners();
             setupDraggablePomodoro();
+            pomoTimeLeft = settings.focusMin * 60;
             updatePomoDisplay();
-            
             DOM.bgAudio.src = AUDIO_TRACKS.lofi;
             DOM.bgAudio.volume = 0.3;
+            if (settings.emailjsKey && window.emailjs) emailjs.init({ publicKey: settings.emailjsKey });
 
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
@@ -1045,23 +1289,24 @@
                     DOM.userDisplayEmail.textContent = user.email;
                     DOM.authView.classList.add('hidden');
                     DOM.appWrapper.classList.remove('hidden');
-                    
                     await loadSubjects();
-                    await loadCards();
+                    await loadUserStats();
+                    await Promise.all([loadCards(), loadStudySessions()]);
                     DOM.tabDashboard.click();
-
                 } else {
                     currentUser = null;
                     DOM.authView.classList.remove('hidden');
                     DOM.appWrapper.classList.add('hidden');
-                    allCards = []; subjects = []; publicCards = [];
+                    allCards = []; subjects = []; publicCards = []; studySessions = [];
+                    reviewStats = { total: 0, good: 0 };
                     DOM.bgAudio.pause();
                     DOM.musicPause.classList.add('hidden');
                     DOM.musicPlay.classList.remove('hidden');
+                    closePdfReader(false);
                 }
             });
 
-            setInterval(syncTimeToFirebase, 30000); 
+            setInterval(syncTimeToFirebase, 30000);
         }
 
         function setupDraggablePomodoro() {
@@ -1069,7 +1314,7 @@
             let dragStartX, dragStartY, initialWidgetLeft, initialWidgetTop;
 
             const handleDragStart = (clientX, clientY) => {
-                if(DOM.unifiedWidget.classList.contains('expanded')) return;
+                if (DOM.unifiedWidget.classList.contains('expanded')) return;
                 isDraggingWidget = true;
                 dragStartX = clientX;
                 dragStartY = clientY;
@@ -1081,40 +1326,31 @@
             };
 
             DOM.unifiedWidget.addEventListener('mousedown', (e) => {
-                if(e.target.closest('.widget-body')) return;
+                if (e.target.closest('.widget-body')) return;
                 handleDragStart(e.clientX, e.clientY);
             });
-
             document.addEventListener('mousemove', (e) => {
-                if(!isDraggingWidget) return;
-                const dx = e.clientX - dragStartX;
-                const dy = e.clientY - dragStartY;
-                DOM.unifiedWidget.style.left = `${initialWidgetLeft + dx}px`;
-                DOM.unifiedWidget.style.top = `${initialWidgetTop + dy}px`;
+                if (!isDraggingWidget) return;
+                DOM.unifiedWidget.style.left = (initialWidgetLeft + e.clientX - dragStartX) + 'px';
+                DOM.unifiedWidget.style.top = (initialWidgetTop + e.clientY - dragStartY) + 'px';
             });
-
             document.addEventListener('mouseup', () => {
-                if(isDraggingWidget) {
+                if (isDraggingWidget) {
                     isDraggingWidget = false;
                     DOM.unifiedWidget.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
                 }
             });
-
             DOM.unifiedWidget.addEventListener('touchstart', (e) => {
-                if(e.target.closest('.widget-body')) return;
+                if (e.target.closest('.widget-body')) return;
                 handleDragStart(e.touches[0].clientX, e.touches[0].clientY);
-            }, {passive: true});
-
+            }, { passive: true });
             document.addEventListener('touchmove', (e) => {
-                if(!isDraggingWidget) return;
-                const dx = e.touches[0].clientX - dragStartX;
-                const dy = e.touches[0].clientY - dragStartY;
-                DOM.unifiedWidget.style.left = `${initialWidgetLeft + dx}px`;
-                DOM.unifiedWidget.style.top = `${initialWidgetTop + dy}px`;
-            }, {passive: true});
-
+                if (!isDraggingWidget) return;
+                DOM.unifiedWidget.style.left = (initialWidgetLeft + e.touches[0].clientX - dragStartX) + 'px';
+                DOM.unifiedWidget.style.top = (initialWidgetTop + e.touches[0].clientY - dragStartY) + 'px';
+            }, { passive: true });
             document.addEventListener('touchend', () => {
-                if(isDraggingWidget) {
+                if (isDraggingWidget) {
                     isDraggingWidget = false;
                     DOM.unifiedWidget.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
                 }
@@ -1126,150 +1362,416 @@
             const q = query(collection(db, "subjects"), where("userId", "==", currentUser.uid));
             const snap = await getDocs(q);
             subjects = [];
-            snap.forEach(doc => {
-                let data = doc.data();
-                if(data.studyTime === undefined) data.studyTime = 0;
-                subjects.push({ id: doc.id, ...data });
+            snap.forEach(d => {
+                let data = d.data();
+                if (data.studyTime === undefined) data.studyTime = 0;
+                subjects.push({ id: d.id, ...data });
             });
             updateSubjectDropdowns();
+        }
+
+        async function loadUserStats() {
+            if (!currentUser) return;
+            try {
+                const snap = await getDocs(query(collection(db, 'users'), where('__name__', '==', currentUser.uid)));
+                snap.forEach(d => {
+                    const data = d.data();
+                    reviewStats.total = data.reviewTotal || 0;
+                    reviewStats.good = data.reviewGood || 0;
+                });
+            } catch (e) { console.error('Erro stats', e); }
+        }
+
+        async function loadStudySessions() {
+            if (!currentUser) return;
+            try {
+                const q = query(collection(db, "studySessions"), where("userId", "==", currentUser.uid));
+                const snap = await getDocs(q);
+                studySessions = [];
+                snap.forEach(d => {
+                    const data = d.data();
+                    studySessions.push({
+                        id: d.id,
+                        subjectId: data.subjectId,
+                        durationSeconds: data.durationSeconds || 0,
+                        mode: data.mode || 'focus',
+                        startedAtMs: data.startedAt?.toMillis ? data.startedAt.toMillis() : (data.startedAt ? Date.parse(data.startedAt) : Date.now())
+                    });
+                });
+            } catch (e) { console.error('Erro sessões', e); }
         }
 
         async function loadCards() {
             if (!currentUser) return;
             allCards = [];
             publicCards = [];
-            
+
             try {
                 const qPersonal = query(collection(db, "flashcards"), where("userId", "==", currentUser.uid));
                 const snapPersonal = await getDocs(qPersonal);
-                snapPersonal.forEach(doc => {
-                    let data = doc.data();
-                    if (data.interval === undefined) { 
-                        data.interval = 0; data.repetition = 0; data.easeFactor = 2.5; data.nextReviewDate = new Date().toISOString();
-                    }
+                snapPersonal.forEach(d => {
+                    let data = d.data();
+                    if (data.interval === undefined) { data.interval = 0; data.repetition = 0; data.easeFactor = 2.5; data.nextReviewDate = new Date().toISOString(); }
                     if (data.mistakes === undefined) data.mistakes = 0;
-                    allCards.push({ id: doc.id, ...data, isPublic: false });
+                    if (!Array.isArray(data.likedBy)) data.likedBy = [];
+                    allCards.push({ id: d.id, ...data, isPublic: !!data.isPublic });
                 });
-            } catch(e) {
-                console.error("Erro ao carregar cards pessoais:", e);
-            }
+            } catch (e) { console.error("Erro ao carregar cards pessoais:", e); }
 
             try {
-                const qPublic = query(collection(db, "flashcards"), where("userEmail", "==", "mauriciomts99@gmail.com"));
+                const qPublic = query(collection(db, "flashcards"), where("isPublic", "==", true));
                 const snapPublic = await getDocs(qPublic);
-                snapPublic.forEach(doc => {
-                    let data = doc.data();
-                    if (data.interval === undefined) { 
-                        data.interval = 0; data.repetition = 0; data.easeFactor = 2.5; data.nextReviewDate = new Date().toISOString();
-                    }
+                snapPublic.forEach(d => {
+                    let data = d.data();
+                    if (data.interval === undefined) { data.interval = 0; data.repetition = 0; data.easeFactor = 2.5; data.nextReviewDate = new Date().toISOString(); }
                     if (data.mistakes === undefined) data.mistakes = 0;
-                    publicCards.push({ id: doc.id, ...data, isPublic: true });
+                    if (!Array.isArray(data.likedBy)) data.likedBy = [];
+                    const inMine = allCards.find(c => c.id === d.id);
+                    if (!inMine) publicCards.push({ id: d.id, ...data, isPublic: true });
                 });
-            } catch(e) {
-                console.error("Erro ao carregar cards da comunidade:", e);
-            }
-            
-            allCards.sort((a, b) => b.createdAt?.toMillis() - a.createdAt?.toMillis());
-            publicCards.sort((a, b) => b.createdAt?.toMillis() - a.createdAt?.toMillis());
-            
+            } catch (e) { console.error("Erro ao carregar cards da comunidade:", e); }
+
+            allCards.sort((a, b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0));
+            publicCards.sort((a, b) => (b.likedBy?.length || 0) - (a.likedBy?.length || 0));
             updateUI();
         }
 
         function updateSubjectDropdowns() {
-            const selects = [DOM.studySubjectFilter, DOM.pomoSubjectSelect, DOM.cardSubjectSelect, DOM.editSubjectSelect];
+            const selects = [DOM.studySubjectFilter, DOM.pomoSubjectSelect, DOM.cardSubjectSelect, DOM.editSubjectSelect, DOM.pdfSubjectSelect];
             selects.forEach(el => {
-                if(!el) return;
+                if (!el) return;
                 const isFilter = (el.id === 'study-subject-filter' || el.id === 'pomo-subject-select');
                 el.innerHTML = isFilter ? '<option value="all">Todas as Matérias</option>' : '<option value="" disabled selected>Selecione uma matéria...</option>';
                 subjects.forEach(sub => {
-                    el.innerHTML += `<option value="${sub.id}">${sub.name}</option>`;
+                    el.innerHTML += '<option value="' + sub.id + '">' + sub.name + '</option>';
                 });
-                if(isFilter) el.value = currentFilter;
+                if (isFilter) el.value = currentFilter;
             });
         }
 
         function getSubjectName(id) {
             const sub = subjects.find(s => s.id === id);
-            return sub ? sub.name : 'Card Público / Sem Matéria';
+            return sub ? sub.name : (id ? 'Sem Matéria' : 'Geral');
         }
 
         function updatePomoDisplay() {
-            const m = Math.floor(pomoTimeLeft / 60).toString().padStart(2, '0');
-            const s = (pomoTimeLeft % 60).toString().padStart(2, '0');
-            DOM.pomoDisplay.textContent = `${m}:${s}`;
+            const clock = fmtClock(pomoTimeLeft);
+            DOM.pomoDisplay.textContent = clock;
+            if (pdfSession.active) DOM.pdfTimerChip.textContent = clock;
+            document.title = isPomoRunning ? clock + ' • FlashLearn' : 'FlashLearn Pro - Domine Qualquer Assunto';
         }
 
-        function switchPomoMode(mode) {
-            pomoMode = mode;
-            pomoTimeLeft = mode === 'focus' ? 25 * 60 : 5 * 60;
-            
-            if(mode === 'focus') {
-                DOM.btnModeFocus.classList.add('active');
-                DOM.btnModeBreak.classList.remove('active');
-                DOM.pomoSubjectSelect.style.display = 'block';
-            } else {
-                DOM.btnModeBreak.classList.add('active');
-                DOM.btnModeFocus.classList.remove('active');
-                DOM.pomoSubjectSelect.style.display = 'none';
+        function flushPomoSession() {
+            if (pomoElapsed > 0) {
+                const subj = currentFilter !== 'all' ? currentFilter : (DOM.pomoSubjectSelect.value !== 'all' ? DOM.pomoSubjectSelect.value : null);
+                logStudySession(subj || (dueCards[currentIndex]?.subjectId) || pdfSession.subjectId, pomoElapsed, pomoMode);
+                pomoElapsed = 0;
             }
-            
-            pauseTimer();
+        }
+
+        function switchPomoMode(mode, customMinutes) {
+            flushPomoSession();
+            pauseTimer(true);
+            pomoMode = mode;
+            const mins = customMinutes !== undefined ? customMinutes : (mode === 'focus' ? settings.focusMin : mode === 'break' ? settings.shortMin : mode === 'longbreak' ? settings.longMin : settings.focusMin);
+            pomoTimeLeft = mins * 60;
+
+            const labels = { focus: '🍅 Foco', break: '☕ Pausa Curta', longbreak: '🛋️ Pausa Longa', pdf: '📄 PDF' };
+            DOM.pomoModeLabel.textContent = labels[mode] || mode;
+            DOM.unifiedWidget.classList.toggle('pdf-mode', mode === 'pdf');
+
+            const btns = { focus: DOM.btnModeFocus, break: DOM.btnModeBreak, longbreak: DOM.btnModeLongBreak, pdf: DOM.btnModePdf };
+            Object.values(btns).forEach(b => b.classList.remove('active'));
+            btns[mode]?.classList.add('active');
+
+            DOM.pomoSubjectSelect.style.display = (mode === 'break' || mode === 'longbreak') ? 'none' : 'block';
             updatePomoDisplay();
         }
 
         function startTimer() {
-            if(isPomoRunning) return;
+            if (isPomoRunning) return;
             isPomoRunning = true;
             DOM.btnPomoPlay.classList.add('hidden');
             DOM.btnPomoPause.classList.remove('hidden');
+            if (!DOM.unifiedWidget.classList.contains('expanded')) DOM.unifiedWidget.classList.add('expanded');
 
             pomoInterval = setInterval(() => {
-                if(pomoTimeLeft > 0) {
+                if (pomoTimeLeft > 0) {
                     pomoTimeLeft--;
+                    pomoElapsed++;
                     updatePomoDisplay();
 
-                    if(pomoMode === 'focus' && currentFilter !== 'all') {
+                    if (pomoMode === 'focus' && currentFilter !== 'all') {
                         pendingTimeUpdates[currentFilter] = (pendingTimeUpdates[currentFilter] || 0) + 1;
-                    } else if (pomoMode === 'focus' && dueCards.length > 0 && !DOM.emptyState.classList.contains('hidden') === false) {
-                        const currentSubId = dueCards[currentIndex].subjectId;
-                        if(currentSubId) pendingTimeUpdates[currentSubId] = (pendingTimeUpdates[currentSubId] || 0) + 1;
                     }
                 } else {
-                    pauseTimer();
-                    alert(pomoMode === 'focus' ? "Sessão de Foco concluída! Hora de descansar." : "Pausa concluída! Voltando aos estudos.");
-                    switchPomoMode(pomoMode === 'focus' ? 'break' : 'focus');
+                    pauseTimer(true);
+                    const isFocus = pomoMode === 'focus' || pomoMode === 'pdf';
+                    playAlarmBeep();
+                    notifyUser(isFocus ? '⏰ Sessão concluída!' : '☕ Pausa concluída!', isFocus ? 'Hora de descansar um pouco.' : 'Hora de voltar aos estudos!');
+                    if (pomoMode === 'pdf') {
+                        alert('📄 Sessão de leitura de PDF concluída! Tempo registrado no dashboard.');
+                        closePdfReader(true);
+                        switchPomoMode('focus');
+                    } else {
+                        alert(pomoMode === 'focus' ? 'Sessão de Foco concluída! Hora de descansar.' : 'Pausa concluída! Voltando aos estudos.');
+                        switchPomoMode(pomoMode === 'focus' ? 'break' : 'focus');
+                    }
                 }
             }, 1000);
         }
 
-        function pauseTimer() {
+        function pauseTimer(silentFlush) {
+            if (!isPomoRunning && pomoElapsed === 0) return;
             isPomoRunning = false;
             clearInterval(pomoInterval);
             DOM.btnPomoPause.classList.add('hidden');
             DOM.btnPomoPlay.classList.remove('hidden');
+            if (!silentFlush) flushPomoSession();
+            else if (pomoElapsed > 0) flushPomoSession();
             syncTimeToFirebase();
         }
 
         async function syncTimeToFirebase() {
             const updates = Object.entries(pendingTimeUpdates);
-            if(updates.length === 0) return;
-
-            for(const [subId, seconds] of updates) {
+            if (updates.length === 0) return;
+            for (const [subId, seconds] of updates) {
                 const sub = subjects.find(s => s.id === subId);
-                if(sub) {
+                if (sub) {
                     sub.studyTime = (sub.studyTime || 0) + seconds;
                     try {
                         await updateDoc(doc(db, "subjects", subId), { studyTime: sub.studyTime });
-                    } catch(e) { console.error("Erro sincronizando tempo", e); }
+                    } catch (e) { console.error("Erro sincronizando tempo", e); }
                 }
             }
             pendingTimeUpdates = {}; 
-            if(DOM.viewDashboard.classList.contains('active')) updateDashboard();
+            if (DOM.viewDashboard.classList.contains('active')) updateDashboard();
+        }
+
+        function computeTimeStats() {
+            const now = new Date();
+            const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+            const dow = (now.getDay() + 6) % 7;
+            const startOfWeek = startOfDay - dow * DAY_MS;
+            const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+
+            let today = 0, week = 0, month = 0, total = 0;
+            const heat = Array.from({ length: 7 }, () => Array(24).fill(0));
+            const perDay = {};
+            for (let i = 29; i >= 0; i--) perDay[todayKey(-i)] = 0;
+            const daysActive = new Set();
+
+            studySessions.forEach(s => {
+                const t = s.startedAtMs || Date.now();
+                const dur = s.durationSeconds || 0;
+                total += dur;
+                if (t >= startOfDay) today += dur;
+                if (t >= startOfWeek) week += dur;
+                if (t >= startOfMonth) month += dur;
+                const d = new Date(t);
+                const key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+                if (perDay[key] !== undefined) perDay[key] += dur / 60;
+                heat[(d.getDay() + 6) % 7][d.getHours()] += dur / 60;
+                daysActive.add(key);
+            });
+
+            let streak = 0;
+            let cursor = daysActive.has(todayKey(0)) ? 0 : (daysActive.has(todayKey(-1)) ? -1 : 1);
+            if (daysActive.size === 0) { streak = 0; }
+            else {
+                let k = cursor;
+                while (daysActive.has(todayKey(k))) { streak++; k--; }
+            }
+
+            const weekByDay = heat.map((h, i) => ({ day: WEEKDAY_NAMES[i], minutes: h.reduce((a, b) => a + b, 0) }));
+            const busiestDay = weekByDay.reduce((a, b) => b.minutes > a.minutes ? b : a, weekByDay[0]);
+            const hourTotals = heat[0].map((_, h) => heat.reduce((sum, row) => sum + row[h], 0));
+            let busiestHourIdx = 0;
+            hourTotals.forEach((v, i) => { if (v > hourTotals[busiestHourIdx]) busiestHourIdx = i; });
+
+            return { today, week, month, total, perDay, heat, streak, weekByDay, busiestDay, busiestHour: busiestHourIdx, hourTotals, daysActiveCount: daysActive.size };
+        }
+
+        function computeSubjectAccuracy() {
+            const map = {};
+            allCards.forEach(c => {
+                const name = getSubjectName(c.subjectId);
+                if (!map[name]) map[name] = { correct: 0, attempts: 0 };
+                map[name].attempts += (c.repetition || 0) + (c.mistakes || 0);
+                map[name].correct += (c.repetition || 0);
+            });
+            return Object.entries(map).map(([name, v]) => ({
+                name,
+                accuracy: v.attempts > 0 ? Math.round(100 * v.correct / v.attempts) : 0,
+                attempts: v.attempts
+            })).filter(s => s.attempts > 0);
+        }
+
+        function computeForecast() {
+            const now = Date.now();
+            const in7 = now + 7 * DAY_MS;
+            let count7 = 0, overdue = 0;
+            allCards.forEach(c => {
+                const t = Date.parse(c.nextReviewDate || 0);
+                if (t <= in7) count7++;
+                if (t <= now) overdue++;
+            });
+            return { count7, overdue };
+        }
+
+        function updateDashboard() {
+            const stats = computeTimeStats();
+            const forecast = computeForecast();
+            const accuracy = reviewStats.total > 0 ? Math.round(100 * reviewStats.good / reviewStats.total) : 0;
+
+            document.getElementById('stat-hours-today').textContent = fmtHours(stats.today);
+            document.getElementById('stat-hours-week-sub').textContent = fmtHours(stats.week) + ' esta semana';
+            document.getElementById('stat-hours-month').textContent = fmtHours(stats.month);
+            document.getElementById('stat-hours-total-sub').textContent = fmtHours(stats.total) + ' no total';
+            document.getElementById('stat-streak').textContent = stats.streak;
+            document.getElementById('stat-accuracy').textContent = accuracy + '%';
+            document.getElementById('stat-forecast-sub').textContent = forecast.count7 + ' revisões próx. 7 dias';
+
+            renderInsights(stats, forecast, accuracy);
+
+            const nowIso = new Date().toISOString();
+            const toReviewCount = allCards.filter(c => !c.nextReviewDate || c.nextReviewDate <= nowIso).length;
+            const learnedCount = allCards.filter(c => c.interval > 0).length;
+
+            if (document.getElementById('dailyChart')) {
+                const ctx = document.getElementById('dailyChart').getContext('2d');
+                const labels = Object.keys(stats.perDay).map(k => k.slice(5));
+                const data = Object.values(stats.perDay).map(m => Math.round(m));
+                if (!dailyChart) {
+                    dailyChart = new Chart(ctx, {
+                        type: 'line',
+                        data: { labels, datasets: [{ label: 'Minutos', data, borderColor: '#6d28d9', backgroundColor: 'rgba(109,40,217,0.15)', fill: true, tension: 0.4, pointRadius: 2 }] },
+                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+                    });
+                } else {
+                    dailyChart.data.labels = labels;
+                    dailyChart.data.datasets[0].data = data;
+                    dailyChart.update();
+                }
+            }
+
+            if (document.getElementById('progressChart')) {
+                const ctx = document.getElementById('progressChart').getContext('2d');
+                if (!progressChart) {
+                    const textColor = getComputedStyle(document.body).getPropertyValue('--text-secondary');
+                    progressChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: { labels: ['Para Revisar', 'Aprendidos'], datasets: [{ data: [toReviewCount, learnedCount], backgroundColor: ['#f59e0b', '#10b981'], borderWidth: 0, hoverOffset: 4 }] },
+                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: textColor, font: { family: 'Inter' } } } } }
+                    });
+                } else {
+                    progressChart.data.datasets[0].data = [toReviewCount, learnedCount];
+                    progressChart.update();
+                }
+            }
+
+            if (document.getElementById('timeChart')) {
+                const ctx = document.getElementById('timeChart').getContext('2d');
+                const labels = subjects.map(s => s.name);
+                const data = subjects.map(s => Math.round(((s.studyTime || 0) + (pendingTimeUpdates[s.id] || 0)) / 60));
+                if (!timeChart) {
+                    timeChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: { labels, datasets: [{ label: 'Minutos', data, backgroundColor: '#6d28d9', borderRadius: 6 }] },
+                        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
+                    });
+                } else {
+                    timeChart.data.labels = labels;
+                    timeChart.data.datasets[0].data = data;
+                    timeChart.update();
+                }
+            }
+
+            const subjAcc = computeSubjectAccuracy();
+            if (document.getElementById('radarChart') && subjAcc.length > 0) {
+                const ctx = document.getElementById('radarChart').getContext('2d');
+                const labels = subjAcc.map(s => s.name);
+                const data = subjAcc.map(s => s.accuracy);
+                if (!radarChart) {
+                    radarChart = new Chart(ctx, {
+                        type: 'radar',
+                        data: { labels, datasets: [{ label: 'Acurácia %', data, backgroundColor: 'rgba(109,40,217,0.2)', borderColor: '#6d28d9', pointBackgroundColor: '#6d28d9' }] },
+                        options: { responsive: true, maintainAspectRatio: false, scales: { r: { min: 0, max: 100, ticks: { display: false } } }, plugins: { legend: { display: false } } }
+                    });
+                } else {
+                    radarChart.data.labels = labels;
+                    radarChart.data.datasets[0].data = data;
+                    radarChart.update();
+                }
+            }
+
+            renderPlotly3D(stats);
+
+            const diffCards = allCards.filter(c => c.mistakes > 0).sort((a, b) => b.mistakes - a.mistakes).slice(0, 5);
+            DOM.diffList.innerHTML = '';
+            if (diffCards.length === 0) {
+                DOM.diffList.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 1rem;">Você ainda não registrou dificuldades. Continue estudando!</p>';
+            } else {
+                diffCards.forEach(c => {
+                    DOM.diffList.innerHTML += '<div class="diff-card-item"><span class="diff-card-q">' + c.question.replace(/</g, '&lt;') + '</span><span class="diff-badge">' + c.mistakes + 'x Erros</span></div>';
+                });
+            }
+        }
+
+        function renderPlotly3D(stats) {
+            const el = document.getElementById('plotly-3d');
+            if (!el || !window.Plotly) return;
+            try {
+                const z = stats.heat.map(row => row.map(v => Math.round(v * 10) / 10));
+                const data = [{
+                    type: 'surface',
+                    z: z,
+                    x: Array.from({ length: 24 }, (_, i) => i),
+                    y: WEEKDAY_NAMES,
+                    colorscale: 'Purples',
+                    showscale: false,
+                    contours: { z: { show: true, usecolormap: true, highlightcolor: '#6d28d9', project: { z: true } } }
+                }];
+                const layout = {
+                    margin: { l: 0, r: 0, b: 0, t: 10 },
+                    scene: {
+                        xaxis: { title: 'Hora do Dia', ticktext: ['0h','6h','12h','18h','23h'], tickvals: [0,6,12,18,23] },
+                        yaxis: { title: 'Dia da Semana' },
+                        zaxis: { title: 'Minutos' }
+                    },
+                    paper_bgcolor: 'rgba(0,0,0,0)',
+                    font: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') }
+                };
+                Plotly.react(el, data, layout, { displayModeBar: false, responsive: true });
+            } catch (e) { console.error('Plotly erro', e); }
+        }
+
+        function renderInsights(stats, forecast, accuracy) {
+            const items = [];
+            const weekMinutes = stats.weekByDay.map(d => Math.round(d.minutes));
+            const busiest = stats.busiestDay;
+            const bestSubj = computeSubjectAccuracy().sort((a, b) => b.accuracy - a.accuracy)[0];
+
+            items.push({ cls: 'good', title: '📅 Dia mais produtivo', value: busiest.minutes > 0 ? busiest.day + ' (' + fmtHours(busiest.minutes * 60) + ' acumulados)' : 'Ainda sem dados — comece o cronômetro!' });
+            items.push({ cls: 'info', title: '🕐 Melhor horário para estudar', value: stats.hourTotals[stats.busiestHour] > 0 ? 'Entre ' + stats.busiestHour + 'h e ' + (stats.busiestHour + 1) + 'h' : 'Sem padrão detectado ainda' });
+            items.push({ cls: 'warn', title: '📚 Matéria forte', value: bestSubj ? bestSubj.name + ' — ' + bestSubj.accuracy + '% de acerto' : 'Responda cards para calcular' });
+            items.push({ cls: '', title: '⏳ Carga de revisão (7 dias)', value: forecast.count7 + ' cards (' + forecast.overdue + ' vencidos agora)' });
+
+            const weekGoal = 10 * 3600;
+            const pctGoal = Math.min(100, Math.round(100 * stats.week / weekGoal));
+            items.push({ cls: stats.week >= weekGoal ? 'good' : '', title: '🎯 Meta semanal (10h)', value: pctGoal + '% — ' + fmtHours(stats.week) + ' de 10h' });
+
+            const avgEase = allCards.length ? (allCards.reduce((s, c) => s + (c.easeFactor || 2.5), 0) / allCards.length) : 2.5;
+            items.push({ cls: avgEase >= 2.5 ? 'good' : 'warn', title: '🧠 Fator de facilidade médio (SRS)', value: avgEase.toFixed(2) + ' — ' + (avgEase >= 2.5 ? 'memória retendo bem' : 'considere revisões mais frequentes') });
+
+            DOM.insightsGrid.innerHTML = items.map(i =>
+                '<div class="insight-item ' + i.cls + '"><div class="insight-title">' + i.title + '</div><div class="insight-value">' + i.value + '</div></div>'
+            ).join('');
         }
 
         function updateUI() {
             const now = new Date().toISOString();
-            
+
             dueCards = allCards.filter(c => {
                 const isDue = !c.nextReviewDate || c.nextReviewDate <= now;
                 const matchesSubject = currentFilter === 'all' || c.subjectId === currentFilter;
@@ -1292,25 +1794,15 @@
                         <div class="empty-icon" style="background: var(--accent-light); color: var(--accent-color);">
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
                         </div>
-                        <h2>Bem-vindo ao FlashLearn!</h2>
-                        <p>Parece que você ainda não tem nenhum material. Siga os passos abaixo para começar a dominar qualquer assunto:</p>
+                        <h2>Bem-vindo ao FlashLearn PRO!</h2>
+                        <p>Siga os passos abaixo para começar:</p>
                         <div class="onboarding-steps">
-                            <div class="step-item">
-                                <div class="step-number">1</div>
-                                <div class="step-text">Clique em <strong>Matéria</strong> no topo para criar sua primeira disciplina.</div>
-                            </div>
-                            <div class="step-item">
-                                <div class="step-number">2</div>
-                                <div class="step-text">Clique em <strong>Card</strong> para adicionar perguntas e respostas à matéria.</div>
-                            </div>
-                            <div class="step-item">
-                                <div class="step-number">3</div>
-                                <div class="step-text">Pronto! Seus cards aparecerão aqui para você estudar com repetição espaçada.</div>
-                            </div>
+                            <div class="step-item"><div class="step-number">1</div><div class="step-text">Clique em <strong>Matéria</strong> para criar sua primeira disciplina.</div></div>
+                            <div class="step-item"><div class="step-number">2</div><div class="step-text">Clique em <strong>Card</strong> para adicionar perguntas e respostas.</div></div>
+                            <div class="step-item"><div class="step-number">3</div><div class="step-text">Use o <strong>cronômetro</strong> flutuante e a aba <strong>📄 PDF</strong> para registrar seu tempo de estudo.</div></div>
                         </div>
                     `;
-                } 
-                else {
+                } else {
                     DOM.emptyState.innerHTML = `
                         <div class="empty-icon">
                             <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1318,7 +1810,7 @@
                             </svg>
                         </div>
                         <h2>Tudo limpo por aqui!</h2>
-                        <p>Você revisou todos os cards programados para agora. Adicione novos ou aproveite sua pausa.</p>
+                        <p>Você revisou todos os cards programados para agora. Aproveite para estudar um PDF com o cronômetro!</p>
                     `;
                 }
                 return;
@@ -1327,7 +1819,7 @@
             DOM.scene.classList.remove('hidden');
             DOM.progressWrapper.classList.remove('hidden');
             DOM.emptyState.classList.add('hidden');
-            
+
             if (currentIndex >= dueCards.length) currentIndex = Math.max(0, dueCards.length - 1);
 
             DOM.card.classList.remove('is-flipped');
@@ -1339,28 +1831,24 @@
 
         function renderCurrentCard(direction = null) {
             if (dueCards.length === 0) return;
-            window.speechSynthesis.cancel(); 
+            window.speechSynthesis.cancel();
 
             const card = dueCards[currentIndex];
             const currentSub = getSubjectName(card.subjectId);
 
             DOM.questionEl.innerHTML = processContent(card.question);
             DOM.answerEl.innerHTML = processContent(card.answer);
-            
+
             setTimeout(() => {
                 applyMathAndCode('card-question');
                 applyMathAndCode('card-answer');
             }, 10);
 
-            DOM.subjectBadgeEl.textContent = card.isPublic ? `🌍 ${currentSub}` : currentSub;
+            DOM.subjectBadgeEl.textContent = (card.isPublic ? '🌍 ' : '') + currentSub;
 
-            if(card.isPublic && currentUser.email !== "mauriciomts99@gmail.com") {
-                DOM.btnEditCard.classList.add('hidden');
-                DOM.btnDeleteCard.classList.add('hidden');
-            } else {
-                DOM.btnEditCard.classList.remove('hidden');
-                DOM.btnDeleteCard.classList.remove('hidden');
-            }
+            const canEdit = !card.isPublic || currentUser.email === ADMIN_EMAIL;
+            DOM.btnEditCard.classList.toggle('hidden', !canEdit);
+            DOM.btnDeleteCard.classList.toggle('hidden', !canEdit);
 
             if (direction === 'next') {
                 DOM.card.classList.add('slide-in-right');
@@ -1370,8 +1858,8 @@
                 setTimeout(() => DOM.card.classList.remove('slide-in-left'), 400);
             }
 
-            DOM.counter.textContent = `${currentIndex + 1} / ${dueCards.length}`;
-            DOM.progressFill.style.width = `${((currentIndex + 1) / dueCards.length) * 100}%`;
+            DOM.counter.textContent = (currentIndex + 1) + ' / ' + dueCards.length;
+            DOM.progressFill.style.width = ((currentIndex + 1) / dueCards.length) * 100 + '%';
 
             DOM.prevBtn.style.opacity = currentIndex === 0 ? '0.5' : '1';
             DOM.prevBtn.style.cursor = currentIndex === 0 ? 'not-allowed' : 'pointer';
@@ -1388,16 +1876,14 @@
 
             const grouped = {};
             cardsList.forEach(c => {
-                // Tenta pegar o nome da matéria salvo no card, senão busca pelo ID, senão chama de "Geral"
-                const sName = c.subjectName || getSubjectName(c.subjectId) || "Geral";
-                
-                if(!grouped[sName]) grouped[sName] = [];
+                const sName = c.subjectName || getSubjectName(c.subjectId) || 'Geral';
+                if (!grouped[sName]) grouped[sName] = [];
                 grouped[sName].push(c);
             });
 
-            let containerHtml = "";
+            let containerHtml = '';
 
-            for(const subName in grouped) {
+            for (const subName in grouped) {
                 const subCards = grouped[subName];
 
                 containerHtml += `
@@ -1415,10 +1901,17 @@
                 subCards.forEach(card => {
                     const cleanQ = processContent(card.question);
                     const cleanA = processContent(card.answer);
-                    const hideActions = card.isPublic && currentUser.email !== "mauriciomts99@gmail.com" ? "hidden" : "";
-                    
+                    const hideActions = (!card.isPublic && card.userId !== currentUser.uid && currentUser.email !== ADMIN_EMAIL) ? 'hidden' : '';
+                    const likes = card.likedBy ? card.likedBy.length : 0;
+                    const liked = card.likedBy && currentUser && card.likedBy.includes(currentUser.uid);
+                    const author = card.userEmail ? card.userEmail.split('@')[0] : 'anônimo';
+
                     containerHtml += `
                         <div class="list-card">
+                            <div class="feed-meta">
+                                <span class="exame-badge">🎓 Comunidade</span>
+                                <span>por ${author}</span>
+                            </div>
                             <div class="list-card-q list-card-content">
                                 <span style="color: var(--accent-color); font-weight: bold; margin-right: 5px;">P:</span> 
                                 <div style="display:inline;" id="list-q-${card.id}">${cleanQ}</div>
@@ -1430,6 +1923,10 @@
                                 </div>
                             </div>
                             <div class="list-card-actions">
+                                <button class="like-btn ${liked ? 'liked' : ''}" title="Curtir resolução" onclick="window.toggleLikeGlobal('${card.id}')">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="${liked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                    <span id="like-count-${card.id}">${likes}</span>
+                                </button>
                                 <button class="card-action-btn" title="Ouvir" onclick="window.speakText(document.getElementById('list-q-${card.id}').innerHTML + ' . Resposta. ' + document.getElementById('list-a-${card.id}').innerHTML, event)">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
                                 </button>
@@ -1444,84 +1941,30 @@
                     `;
                 });
 
-                containerHtml += `</div></div>`;
+                containerHtml += '</div></div>';
             }
 
             container.innerHTML = containerHtml;
             setTimeout(() => applyMathAndCode(container.id), 50);
         }
 
-        function renderAllCardsView() {
-            buildCardListHTML(allCards, DOM.allCardsContainer); 
-        }
+        function renderAllCardsView() { buildCardListHTML(allCards, DOM.allCardsContainer); }
+        function renderCommunityCardsView() { buildCardListHTML(publicCards, DOM.communityCardsContainer); }
 
-        function renderCommunityCardsView() {
-            buildCardListHTML(publicCards, DOM.communityCardsContainer);
-        }
-
-        function updateDashboard() {
-            const now = new Date().toISOString();
-            
-            const toReviewCount = allCards.filter(c => !c.nextReviewDate || c.nextReviewDate <= now).length;
-            const learnedCount = allCards.filter(c => c.interval > 0).length;
-            
-            if(DOM.statToReview) DOM.statToReview.textContent = toReviewCount;
-            if(DOM.statLearned) DOM.statLearned.textContent = learnedCount;
-            
-            if (document.getElementById('progressChart')) {
-                const ctx = document.getElementById('progressChart').getContext('2d');
-                if (!progressChart) {
-                    const textColor = getComputedStyle(document.body).getPropertyValue('--text-secondary');
-                    progressChart = new Chart(ctx, {
-                        type: 'doughnut',
-                        data: {
-                            labels: ['Aprender Hoje', 'Aprendidos'],
-                            datasets: [{ data: [toReviewCount, learnedCount], backgroundColor: ['#f59e0b', '#10b981'], borderWidth: 0, hoverOffset: 4 }]
-                        },
-                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: textColor, font: {family: 'Inter'} } } } }
-                    });
-                } else {
-                    progressChart.data.datasets[0].data = [toReviewCount, learnedCount];
-                    progressChart.update();
-                }
-            }
-
-            if (document.getElementById('timeChart') && subjects.length > 0) {
-                const ctx = document.getElementById('timeChart').getContext('2d');
-                const labels = subjects.map(s => s.name);
-                const data = subjects.map(s => Math.round(((s.studyTime || 0) + (pendingTimeUpdates[s.id] || 0)) / 60)); 
-                
-                if (!timeChart) {
-                    timeChart = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: labels,
-                            datasets: [{ label: 'Minutos Estudados', data: data, backgroundColor: '#6d28d9', borderRadius: 6 }]
-                        },
-                        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
-                    });
-                } else {
-                    timeChart.data.labels = labels;
-                    timeChart.data.datasets[0].data = data;
-                    timeChart.update();
-                }
-            }
-
-            const diffCards = allCards.filter(c => c.mistakes > 0).sort((a, b) => b.mistakes - a.mistakes).slice(0, 5);
-            DOM.diffList.innerHTML = '';
-            if(diffCards.length === 0) {
-                DOM.diffList.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 1rem;">Você ainda não registrou dificuldades. Continue estudando!</p>';
-            } else {
-                diffCards.forEach(c => {
-                    DOM.diffList.innerHTML += `
-                        <div class="diff-card-item">
-                            <span class="diff-card-q">${c.question}</span>
-                            <span class="diff-badge">${c.mistakes}x Erros</span>
-                        </div>
-                    `;
-                });
-            }
-        }
+        window.toggleLikeGlobal = async function(id) {
+            if (!currentUser) return;
+            let card = publicCards.find(c => c.id === id) || allCards.find(c => c.id === id);
+            if (!card) return;
+            if (!Array.isArray(card.likedBy)) card.likedBy = [];
+            const idx = card.likedBy.indexOf(currentUser.uid);
+            const nowLiked = idx === -1;
+            if (nowLiked) card.likedBy.push(currentUser.uid); else card.likedBy.splice(idx, 1);
+            try {
+                await updateDoc(doc(db, 'flashcards', id), { likedBy: card.likedBy });
+            } catch (e) { console.error('Erro like', e); }
+            if (DOM.viewCommunity.classList.contains('active')) renderCommunityCardsView();
+            if (DOM.viewAllCards.classList.contains('active')) renderAllCardsView();
+        };
 
         function toggleFlip() {
             if (dueCards.length === 0) return;
@@ -1538,57 +1981,52 @@
         async function processSRSRating(rating) {
             if (dueCards.length === 0) return;
             const card = dueCards[currentIndex];
-            
-            let { interval = 0, repetition = 0, easeFactor = 2.5, mistakes = 0 } = card;
-            
-            if (rating <= 2) mistakes++;
 
+            let { interval = 0, repetition = 0, easeFactor = 2.5, mistakes = 0 } = card;
+
+            if (rating <= 2) mistakes++;
             if (rating >= 3) {
                 if (repetition === 0) interval = 1;
                 else if (repetition === 1) interval = 6;
                 else interval = Math.round(interval * easeFactor);
                 repetition++;
             } else {
-                repetition = 0; interval = 1; 
+                repetition = 0; interval = 1;
             }
-            
+
             easeFactor = easeFactor + (0.1 - (5 - rating) * (0.08 + (5 - rating) * 0.02));
             if (easeFactor < 1.3) easeFactor = 1.3;
-            
+
             card.interval = interval;
             card.repetition = repetition;
             card.easeFactor = easeFactor;
             card.mistakes = mistakes;
-            
+
             const nextDate = new Date();
             nextDate.setDate(nextDate.getDate() + interval);
             card.nextReviewDate = nextDate.toISOString();
-            
+
+            logReview(rating >= 3);
+
             try {
-                const cardRef = doc(db, "flashcards", card.id);
-                await updateDoc(cardRef, {
-                    interval: card.interval,
-                    repetition: card.repetition,
-                    easeFactor: card.easeFactor,
-                    nextReviewDate: card.nextReviewDate,
-                    mistakes: card.mistakes
+                await updateDoc(doc(db, "flashcards", card.id), {
+                    interval, repetition, easeFactor, nextReviewDate: card.nextReviewDate, mistakes
                 });
             } catch (e) { console.error("Erro ao atualizar no Firebase: ", e); }
             updateUI();
         }
 
-        async function createCard(subjectId, question, answer) {
-            // Busca o nome da matéria para salvar no card
+        async function createCard(subjectId, question, answer, isPublic) {
             const sub = subjects.find(s => s.id === subjectId);
-            const subjectName = sub ? sub.name : "Geral";
+            const subjectName = sub ? sub.name : 'Geral';
+            const autoPublic = currentUser.email === ADMIN_EMAIL;
 
             const newCard = {
-                userId: currentUser.uid, 
-                userEmail: currentUser.email, 
-                subjectId, 
-                subjectName, // Salvando o nome da matéria aqui!
-                question, 
-                answer,
+                userId: currentUser.uid,
+                userEmail: currentUser.email,
+                subjectId, subjectName, question, answer,
+                isPublic: isPublic || autoPublic,
+                likedBy: [],
                 interval: 0, repetition: 0, easeFactor: 2.5, mistakes: 0,
                 nextReviewDate: new Date().toISOString(), createdAt: serverTimestamp()
             };
@@ -1597,45 +2035,41 @@
                 const docRef = await addDoc(collection(db, "flashcards"), newCard);
                 newCard.id = docRef.id;
                 allCards.unshift(newCard);
-                
-                if(currentUser.email === "mauriciomts99@gmail.com") {
-                    publicCards.unshift({...newCard, isPublic: true});
-                }
-                
+                if (newCard.isPublic) publicCards.unshift({ ...newCard, isPublic: true });
                 updateUI();
                 return true;
             } catch (error) { return false; }
         }
 
         window.deleteCardGlobal = async function(id) {
-            if(confirm("Tem certeza que deseja excluir este flashcard definitivamente?")) {
+            if (confirm('Tem certeza que deseja excluir este flashcard definitivamente?')) {
                 try {
                     await deleteDoc(doc(db, "flashcards", id));
                     allCards = allCards.filter(c => c.id !== id);
                     publicCards = publicCards.filter(c => c.id !== id);
                     updateUI();
-                } catch(e) { alert("Erro ao excluir. Tente novamente."); }
+                } catch (e) { alert('Erro ao excluir. Tente novamente.'); }
             }
         };
 
         window.openEditModalGlobal = function(id) {
             let card = allCards.find(c => c.id === id);
-            if(!card) card = publicCards.find(c => c.id === id);
-            if(!card) return;
-            
+            if (!card) card = publicCards.find(c => c.id === id);
+            if (!card) return;
+
             editingCardId = card.id;
-            
-            DOM.editSubjectSelect.value = card.subjectId || "";
+            DOM.editSubjectSelect.value = card.subjectId || '';
             DOM.editQuestion.value = card.question;
             DOM.editAnswer.value = card.answer;
-            
+            DOM.editShareCommunity.checked = !!card.isPublic;
+
             DOM.editModal.classList.remove('hidden');
             DOM.editQuestion.focus();
         };
 
         async function saveCardEdits(e) {
             e.preventDefault();
-            if(!editingCardId) return;
+            if (!editingCardId) return;
 
             DOM.submitEditBtn.textContent = 'Salvando...';
             DOM.submitEditBtn.disabled = true;
@@ -1643,26 +2077,31 @@
             const updatedData = {
                 subjectId: DOM.editSubjectSelect.value,
                 question: DOM.editQuestion.value.trim(),
-                answer: DOM.editAnswer.value.trim()
+                answer: DOM.editAnswer.value.trim(),
+                isPublic: DOM.editShareCommunity.checked,
+                subjectName: getSubjectName(DOM.editSubjectSelect.value)
             };
 
             try {
                 await updateDoc(doc(db, "flashcards", editingCardId), updatedData);
-                
-                const cardIndex = allCards.findIndex(c => c.id === editingCardId);
-                if (cardIndex !== -1) {
-                    allCards[cardIndex] = { ...allCards[cardIndex], ...updatedData };
+
+                const updateLocal = (list) => {
+                    const i = list.findIndex(c => c.id === editingCardId);
+                    if (i !== -1) list[i] = { ...list[i], ...updatedData };
+                };
+                updateLocal(allCards);
+                updateLocal(publicCards);
+
+                if (updatedData.isPublic && !publicCards.find(c => c.id === editingCardId)) {
+                    const c = allCards.find(x => x.id === editingCardId);
+                    if (c) publicCards.unshift({ ...c, isPublic: true });
                 }
-                
-                const pubIndex = publicCards.findIndex(c => c.id === editingCardId);
-                if (pubIndex !== -1) {
-                    publicCards[pubIndex] = { ...publicCards[pubIndex], ...updatedData };
-                }
-                
+                if (!updatedData.isPublic) publicCards = publicCards.filter(c => c.id !== editingCardId);
+
                 DOM.editModal.classList.add('hidden');
                 updateUI();
-            } catch(error) {
-                alert("Erro ao salvar alterações.");
+            } catch (error) {
+                alert('Erro ao salvar alterações.');
             } finally {
                 DOM.submitEditBtn.textContent = 'Salvar Alterações';
                 DOM.submitEditBtn.disabled = false;
@@ -1673,9 +2112,9 @@
         function switchTab(clickedTabStr) {
             const tabs = ['tabStudy', 'tabAllCards', 'tabDashboard', 'tabCommunity'];
             const views = ['viewStudy', 'viewAllCards', 'viewDashboard', 'viewCommunity'];
-            
+
             tabs.forEach((t, i) => {
-                if(t === clickedTabStr) {
+                if (t === clickedTabStr) {
                     DOM[t].classList.add('active');
                     DOM[views[i]].classList.add('active');
                     DOM[views[i]].classList.remove('hidden');
@@ -1686,8 +2125,145 @@
                 }
             });
 
-            if(clickedTabStr === 'tabStudy') DOM.subjectFilterContainer.classList.remove('hidden');
-            else DOM.subjectFilterContainer.classList.add('hidden');
+            DOM.subjectFilterContainer.classList.toggle('hidden', clickedTabStr !== 'tabStudy');
+        }
+
+        function buildWeeklySummaryText() {
+            const stats = computeTimeStats();
+            const forecast = computeForecast();
+            const accuracy = reviewStats.total > 0 ? Math.round(100 * reviewStats.good / reviewStats.total) : 0;
+            const subjAcc = computeSubjectAccuracy().sort((a, b) => b.accuracy - a.accuracy);
+            const bestSubj = subjAcc[0];
+            const worstSubj = subjAcc[subjAcc.length - 1];
+
+            const weekLines = stats.weekByDay.map(d => '  • ' + d.day + ': ' + fmtHours(d.minutes * 60)).join('\n');
+
+            return '📊 RESUMO SEMANAL — FlashLearn PRO\n' +
+                'Aluno: ' + currentUser.email + '\n' +
+                'Período: semana atual (até ' + new Date().toLocaleDateString('pt-BR') + ')\n\n' +
+                '⏱️ TEMPO DE ESTUDO\n' +
+                '  • Hoje: ' + fmtHours(stats.today) + '\n' +
+                '  • Esta semana: ' + fmtHours(stats.week) + '\n' +
+                '  • Este mês: ' + fmtHours(stats.month) + '\n' +
+                '  • Total: ' + fmtHours(stats.total) + '\n\n' +
+                '📅 DISTRIBUIÇÃO NA SEMANA\n' + weekLines + '\n\n' +
+                '💡 INSIGHTS\n' +
+                '  • Dia mais produtivo: ' + (stats.busiestDay.minutes > 0 ? stats.busiestDay.day : 'sem dados') + '\n' +
+                '  • Melhor horário: ' + (stats.hourTotals[stats.busiestHour] > 0 ? stats.busiestHour + 'h–' + (stats.busiestHour + 1) + 'h' : 'sem padrão') + '\n' +
+                '  • Sequência de dias: ' + stats.streak + '\n\n' +
+                '🧠 DESEMPENHO NOS CARDS\n' +
+                '  • Total de cards: ' + allCards.length + '\n' +
+                '  • Taxa de acerto (SRS): ' + accuracy + '% (' + reviewStats.good + '/' + reviewStats.total + ')\n' +
+                '  • Revisões previstas (7 dias): ' + forecast.count7 + '\n' +
+                (bestSubj ? '  • Melhor matéria: ' + bestSubj.name + ' (' + bestSubj.accuracy + '%)\n' : '') +
+                (worstSubj && worstSubj !== bestSubj ? '  • Foco recomendado: ' + worstSubj.name + ' (' + worstSubj.accuracy + '%)\n' : '') +
+                '\n🎯 META SEMANAL (10h): ' + Math.min(100, Math.round(100 * stats.week / (10 * 3600))) + '%\n' +
+                '\nGerado automaticamente pelo FlashLearn PRO.';
+        }
+
+        function openSummaryModal() {
+            if (!currentUser) return;
+            DOM.summaryText.textContent = buildWeeklySummaryText();
+            DOM.summaryModal.classList.remove('hidden');
+        }
+
+        function sendSummaryEmail() {
+            const text = DOM.summaryText.textContent;
+            if (settings.emailjsKey && settings.emailjsService && settings.emailjsTemplate && window.emailjs) {
+                DOM.btnSendSummary.textContent = 'Enviando...';
+                emailjs.send(settings.emailjsService, settings.emailjsTemplate, {
+                    to_email: currentUser.email,
+                    subject: '📊 Resumo Semanal — FlashLearn PRO',
+                    message: text
+                }).then(() => {
+                    alert('✅ Resumo enviado para ' + currentUser.email + '!');
+                    DOM.btnSendSummary.textContent = '📧 Enviar por E-mail';
+                }).catch((err) => {
+                    console.error(err);
+                    alert('❌ Falha no EmailJS. Verifique as chaves em ⚙️ Configurações. Abrindo e-mail padrão...');
+                    window.location.href = 'mailto:' + currentUser.email + '?subject=' + encodeURIComponent('📊 Resumo Semanal — FlashLearn PRO') + '&body=' + encodeURIComponent(text);
+                    DOM.btnSendSummary.textContent = '📧 Enviar por E-mail';
+                });
+            } else {
+                window.location.href = 'mailto:' + currentUser.email + '?subject=' + encodeURIComponent('📊 Resumo Semanal — FlashLearn PRO') + '&body=' + encodeURIComponent(text + '\n\n(Dica: configure o EmailJS em ⚙️ para envio automático direto.)');
+            }
+        }
+
+        function loadSettingsIntoForm() {
+            DOM.setFocus.value = settings.focusMin;
+            DOM.setShort.value = settings.shortMin;
+            DOM.setLong.value = settings.longMin;
+            DOM.setSound.checked = settings.soundOn;
+            DOM.setVolume.value = settings.volume;
+            DOM.setNotify.checked = settings.notifyOn;
+            DOM.setEmailjsKey.value = settings.emailjsKey || '';
+            DOM.setEmailjsService.value = settings.emailjsService || '';
+            DOM.setEmailjsTemplate.value = settings.emailjsTemplate || '';
+        }
+
+        function saveSettingsFromForm() {
+            settings.focusMin = Math.max(1, parseInt(DOM.setFocus.value) || 25);
+            settings.shortMin = Math.max(1, parseInt(DOM.setShort.value) || 5);
+            settings.longMin = Math.max(1, parseInt(DOM.setLong.value) || 15);
+            settings.soundOn = DOM.setSound.checked;
+            settings.volume = parseFloat(DOM.setVolume.value);
+            settings.notifyOn = DOM.setNotify.checked;
+            settings.emailjsKey = DOM.setEmailjsKey.value.trim();
+            settings.emailjsService = DOM.setEmailjsService.value.trim();
+            settings.emailjsTemplate = DOM.setEmailjsTemplate.value.trim();
+            localStorage.setItem('flSettings', JSON.stringify(settings));
+            if (settings.emailjsKey && window.emailjs) emailjs.init({ publicKey: settings.emailjsKey });
+            if (!pomoModeLockedToCustom()) switchPomoMode(pomoMode);
+            alert('✅ Configurações salvas!');
+        }
+
+        function pomoModeLockedToCustom() { return false; }
+
+        function openPdfModal() {
+            if (subjects.length === 0) { alert('⚠️ Crie uma matéria antes de estudar PDF.'); return; }
+            DOM.pdfModal.classList.remove('hidden');
+        }
+
+        function startPdfSession() {
+            const file = DOM.pdfFileInput.files[0];
+            if (!file) { alert('⚠️ Selecione um arquivo PDF primeiro.'); return; }
+            if (file.type !== 'application/pdf') { alert('⚠️ O arquivo precisa ser um PDF.'); return; }
+            const subjectId = DOM.pdfSubjectSelect.value;
+            if (!subjectId) { alert('⚠️ Selecione a matéria.'); return; }
+            const minutes = Math.max(1, parseInt(DOM.pdfDurationInput.value) || 25);
+
+            if (pdfObjectUrl) URL.revokeObjectURL(pdfObjectUrl);
+            pdfObjectUrl = URL.createObjectURL(file);
+            DOM.pdfFrame.src = pdfObjectUrl;
+            DOM.pdfReaderTitle.textContent = '📄 ' + file.name;
+            pdfSession = { active: true, subjectId, name: file.name };
+            DOM.pdfModal.classList.add('hidden');
+            DOM.pdfReader.classList.remove('hidden');
+            DOM.unifiedWidget.classList.add('expanded');
+
+            switchPomoMode('pdf', minutes);
+            startTimer();
+            notifyUser('📄 Sessão PDF iniciada', minutes + ' minutos de leitura. Bom estudo!');
+        }
+
+        function closePdfReader(logTime) {
+            if (!pdfSession.active && !logTime) {
+                DOM.pdfReader.classList.add('hidden');
+                if (pdfObjectUrl) { URL.revokeObjectURL(pdfObjectUrl); pdfObjectUrl = null; }
+                return;
+            }
+            if (logTime && pomoElapsed > 0) {
+                logStudySession(pdfSession.subjectId, pomoElapsed, 'pdf');
+                pomoElapsed = 0;
+            }
+            if (isPomoRunning && pomoMode === 'pdf') pauseTimer();
+            pdfSession = { active: false, subjectId: null, name: '' };
+            DOM.pdfReader.classList.add('hidden');
+            DOM.pdfFrame.src = 'about:blank';
+            if (pdfObjectUrl) { URL.revokeObjectURL(pdfObjectUrl); pdfObjectUrl = null; }
+            DOM.pdfFileInput.value = '';
+            switchPomoMode('focus');
+            if (DOM.viewDashboard.classList.contains('active')) updateDashboard();
         }
 
         function setupEventListeners() {
@@ -1705,9 +2281,8 @@
                     DOM.iconMoon.classList.add('hidden');
                 }
                 if (DOM.viewDashboard.classList.contains('active')) {
-                    if (progressChart) progressChart.destroy();
-                    if (timeChart) timeChart.destroy();
-                    progressChart = null; timeChart = null;
+                    [progressChart, timeChart, dailyChart, radarChart].forEach(c => c && c.destroy());
+                    progressChart = timeChart = dailyChart = radarChart = null;
                     updateDashboard();
                 }
             };
@@ -1717,37 +2292,39 @@
 
             DOM.tabLogin.onclick = () => { isLoginMode = true; DOM.tabLogin.classList.add('active'); DOM.tabRegister.classList.remove('active'); DOM.authSubmitBtn.textContent = 'Entrar'; };
             DOM.tabRegister.onclick = () => { isLoginMode = false; DOM.tabRegister.classList.add('active'); DOM.tabLogin.classList.remove('active'); DOM.authSubmitBtn.textContent = 'Criar Conta'; };
-            
+
             DOM.authForm.onsubmit = async (e) => {
-                e.preventDefault(); 
+                e.preventDefault();
                 DOM.authSubmitBtn.disabled = true;
                 try {
                     if (isLoginMode) await signInWithEmailAndPassword(auth, DOM.authEmail.value, DOM.authPassword.value);
                     else await createUserWithEmailAndPassword(auth, DOM.authEmail.value, DOM.authPassword.value);
-                } catch (error) { 
-                    DOM.authError.textContent = 'Erro de Autenticação. Verifique os dados e a senha.'; 
-                } finally { 
-                    DOM.authSubmitBtn.disabled = false; 
+                } catch (error) {
+                    DOM.authError.textContent = 'Erro de Autenticação. Verifique os dados e a senha.';
+                } finally {
+                    DOM.authSubmitBtn.disabled = false;
                 }
             };
-            
-            DOM.logoutBtn.onclick = () => { syncTimeToFirebase(); signOut(auth); }
+
+            DOM.logoutBtn.onclick = () => { pauseTimer(); syncTimeToFirebase(); signOut(auth); };
 
             DOM.unifiedWidget.addEventListener('click', (e) => {
-                if(e.target.closest('.widget-body')) return;
+                if (e.target.closest('.widget-body')) return;
                 DOM.unifiedWidget.classList.toggle('expanded');
             });
             document.addEventListener('click', (e) => {
-                if(!DOM.unifiedWidget.contains(e.target) && DOM.unifiedWidget.classList.contains('expanded')) {
+                if (!DOM.unifiedWidget.contains(e.target) && DOM.unifiedWidget.classList.contains('expanded') && !pdfSession.active) {
                     DOM.unifiedWidget.classList.remove('expanded');
                 }
             });
 
             DOM.btnPomoPlay.onclick = startTimer;
-            DOM.btnPomoPause.onclick = pauseTimer;
-            DOM.btnPomoReset.onclick = () => { pauseTimer(); switchPomoMode(pomoMode); };
+            DOM.btnPomoPause.onclick = () => pauseTimer();
+            DOM.btnPomoReset.onclick = () => switchPomoMode(pomoMode);
             DOM.btnModeFocus.onclick = () => switchPomoMode('focus');
             DOM.btnModeBreak.onclick = () => switchPomoMode('break');
+            DOM.btnModeLongBreak.onclick = () => switchPomoMode('longbreak');
+            DOM.btnModePdf.onclick = () => { if (!pdfSession.active) openPdfModal(); };
 
             DOM.musicPlay.onclick = () => { DOM.bgAudio.play(); DOM.musicPlay.classList.add('hidden'); DOM.musicPause.classList.remove('hidden'); };
             DOM.musicPause.onclick = () => { DOM.bgAudio.pause(); DOM.musicPause.classList.add('hidden'); DOM.musicPlay.classList.remove('hidden'); };
@@ -1755,10 +2332,10 @@
             DOM.musicVolume.oninput = (e) => { DOM.bgAudio.volume = e.target.value; };
 
             const handleFilterChange = (val) => {
-                currentFilter = val; 
+                currentFilter = val;
                 DOM.studySubjectFilter.value = val;
                 DOM.pomoSubjectSelect.value = val;
-                currentIndex = 0; 
+                currentIndex = 0;
                 updateUI();
             };
             DOM.studySubjectFilter.addEventListener('change', (e) => handleFilterChange(e.target.value));
@@ -1770,7 +2347,7 @@
             DOM.tabCommunity.addEventListener('click', () => { switchTab('tabCommunity'); renderCommunityCardsView(); });
 
             DOM.card.addEventListener('click', (e) => {
-                if(e.target.closest('.voice-btn') || e.target.closest('.card-action-btn')) return;
+                if (e.target.closest('.voice-btn') || e.target.closest('.card-action-btn')) return;
                 toggleFlip();
             });
 
@@ -1785,41 +2362,45 @@
             DOM.nextBtn.addEventListener('click', (e) => { e.stopPropagation(); if (currentIndex < dueCards.length - 1) { currentIndex++; renderCurrentCard('next'); } });
             DOM.prevBtn.addEventListener('click', (e) => { e.stopPropagation(); if (currentIndex > 0) { currentIndex--; renderCurrentCard('prev'); } });
 
-            DOM.addSubjectBtn.onclick = () => { DOM.subjectModal.classList.remove('hidden'); DOM.newSubjectName.focus(); }
+            DOM.addSubjectBtn.onclick = () => { DOM.subjectModal.classList.remove('hidden'); DOM.newSubjectName.focus(); };
             DOM.closeSubjectModal.onclick = () => DOM.subjectModal.classList.add('hidden');
-            DOM.addBtn.onclick = () => { DOM.addModal.classList.remove('hidden'); DOM.questionInput.focus(); }
+            DOM.addBtn.onclick = () => { DOM.addModal.classList.remove('hidden'); DOM.questionInput.focus(); };
             DOM.closeModalBtn.onclick = () => DOM.addModal.classList.add('hidden');
-            
             DOM.closeEditModalBtn.onclick = () => DOM.editModal.classList.add('hidden');
             DOM.editCardForm.onsubmit = saveCardEdits;
 
             document.querySelectorAll('.modal-overlay').forEach(overlay => { overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.add('hidden'); }); });
 
             DOM.addSubjectForm.onsubmit = async (e) => {
-                e.preventDefault(); const name = DOM.newSubjectName.value.trim(); if(!name) return;
+                e.preventDefault();
+                const name = DOM.newSubjectName.value.trim();
+                if (!name) return;
                 const docRef = await addDoc(collection(db, "subjects"), { name, userId: currentUser.uid, studyTime: 0, createdAt: serverTimestamp() });
-                subjects.push({ id: docRef.id, name, studyTime: 0 }); updateSubjectDropdowns(); DOM.addSubjectForm.reset(); DOM.subjectModal.classList.add('hidden');
+                subjects.push({ id: docRef.id, name, studyTime: 0 });
+                updateSubjectDropdowns();
+                DOM.addSubjectForm.reset();
+                DOM.subjectModal.classList.add('hidden');
             };
 
-            // NOVA LÓGICA DE SALVAR CARD: Limpa e mantém aberto
             DOM.addCardForm.onsubmit = async (e) => {
                 e.preventDefault();
-                DOM.submitCardBtn.textContent = 'Salvando...'; DOM.submitCardBtn.disabled = true;
-                
-                const success = await createCard(DOM.cardSubjectSelect.value, DOM.questionInput.value.trim(), DOM.answerInput.value.trim());
-                
+                DOM.submitCardBtn.textContent = 'Salvando...';
+                DOM.submitCardBtn.disabled = true;
+
+                const success = await createCard(DOM.cardSubjectSelect.value, DOM.questionInput.value.trim(), DOM.answerInput.value.trim(), DOM.shareCommunity.checked);
+
                 if (success) {
                     DOM.questionInput.value = '';
                     DOM.answerInput.value = '';
                     DOM.submitCardBtn.textContent = 'Salvo! Adicionar outro?';
                     DOM.submitCardBtn.style.backgroundColor = 'var(--success)';
-                    
+
                     setTimeout(() => {
                         DOM.submitCardBtn.textContent = 'Salvar Flashcard';
                         DOM.submitCardBtn.style.backgroundColor = 'var(--accent-color)';
                         DOM.submitCardBtn.disabled = false;
                     }, 1500);
-                    
+
                     DOM.questionInput.focus();
                 } else {
                     DOM.submitCardBtn.textContent = 'Erro ao salvar. Tente novamente.';
@@ -1827,48 +2408,69 @@
                 }
             };
 
-            // LÓGICA DA NOVA MATÉRIA INLINE
             DOM.toggleInlineSubject.onclick = () => {
                 DOM.inlineSubjectGroup.classList.toggle('hidden');
-                if(!DOM.inlineSubjectGroup.classList.contains('hidden')) DOM.inlineSubjectName.focus();
+                if (!DOM.inlineSubjectGroup.classList.contains('hidden')) DOM.inlineSubjectName.focus();
             };
 
             DOM.saveInlineSubject.onclick = async () => {
                 const name = DOM.inlineSubjectName.value.trim();
-                if(!name) return;
+                if (!name) return;
                 DOM.saveInlineSubject.textContent = '...';
                 try {
                     const docRef = await addDoc(collection(db, "subjects"), { name, userId: currentUser.uid, studyTime: 0, createdAt: serverTimestamp() });
                     subjects.push({ id: docRef.id, name, studyTime: 0 });
                     updateSubjectDropdowns();
-                    DOM.cardSubjectSelect.value = docRef.id; 
+                    DOM.cardSubjectSelect.value = docRef.id;
                     DOM.inlineSubjectName.value = '';
                     DOM.inlineSubjectGroup.classList.add('hidden');
-                } catch(e) {
-                    alert("Erro ao criar matéria");
+                } catch (e) {
+                    alert('Erro ao criar matéria');
                 } finally {
                     DOM.saveInlineSubject.textContent = 'Salvar';
                 }
             };
 
+            /* --- NOVOS RECURSOS PRO --- */
+            DOM.btnPdfStudy.onclick = openPdfModal;
+            DOM.dashBtnPdf.onclick = openPdfModal;
+            DOM.closePdfModalBtn.onclick = () => DOM.pdfModal.classList.add('hidden');
+            DOM.btnPdfStart.onclick = startPdfSession;
+            DOM.btnPdfClose.onclick = () => closePdfReader(true);
+
+            DOM.dashBtnSettings.onclick = () => { loadSettingsIntoForm(); DOM.settingsModal.classList.remove('hidden'); };
+            DOM.closeSettingsModalBtn.onclick = () => DOM.settingsModal.classList.add('hidden');
+            DOM.btnSaveSettings.onclick = saveSettingsFromForm;
+
+            DOM.dashBtnSummary.onclick = openSummaryModal;
+            DOM.closeSummaryModalBtn.onclick = () => DOM.summaryModal.classList.add('hidden');
+            DOM.btnSendSummary.onclick = sendSummaryEmail;
+            DOM.btnCopySummary.onclick = () => {
+                navigator.clipboard.writeText(DOM.summaryText.textContent).then(() => {
+                    DOM.btnCopySummary.textContent = '✅ Copiado!';
+                    setTimeout(() => DOM.btnCopySummary.textContent = '📋 Copiar Resumo', 1500);
+                });
+            };
+
             document.addEventListener('keydown', (e) => {
                 if (document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "TEXTAREA" || document.activeElement.tagName === "SELECT") return;
-                const modalsOpen = !DOM.subjectModal.classList.contains('hidden') || !DOM.addModal.classList.contains('hidden') || !DOM.editModal.classList.contains('hidden');
-                
+                const modalsOpen = ['subject-modal', 'add-modal', 'edit-modal', 'pdf-modal', 'settings-modal', 'summary-modal'].some(id => !document.getElementById(id).classList.contains('hidden'));
+
                 if (!modalsOpen && !DOM.appWrapper.classList.contains('hidden') && DOM.viewStudy.classList.contains('active')) {
                     if (e.key === 'ArrowRight' || e.key === ' ') {
                         if (e.key === ' ') e.preventDefault();
-                        if (currentIndex < dueCards.length - 1 && !DOM.card.classList.contains('is-flipped')) { currentIndex++; renderCurrentCard('next'); } 
+                        if (currentIndex < dueCards.length - 1 && !DOM.card.classList.contains('is-flipped')) { currentIndex++; renderCurrentCard('next'); }
                         else if (e.key === ' ' && dueCards.length > 0) toggleFlip();
                     } else if (e.key === 'ArrowLeft') {
                         if (currentIndex > 0 && !DOM.card.classList.contains('is-flipped')) { currentIndex--; renderCurrentCard('prev'); }
                     } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-                        e.preventDefault(); if (dueCards.length > 0) toggleFlip();
+                        e.preventDefault();
+                        if (dueCards.length > 0) toggleFlip();
                     }
                 }
             });
-            
-            window.addEventListener('beforeunload', syncTimeToFirebase);
+
+            window.addEventListener('beforeunload', () => { syncTimeToFirebase(); });
         }
 
         init();
