@@ -143,6 +143,7 @@
 
         .btn { background: var(--surface-2); border: 1px solid var(--border); color: var(--text-2); padding: 0.6rem 1rem; border-radius: var(--radius-sm); cursor: pointer; font-weight: 500; font-size: 0.86rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; transition: var(--transition); white-space: nowrap; }
         .btn:hover { transform: translateY(-1px); color: var(--text); border-color: var(--border-strong); background: var(--surface-3); }
+        .btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
         .btn.primary { background: var(--accent); border-color: var(--accent); color: #14120B; font-weight: 600; box-shadow: 0 4px 14px var(--accent-glow); }
         [data-theme="light"] .btn.primary { color: #fff; }
         .btn.primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
@@ -150,6 +151,10 @@
         .btn.danger-ghost:hover { background: var(--danger-dim); border-color: var(--danger); }
         .btn.sm { padding: 0.42rem 0.75rem; font-size: 0.78rem; }
         .submit-btn { width: 100%; margin-top: 0.5rem; padding: 0.85rem; font-size: 0.95rem; font-weight: 600; }
+
+        .preset-row { display: flex; gap: 0.45rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
+        .preset-chip { background: var(--surface-2); border: 1px solid var(--border); color: var(--text-2); padding: 0.3rem 0.65rem; border-radius: 99px; font-size: 0.76rem; font-family: 'JetBrains Mono', monospace; cursor: pointer; transition: var(--transition); }
+        .preset-chip:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
 
         .view-section { display: none; animation: fadeIn .28s ease-out forwards; flex: 1; }
         .view-section.active { display: flex; flex-direction: column; }
@@ -173,7 +178,6 @@
         .card-head h3 { font-family: 'Inter', sans-serif; font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); font-weight: 700; }
         .canvas-wrapper { height: 230px; position: relative; width: 100%; }
 
-        /* Subject breakdown list */
         .subj-breakdown { display: flex; flex-direction: column; gap: 0.8rem; max-height: 230px; overflow-y: auto; padding-right: 4px; }
         .subj-row { display: flex; flex-direction: column; gap: 0.35rem; }
         .subj-row-top { display: flex; justify-content: space-between; align-items: center; font-size: 0.86rem; }
@@ -182,7 +186,6 @@
         .subj-track { height: 6px; background: var(--surface-2); border-radius: 99px; overflow: hidden; }
         .subj-bar { height: 100%; border-radius: 99px; transition: width .4s ease; }
 
-        /* Heatmap 12 weeks */
         .heatmap-wrap { display: flex; flex-direction: column; gap: 0.7rem; }
         .heatmap-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 5px; }
         .heat-col { display: grid; grid-template-rows: repeat(7, 1fr); gap: 5px; }
@@ -227,7 +230,6 @@
         .del-icon-btn { background: none; border: none; color: var(--muted); cursor: pointer; padding: 5px; border-radius: 6px; display: flex; transition: var(--transition); }
         .del-icon-btn:hover { color: var(--danger); background: var(--danger-dim); }
 
-        /* Floating Mini Pill when timer running outside timer view */
         .mini-timer-pill {
             position: fixed; bottom: 24px; right: 24px; z-index: 9000;
             background: var(--surface); border: 1px solid var(--accent);
@@ -321,12 +323,10 @@
         .toast.error { border-left-color: var(--danger); }
         @keyframes toastIn { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
 
-        /* PDF Reader */
         .pdf-reader { position: fixed; inset: 0; z-index: 9500; background: var(--bg); display: flex; flex-direction: column; }
         .pdf-reader-header { display: flex; justify-content: space-between; align-items: center; padding: 0.7rem 1.4rem; background: var(--surface); border-bottom: 1px solid var(--border); gap: 1rem; }
         .pdf-frame { flex: 1; border: none; width: 100%; background: #525659; }
 
-        /* Bottom nav mobile */
         .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 9900; background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(14px); border-top: 1px solid var(--border); padding: 6px 4px calc(6px + env(safe-area-inset-bottom)); }
         .bottom-nav-inner { display: flex; justify-content: space-around; }
         .bottom-nav .nav-btn { flex-direction: column; gap: 2px; font-size: 0.62rem; padding: 0.4rem 0.65rem; }
@@ -440,8 +440,8 @@
                     <p class="view-subtitle" id="view-subtitle">Visão geral das suas horas estudadas</p>
                 </div>
                 <div class="topbar-actions">
-                    <button id="btn-manual-log" class="btn">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <button id="btn-manual-log" class="btn primary">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                         Registrar tempo
                     </button>
                     <button id="btn-open-settings" class="btn" title="Configurações">
@@ -582,7 +582,10 @@
                     <div class="panel">
                         <div class="card-head">
                             <h3>Sessões registradas hoje</h3>
-                            <span id="today-total-badge" class="badge-mono">0min</span>
+                            <div style="display:flex; align-items:center; gap:0.5rem;">
+                                <span id="today-total-badge" class="badge-mono">0min</span>
+                                <button id="btn-timer-manual" class="btn sm">+ Registrar</button>
+                            </div>
                         </div>
                         <div id="today-sessions-list" class="sessions-list"></div>
                     </div>
@@ -607,7 +610,6 @@
                     </div>
                 </div>
 
-                <!-- Embed opcional do Google Agenda -->
                 <div id="gcal-embed-container" class="hidden" style="margin-bottom: 1.2rem;">
                     <div class="panel" style="margin-bottom: 0.7rem; display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; padding: 1rem;">
                         <input type="text" id="gcal-embed-input" placeholder="Cole seu e-mail Gmail (ex: nome@gmail.com) ou URL de incorporação do Google Agenda..." style="flex: 1; min-width: 240px;">
@@ -698,7 +700,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Nova matéria</h2>
-                <button class="close-btn" data-close="subject-modal">✕</button>
+                <button class="close-btn" type="button" data-close="subject-modal">✕</button>
             </div>
             <form id="subject-form">
                 <div class="form-group">
@@ -719,17 +721,28 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Registrar tempo de estudo</h2>
-                <button class="close-btn" data-close="manual-modal">✕</button>
+                <button class="close-btn" type="button" data-close="manual-modal">✕</button>
             </div>
             <form id="manual-form">
                 <div class="form-group">
                     <label>Matéria</label>
                     <select id="manual-subject" style="width: 100%;"></select>
                 </div>
+                <div class="form-group">
+                    <label>Atalhos rápidos</label>
+                    <div class="preset-row" id="manual-presets">
+                        <button type="button" class="preset-chip" data-mins="15">15m</button>
+                        <button type="button" class="preset-chip" data-mins="30">30m</button>
+                        <button type="button" class="preset-chip" data-mins="45">45m</button>
+                        <button type="button" class="preset-chip" data-mins="60">1h</button>
+                        <button type="button" class="preset-chip" data-mins="90">1h30</button>
+                        <button type="button" class="preset-chip" data-mins="120">2h</button>
+                    </div>
+                </div>
                 <div class="form-row-2">
                     <div class="form-group">
                         <label>Minutos estudados</label>
-                        <input type="number" id="manual-minutes" min="1" max="720" value="45" required>
+                        <input type="number" id="manual-minutes" min="1" max="1440" value="45" required>
                     </div>
                     <div class="form-group">
                         <label>Data</label>
@@ -740,7 +753,7 @@
                     <label>Observação / tópico estudado (opcional)</label>
                     <input type="text" id="manual-note" placeholder="Ex: Lista de exercícios cap. 4">
                 </div>
-                <button type="submit" class="btn primary submit-btn">Adicionar ao controle</button>
+                <button type="submit" id="manual-submit-btn" class="btn primary submit-btn">Adicionar ao controle</button>
             </form>
         </div>
     </div>
@@ -750,7 +763,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="note-modal-title">Nova anotação no calendário</h2>
-                <button class="close-btn" data-close="note-modal">✕</button>
+                <button class="close-btn" type="button" data-close="note-modal">✕</button>
             </div>
             <form id="note-form">
                 <div class="form-group">
@@ -794,7 +807,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Cadastrar prova</h2>
-                <button class="close-btn" data-close="exam-modal">✕</button>
+                <button class="close-btn" type="button" data-close="exam-modal">✕</button>
             </div>
             <form id="exam-form">
                 <div class="form-group">
@@ -835,7 +848,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Estudar PDF com cronômetro</h2>
-                <button class="close-btn" data-close="pdf-modal">✕</button>
+                <button class="close-btn" type="button" data-close="pdf-modal">✕</button>
             </div>
             <div class="form-group">
                 <label>Arquivo PDF (fica apenas no seu navegador)</label>
@@ -851,7 +864,7 @@
                     <input type="number" id="pdf-duration-input" min="1" max="480" value="30">
                 </div>
             </div>
-            <button id="btn-pdf-start" class="btn primary submit-btn">Iniciar leitura</button>
+            <button id="btn-pdf-start" type="button" class="btn primary submit-btn">Iniciar leitura</button>
         </div>
     </div>
 
@@ -860,7 +873,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Configurações</h2>
-                <button class="close-btn" data-close="settings-modal">✕</button>
+                <button class="close-btn" type="button" data-close="settings-modal">✕</button>
             </div>
             <div class="settings-row"><label>Meta semanal de estudo (horas)</label><input type="number" id="set-weekly-goal" min="1" max="120"></div>
             <div class="settings-row"><label>Pomodoro foco (min)</label><input type="number" id="set-focus" min="1" max="180"></div>
@@ -874,7 +887,7 @@
                 <div class="settings-row"><label>Service ID</label><input type="text" id="set-ejs-srv"></div>
                 <div class="settings-row"><label>Template ID</label><input type="text" id="set-ejs-tpl"></div>
             </div>
-            <button id="btn-save-settings" class="btn primary submit-btn" style="margin-top: 1.2rem;">Salvar</button>
+            <button id="btn-save-settings" type="button" class="btn primary submit-btn" style="margin-top: 1.2rem;">Salvar</button>
         </div>
     </div>
 
@@ -883,12 +896,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Resumo semanal</h2>
-                <button class="close-btn" data-close="summary-modal">✕</button>
+                <button class="close-btn" type="button" data-close="summary-modal">✕</button>
             </div>
             <pre id="summary-text" class="mono" style="background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem; font-size: 0.78rem; white-space: pre-wrap; max-height: 300px; overflow-y: auto; margin-bottom: 1rem;"></pre>
             <div style="display: flex; gap: 0.6rem;">
-                <button id="btn-copy-summary" class="btn" style="flex: 1;">Copiar texto</button>
-                <button id="btn-send-summary" class="btn primary" style="flex: 1;">Enviar por e-mail</button>
+                <button id="btn-copy-summary" type="button" class="btn" style="flex: 1;">Copiar texto</button>
+                <button id="btn-send-summary" type="button" class="btn primary" style="flex: 1;">Enviar por e-mail</button>
             </div>
         </div>
     </div>
@@ -899,8 +912,8 @@
             <h2 style="margin-bottom: 0.6rem;">Confirmar</h2>
             <p id="confirm-msg" style="color: var(--text-2); font-size: 0.9rem; margin-bottom: 1.4rem;">Tem certeza?</p>
             <div style="display: flex; gap: 0.7rem;">
-                <button id="confirm-cancel" class="btn" style="flex: 1;">Cancelar</button>
-                <button id="confirm-ok" class="btn danger-ghost" style="flex: 1;">Confirmar</button>
+                <button id="confirm-cancel" type="button" class="btn" style="flex: 1;">Cancelar</button>
+                <button id="confirm-ok" type="button" class="btn danger-ghost" style="flex: 1;">Confirmar</button>
             </div>
         </div>
     </div>
@@ -911,7 +924,7 @@
             <span id="pdf-reader-title" style="font-weight: 600; font-size: 0.92rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">PDF</span>
             <div style="display: flex; align-items: center; gap: 0.8rem;">
                 <span id="pdf-timer-chip" class="mono" style="color: var(--accent); font-weight: 700; font-size: 1rem;">30:00</span>
-                <button id="btn-pdf-close" class="btn sm">Encerrar e salvar</button>
+                <button id="btn-pdf-close" type="button" class="btn sm">Encerrar e salvar</button>
             </div>
         </div>
         <iframe id="pdf-frame" class="pdf-frame" title="Leitor PDF"></iframe>
@@ -939,7 +952,7 @@
 
         const SUBJECT_COLORS = ['#C9A254', '#7D96C4', '#7BAF94', '#C4645C', '#B48EAD', '#CE9D5C', '#6BA3BE', '#D08770'];
         const DAY_MS = 86400000;
-        const RING_CIRC = 2 * Math.PI * 100; // 628.3
+        const RING_CIRC = 2 * Math.PI * 100;
         const $ = (id) => document.getElementById(id);
 
         let currentUser = null;
@@ -950,8 +963,7 @@
         let dailyChart = null;
         let isLoginMode = true;
 
-        // Timer state
-        let timerMode = 'focus'; // focus | stopwatch | break | longbreak | pdf
+        let timerMode = 'focus';
         let timerInterval = null;
         let isRunning = false;
         let timeLeft = 25 * 60;
@@ -959,13 +971,11 @@
         let elapsedSec = 0;
         let stopwatchSec = 0;
 
-        // Calendar state
         let calYear = new Date().getFullYear();
         let calMonth = new Date().getMonth();
         let selectedDate = dateKey(new Date());
         let editingNoteId = null;
 
-        // PDF & Audio
         let pdfObjectUrl = null;
         let pdfActive = false;
         let pdfSubjectId = null;
@@ -1029,9 +1039,12 @@
         function getSubject(id) {
             return subjects.find(s => s.id === id) || null;
         }
-        function getSubjectColor(id, idx = 0) {
-            const sub = getSubject(id);
-            return sub?.color || SUBJECT_COLORS[idx % SUBJECT_COLORS.length];
+        function lsKey(name) { return `sf_${name}_${currentUser?.uid || 'anon'}`; }
+        function saveLocal(name, arr) {
+            try { localStorage.setItem(lsKey(name), JSON.stringify(arr)); } catch {}
+        }
+        function loadLocal(name) {
+            try { return JSON.parse(localStorage.getItem(lsKey(name)) || '[]'); } catch { return []; }
         }
 
         function playBeep() {
@@ -1063,7 +1076,6 @@
             const dClean = date.replace(/-/g, '');
             let dates;
             if (time) {
-                const [hh, mm] = time.split(':').map(Number);
                 const start = new Date(`${date}T${time}:00`);
                 const end = new Date(start.getTime() + 60 * 60 * 1000);
                 const fmt = (dt) => dt.getFullYear() + String(dt.getMonth()+1).padStart(2,'0') + String(dt.getDate()).padStart(2,'0') + 'T' + String(dt.getHours()).padStart(2,'0') + String(dt.getMinutes()).padStart(2,'0') + '00';
@@ -1081,9 +1093,7 @@
             return url.toString();
         }
 
-        /* ============ FIRESTORE LOAD & SYNC (com fallback local seguro) ============ */
-        function lsKey(name) { return `sf_${name}_${currentUser?.uid || 'anon'}`; }
-
+        /* ============ FIRESTORE LOAD & SYNC (RESILIENTE) ============ */
         async function loadAllData() {
             await Promise.all([loadSubjects(), loadSessions(), loadCalendarNotes(), loadExams()]);
             populateSubjectSelects();
@@ -1091,100 +1101,171 @@
         }
 
         async function loadSubjects() {
-            const snap = await getDocs(query(collection(db, "subjects"), where("userId", "==", currentUser.uid)));
-            subjects = [];
-            snap.forEach((d, idx) => {
-                const data = d.data();
-                subjects.push({ id: d.id, ...data, studyTime: data.studyTime || 0, color: data.color || SUBJECT_COLORS[subjects.length % SUBJECT_COLORS.length] });
-            });
-            subjects.sort((a, b) => a.name.localeCompare(b.name));
+            const localSubs = loadLocal('subjects');
+            try {
+                const snap = await getDocs(query(collection(db, "subjects"), where("userId", "==", currentUser.uid)));
+                const remote = [];
+                snap.forEach(d => {
+                    const data = d.data();
+                    remote.push({ id: d.id, ...data, name: data.name || 'Matéria', studyTime: data.studyTime || 0, color: data.color || SUBJECT_COLORS[remote.length % SUBJECT_COLORS.length] });
+                });
+                const localOnly = localSubs.filter(x => String(x.id).startsWith('local_'));
+                subjects = [...remote, ...localOnly];
+                saveLocal('subjects', subjects);
+            } catch (e) {
+                console.warn('Carregando matérias locais:', e);
+                subjects = localSubs;
+            }
+            subjects.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
         }
 
         async function loadSessions() {
-            const snap = await getDocs(query(collection(db, "studySessions"), where("userId", "==", currentUser.uid)));
-            studySessions = [];
-            snap.forEach(d => {
-                const data = d.data();
-                const ms = data.startedAt?.toMillis ? data.startedAt.toMillis() : (data.startedAt ? Date.parse(data.startedAt) : Date.now());
-                studySessions.push({
-                    id: d.id,
-                    subjectId: data.subjectId || null,
-                    durationSeconds: data.durationSeconds || 0,
-                    mode: data.mode || 'focus',
-                    note: data.note || '',
-                    startedAtMs: ms
+            const localSess = loadLocal('sessions');
+            try {
+                const snap = await getDocs(query(collection(db, "studySessions"), where("userId", "==", currentUser.uid)));
+                const remote = [];
+                snap.forEach(d => {
+                    const data = d.data();
+                    const ms = data.startedAt?.toMillis ? data.startedAt.toMillis() : (data.startedAt ? Date.parse(data.startedAt) : Date.now());
+                    remote.push({
+                        id: d.id,
+                        subjectId: data.subjectId || null,
+                        durationSeconds: data.durationSeconds || 0,
+                        mode: data.mode || 'focus',
+                        note: data.note || '',
+                        startedAtMs: Number.isFinite(ms) ? ms : Date.now()
+                    });
                 });
-            });
+                const localOnly = localSess.filter(x => String(x.id).startsWith('local_'));
+                studySessions = [...remote, ...localOnly];
+                saveLocal('sessions', studySessions);
+            } catch (e) {
+                console.warn('Carregando sessões locais:', e);
+                studySessions = localSess;
+            }
             studySessions.sort((a, b) => b.startedAtMs - a.startedAtMs);
         }
 
         async function loadCalendarNotes() {
+            const localNotes = loadLocal('notes');
             try {
                 const snap = await getDocs(query(collection(db, "calendarNotes"), where("userId", "==", currentUser.uid)));
-                calendarNotes = [];
-                snap.forEach(d => calendarNotes.push({ id: d.id, ...d.data() }));
-                localStorage.setItem(lsKey('notes'), JSON.stringify(calendarNotes));
+                const remote = [];
+                snap.forEach(d => remote.push({ id: d.id, ...d.data() }));
+                calendarNotes = [...remote, ...localNotes.filter(x => String(x.id).startsWith('local_'))];
+                saveLocal('notes', calendarNotes);
             } catch {
-                calendarNotes = JSON.parse(localStorage.getItem(lsKey('notes')) || '[]');
+                calendarNotes = localNotes;
             }
         }
 
         async function loadExams() {
+            const localEx = loadLocal('exams');
             try {
                 const snap = await getDocs(query(collection(db, "exams"), where("userId", "==", currentUser.uid)));
-                exams = [];
-                snap.forEach(d => exams.push({ id: d.id, ...d.data() }));
-                localStorage.setItem(lsKey('exams'), JSON.stringify(exams));
+                const remote = [];
+                snap.forEach(d => remote.push({ id: d.id, ...d.data() }));
+                exams = [...remote, ...localEx.filter(x => String(x.id).startsWith('local_'))];
+                saveLocal('exams', exams);
             } catch {
-                exams = JSON.parse(localStorage.getItem(lsKey('exams')) || '[]');
+                exams = localEx;
             }
         }
 
         async function createSubject(name, color) {
             const payload = { name, color, userId: currentUser.uid, studyTime: 0, createdAt: serverTimestamp() };
-            const ref = await addDoc(collection(db, "subjects"), payload);
-            subjects.push({ id: ref.id, name, color, studyTime: 0 });
-            subjects.sort((a, b) => a.name.localeCompare(b.name));
+            let newId = 'local_' + Date.now();
+            try {
+                const ref = await addDoc(collection(db, "subjects"), payload);
+                newId = ref.id;
+            } catch (e) {
+                console.warn('Matéria salva localmente:', e);
+            }
+            subjects.push({ id: newId, name, color, studyTime: 0 });
+            subjects.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+            saveLocal('subjects', subjects);
             populateSubjectSelects();
             renderAll();
-            return ref.id;
+            return newId;
         }
 
         async function logStudySession(subjectId, seconds, mode = 'focus', note = '', customDateStr = null) {
-            if (!currentUser || seconds < 5) return;
-            const dateObj = customDateStr ? new Date(customDateStr + 'T12:00:00') : new Date();
-            const payload = {
-                userId: currentUser.uid,
+            if (!currentUser) {
+                toast('Faça login para registrar seu tempo.', 'error');
+                return false;
+            }
+            const cleanSec = Math.round(Number(seconds) || 0);
+            if (cleanSec < 1) return false;
+
+            const todayStr = dateKey(new Date());
+            const isPastOrOtherDay = customDateStr && customDateStr !== todayStr;
+            const dateObj = isPastOrOtherDay ? new Date(customDateStr + 'T12:00:00') : new Date();
+
+            const entry = {
+                id: 'local_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
                 subjectId: subjectId || null,
-                durationSeconds: Math.round(seconds),
+                durationSeconds: cleanSec,
                 mode,
-                note,
-                startedAt: customDateStr ? Timestamp.fromDate(dateObj) : serverTimestamp()
+                note: note || '',
+                startedAtMs: dateObj.getTime()
             };
-            const ref = await addDoc(collection(db, "studySessions"), payload);
-            studySessions.unshift({ id: ref.id, subjectId: subjectId || null, durationSeconds: Math.round(seconds), mode, note, startedAtMs: dateObj.getTime() });
+
+            // Atualiza imediatamente na interface e no cache local
+            studySessions.unshift(entry);
+            studySessions.sort((a, b) => b.startedAtMs - a.startedAtMs);
 
             if (subjectId) {
                 const sub = getSubject(subjectId);
                 if (sub) {
-                    sub.studyTime = (sub.studyTime || 0) + Math.round(seconds);
-                    updateDoc(doc(db, "subjects", subjectId), { studyTime: sub.studyTime }).catch(() => {});
+                    sub.studyTime = (sub.studyTime || 0) + cleanSec;
+                    saveLocal('subjects', subjects);
                 }
             }
+            saveLocal('sessions', studySessions);
             renderAll();
+
+            // Sincroniza em segundo plano com o Firestore
+            try {
+                const payload = {
+                    userId: currentUser.uid,
+                    subjectId: subjectId || null,
+                    durationSeconds: cleanSec,
+                    mode,
+                    note: note || '',
+                    startedAt: isPastOrOtherDay ? Timestamp.fromDate(dateObj) : serverTimestamp()
+                };
+                const ref = await addDoc(collection(db, "studySessions"), payload);
+                entry.id = ref.id;
+                saveLocal('sessions', studySessions);
+
+                if (subjectId && !String(subjectId).startsWith('local_')) {
+                    const sub = getSubject(subjectId);
+                    if (sub) await updateDoc(doc(db, "subjects", subjectId), { studyTime: sub.studyTime }).catch(() => {});
+                }
+            } catch (e) {
+                console.warn('Sessão salva apenas localmente (erro Firestore):', e);
+            }
+            return true;
         }
 
         async function deleteSession(session) {
             const ok = await confirmDialog(`Remover sessão de ${fmtDuration(session.durationSeconds)}?`);
             if (!ok) return;
-            await deleteDoc(doc(db, "studySessions", session.id));
             studySessions = studySessions.filter(s => s.id !== session.id);
+            saveLocal('sessions', studySessions);
+
             if (session.subjectId) {
                 const sub = getSubject(session.subjectId);
                 if (sub) {
                     sub.studyTime = Math.max(0, (sub.studyTime || 0) - session.durationSeconds);
-                    updateDoc(doc(db, "subjects", sub.id), { studyTime: sub.studyTime }).catch(() => {});
+                    saveLocal('subjects', subjects);
+                    if (!String(sub.id).startsWith('local_')) {
+                        updateDoc(doc(db, "subjects", sub.id), { studyTime: sub.studyTime }).catch(() => {});
+                    }
                 }
+            }
+            if (!String(session.id).startsWith('local_')) {
+                deleteDoc(doc(db, "studySessions", session.id)).catch(() => {});
             }
             renderAll();
             toast('Sessão removida.', 'success');
@@ -1209,7 +1290,7 @@
         function computeStats() {
             const now = new Date();
             const startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-            const dow = (now.getDay() + 6) % 7; // segunda = 0
+            const dow = (now.getDay() + 6) % 7;
             const startWeek = startDay - dow * DAY_MS;
             const startMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
 
@@ -1230,7 +1311,6 @@
                 if (perDay30[k] !== undefined) perDay30[k] += d / 60;
             });
 
-            // Streak
             let streak = 0;
             let cursor = byDateSec[offsetDateKey(0)] ? 0 : (byDateSec[offsetDateKey(-1)] ? -1 : 1);
             while (cursor <= 0 && byDateSec[offsetDateKey(cursor)]) { streak++; cursor--; }
@@ -1269,7 +1349,10 @@
         }
 
         function renderDailyChart(perDay30) {
-            const ctx = $('dailyChart').getContext('2d');
+            if (!window.Chart) return;
+            const canvas = $('dailyChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
             const labels = Object.keys(perDay30).map(k => k.slice(8) + '/' + k.slice(5, 7));
             const data = Object.values(perDay30).map(v => Math.round(v));
             const css = (v) => getComputedStyle(document.body).getPropertyValue(v).trim();
@@ -1310,7 +1393,6 @@
                 sum += s.durationSeconds;
             });
 
-            // Inclui studyTime legado se "all" e sem sessões equivalentes
             if (period === 'all') {
                 subjects.forEach(sub => {
                     const sessionSum = map[sub.id] || 0;
@@ -1328,7 +1410,7 @@
                 el.innerHTML = '<p style="color: var(--muted); font-size: 0.86rem; padding: 1.5rem 0; text-align: center;">Nenhum tempo registrado neste período.</p>';
                 return;
             }
-            el.innerHTML = entries.map(([id, sec], idx) => {
+            el.innerHTML = entries.map(([id, sec]) => {
                 const sub = getSubject(id);
                 const name = sub ? sub.name : 'Geral';
                 const color = sub ? sub.color : '#7D96C4';
@@ -1348,7 +1430,6 @@
         function renderHeatmap(byDateSec) {
             const grid = $('heatmap-grid');
             grid.innerHTML = '';
-            const totalDays = 84; // 12 semanas
             let activeDays = 0;
 
             for (let w = 11; w >= 0; w--) {
@@ -1454,6 +1535,9 @@
                 } else if (timeLeft > 0) {
                     timeLeft--;
                     elapsedSec++;
+                    if ((timerMode === 'focus' || timerMode === 'pdf') && elapsedSec >= 5) {
+                        $('btn-timer-save').classList.remove('hidden');
+                    }
                     updateTimerDisplay();
                 } else {
                     const finishedMode = timerMode;
@@ -1475,22 +1559,31 @@
             $('btn-timer-start').classList.remove('hidden');
             updateMiniPill();
 
-            if (saveFocus && (timerMode === 'focus' || timerMode === 'pdf') && elapsedSec >= 10) {
+            if (saveFocus && (timerMode === 'focus' || timerMode === 'pdf') && elapsedSec >= 5) {
                 const subj = timerMode === 'pdf' ? pdfSubjectId : ($('timer-subject-select').value || null);
-                logStudySession(subj, elapsedSec, timerMode);
+                const saved = elapsedSec;
                 elapsedSec = 0;
+                $('btn-timer-save').classList.add('hidden');
+                logStudySession(subj, saved, timerMode);
+                toast(`${fmtDuration(saved)} salvos no controle!`, 'success');
             }
         }
 
-        function saveStopwatchSession() {
-            if (stopwatchSec < 5) { toast('Estude pelo menos alguns segundos para salvar.', 'info'); return; }
-            const sec = stopwatchSec;
-            pauseTimer(false);
-            stopwatchSec = 0;
-            $('btn-timer-save').classList.add('hidden');
-            logStudySession($('timer-subject-select').value || null, sec, 'stopwatch');
-            updateTimerDisplay();
-            toast(`Sessão de ${fmtDuration(sec)} salva!`, 'success');
+        function saveCurrentTimerSession() {
+            if (timerMode === 'stopwatch') {
+                if (stopwatchSec < 5) { toast('Estude pelo menos 5 segundos para salvar.', 'info'); return; }
+                const sec = stopwatchSec;
+                pauseTimer(false);
+                stopwatchSec = 0;
+                $('btn-timer-save').classList.add('hidden');
+                logStudySession($('timer-subject-select').value || null, sec, 'stopwatch');
+                updateTimerDisplay();
+                toast(`Sessão de ${fmtDuration(sec)} salva!`, 'success');
+            } else if (timerMode === 'focus' || timerMode === 'pdf') {
+                if (elapsedSec < 5) { toast('Estude pelo menos 5 segundos para salvar.', 'info'); return; }
+                pauseTimer(true);
+                setTimerMode(timerMode);
+            }
         }
 
         function renderTodaySessions() {
@@ -1534,14 +1627,12 @@
         /* ============ CALENDÁRIO ESTILO GOOGLE ============ */
         function renderCalendar() {
             const first = new Date(calYear, calMonth, 1);
-            const monthLabel = first.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
-            $('cal-month-title').textContent = monthLabel;
+            $('cal-month-title').textContent = first.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
 
-            const startDow = first.getDay(); // 0 = Dom
+            const startDow = first.getDay();
             const gridStart = new Date(calYear, calMonth, 1 - startDow);
             const todayK = dateKey(new Date());
 
-            // Pre-aggregate study seconds per day
             const studyByDay = {};
             studySessions.forEach(s => {
                 const k = dateKey(new Date(s.startedAtMs));
@@ -1601,9 +1692,7 @@
 
             let daySec = 0;
             if (studyByDay) daySec = studyByDay[selectedDate] || 0;
-            else {
-                studySessions.forEach(s => { if (dateKey(new Date(s.startedAtMs)) === selectedDate) daySec += s.durationSeconds; });
-            }
+            else studySessions.forEach(s => { if (dateKey(new Date(s.startedAtMs)) === selectedDate) daySec += s.durationSeconds; });
             $('drawer-study-summary').textContent = daySec > 0 ? `${fmtDuration(daySec)} estudados neste dia` : 'Nenhum tempo registrado neste dia';
 
             const dayExams = exams.filter(e => e.date === selectedDate);
@@ -1619,22 +1708,15 @@
             dayExams.forEach(ex => {
                 const sub = getSubject(ex.subjectId);
                 const gLink = googleCalendarLink({
-                    title: `[Prova] ${ex.title}`,
-                    date: ex.date,
-                    time: ex.time,
-                    details: (sub ? `Matéria: ${sub.name}\n` : '') + (ex.topics || ''),
-                    location: ex.location
+                    title: `[Prova] ${ex.title}`, date: ex.date, time: ex.time,
+                    details: (sub ? `Matéria: ${sub.name}\n` : '') + (ex.topics || ''), location: ex.location
                 });
                 const card = document.createElement('div');
                 card.className = 'note-card exam';
                 card.innerHTML = `
-                    <div class="note-card-head">
-                        <span class="note-card-title">Prova: ${escapeHtml(ex.title)}</span>
-                    </div>
+                    <div class="note-card-head"><span class="note-card-title">Prova: ${escapeHtml(ex.title)}</span></div>
                     <div class="note-card-body">${sub ? escapeHtml(sub.name) + ' · ' : ''}${ex.time ? ex.time + ' · ' : ''}${escapeHtml(ex.topics || 'Sem detalhes')}</div>
-                    <div class="note-card-foot">
-                        <a class="gcal-link" href="${gLink}" target="_blank" rel="noopener">Adicionar ao Google Agenda ↗</a>
-                    </div>
+                    <div class="note-card-foot"><a class="gcal-link" href="${gLink}" target="_blank" rel="noopener">Adicionar ao Google Agenda ↗</a></div>
                 `;
                 list.appendChild(card);
             });
@@ -1642,9 +1724,7 @@
             dayNotes.forEach(n => {
                 const sub = getSubject(n.subjectId);
                 const gLink = googleCalendarLink({
-                    title: n.title,
-                    date: n.date,
-                    time: n.time,
+                    title: n.title, date: n.date, time: n.time,
                     details: (sub ? `Matéria: ${sub.name}\n` : '') + (n.content || '')
                 });
                 const card = document.createElement('div');
@@ -1660,9 +1740,7 @@
                     </div>
                     ${sub ? `<div style="font-size:0.72rem; color:${sub.color}; font-weight:600;">${escapeHtml(sub.name)}</div>` : ''}
                     ${n.content ? `<div class="note-card-body">${escapeHtml(n.content)}</div>` : ''}
-                    <div class="note-card-foot">
-                        <a class="gcal-link" href="${gLink}" target="_blank" rel="noopener">Adicionar ao Google Agenda ↗</a>
-                    </div>
+                    <div class="note-card-foot"><a class="gcal-link" href="${gLink}" target="_blank" rel="noopener">Adicionar ao Google Agenda ↗</a></div>
                 `;
                 card.querySelector('[data-edit]').onclick = () => openNoteModal(n);
                 card.querySelector('[data-del]').onclick = () => deleteCalendarNote(n.id);
@@ -1700,16 +1778,18 @@
             if (editingNoteId) {
                 const idx = calendarNotes.findIndex(n => n.id === editingNoteId);
                 if (idx !== -1) calendarNotes[idx] = { ...calendarNotes[idx], ...payload };
-                try { await updateDoc(doc(db, "calendarNotes", editingNoteId), payload); } catch {}
+                if (!String(editingNoteId).startsWith('local_')) {
+                    try { await updateDoc(doc(db, "calendarNotes", editingNoteId), payload); } catch {}
+                }
             } else {
+                let newId = 'local_' + Date.now();
                 try {
                     const ref = await addDoc(collection(db, "calendarNotes"), { ...payload, createdAt: serverTimestamp() });
-                    calendarNotes.push({ id: ref.id, ...payload });
-                } catch {
-                    calendarNotes.push({ id: 'local_' + Date.now(), ...payload });
-                }
+                    newId = ref.id;
+                } catch {}
+                calendarNotes.push({ id: newId, ...payload });
             }
-            localStorage.setItem(lsKey('notes'), JSON.stringify(calendarNotes));
+            saveLocal('notes', calendarNotes);
             selectedDate = payload.date;
             $('note-modal').classList.add('hidden');
             renderCalendar();
@@ -1720,7 +1800,7 @@
             const ok = await confirmDialog('Excluir esta anotação?');
             if (!ok) return;
             calendarNotes = calendarNotes.filter(n => n.id !== id);
-            localStorage.setItem(lsKey('notes'), JSON.stringify(calendarNotes));
+            saveLocal('notes', calendarNotes);
             if (!String(id).startsWith('local_')) {
                 try { await deleteDoc(doc(db, "calendarNotes", id)); } catch {}
             }
@@ -1744,7 +1824,6 @@
 
         /* ============ PROVAS & MATÉRIAS ============ */
         function renderSubjectsAndExams() {
-            // Matérias
             const subList = $('subjects-manage-list');
             if (subjects.length === 0) {
                 subList.innerHTML = '<p style="color:var(--muted);font-size:0.86rem;padding:1rem 0;">Nenhuma matéria cadastrada ainda.</p>';
@@ -1765,10 +1844,13 @@
                         </div>
                     `;
                     row.querySelector('.del-icon-btn').onclick = async () => {
-                        const ok = await confirmDialog(`Excluir a matéria "${sub.name}"? (As horas antigas continuarão no histórico geral)`);
+                        const ok = await confirmDialog(`Excluir a matéria "${sub.name}"?`);
                         if (!ok) return;
-                        await deleteDoc(doc(db, "subjects", sub.id));
                         subjects = subjects.filter(s => s.id !== sub.id);
+                        saveLocal('subjects', subjects);
+                        if (!String(sub.id).startsWith('local_')) {
+                            deleteDoc(doc(db, "subjects", sub.id)).catch(() => {});
+                        }
                         populateSubjectSelects();
                         renderAll();
                         toast('Matéria removida.', 'success');
@@ -1777,7 +1859,6 @@
                 });
             }
 
-            // Provas
             const exList = $('exams-list');
             if (exams.length === 0) {
                 exList.innerHTML = '<p style="color:var(--muted);font-size:0.86rem;padding:1rem 0;">Nenhuma prova cadastrada. Adicione suas provas para acompanhar a contagem regressiva e vê-las no calendário.</p>';
@@ -1796,11 +1877,8 @@
                 else if (diff <= 7) cdClass = 'cd-soon';
 
                 const gLink = googleCalendarLink({
-                    title: `[Prova] ${ex.title}`,
-                    date: ex.date,
-                    time: ex.time,
-                    details: (sub ? `Matéria: ${sub.name}\n` : '') + (ex.topics || ''),
-                    location: ex.location
+                    title: `[Prova] ${ex.title}`, date: ex.date, time: ex.time,
+                    details: (sub ? `Matéria: ${sub.name}\n` : '') + (ex.topics || ''), location: ex.location
                 });
 
                 const card = document.createElement('div');
@@ -1827,7 +1905,7 @@
                 `;
                 card.querySelector('[data-toggle]').onclick = async () => {
                     ex.done = !ex.done;
-                    localStorage.setItem(lsKey('exams'), JSON.stringify(exams));
+                    saveLocal('exams', exams);
                     if (!String(ex.id).startsWith('local_')) {
                         try { await updateDoc(doc(db, "exams", ex.id), { done: ex.done }); } catch {}
                     }
@@ -1837,7 +1915,7 @@
                     const ok = await confirmDialog(`Excluir a prova "${ex.title}"?`);
                     if (!ok) return;
                     exams = exams.filter(x => x.id !== ex.id);
-                    localStorage.setItem(lsKey('exams'), JSON.stringify(exams));
+                    saveLocal('exams', exams);
                     if (!String(ex.id).startsWith('local_')) {
                         try { await deleteDoc(doc(db, "exams", ex.id)); } catch {}
                     }
@@ -1861,13 +1939,13 @@
                 done: false
             };
             if (!payload.title || !payload.date) return;
+            let newId = 'local_' + Date.now();
             try {
                 const ref = await addDoc(collection(db, "exams"), { ...payload, createdAt: serverTimestamp() });
-                exams.push({ id: ref.id, ...payload });
-            } catch {
-                exams.push({ id: 'local_' + Date.now(), ...payload });
-            }
-            localStorage.setItem(lsKey('exams'), JSON.stringify(exams));
+                newId = ref.id;
+            } catch {}
+            exams.push({ id: newId, ...payload });
+            saveLocal('exams', exams);
             $('exam-modal').classList.add('hidden');
             $('exam-form').reset();
             renderAll();
@@ -1904,7 +1982,7 @@
         }
 
         function closePdfReader(saveElapsed = true) {
-            if (saveElapsed && elapsedSec >= 10) {
+            if (saveElapsed && elapsedSec >= 5) {
                 logStudySession(pdfSubjectId, elapsedSec, 'pdf');
                 elapsedSec = 0;
             }
@@ -1976,6 +2054,13 @@
             }
         }
 
+        function openManualModal() {
+            $('manual-date').value = dateKey(new Date());
+            if (!$('manual-minutes').value) $('manual-minutes').value = 45;
+            $('manual-modal').classList.remove('hidden');
+            $('manual-minutes').focus();
+        }
+
         function init() {
             applyTheme(localStorage.getItem('theme') || 'dark');
             if (settings.emailjsKey && window.emailjs) emailjs.init({ publicKey: settings.emailjsKey });
@@ -1984,7 +2069,6 @@
                 applyGcalEmbed(settings.gcalEmbed);
             }
 
-            // Color picker para matérias
             let selectedColor = SUBJECT_COLORS[0];
             const picker = $('subject-color-picker');
             SUBJECT_COLORS.forEach((c, idx) => {
@@ -2000,7 +2084,6 @@
                 picker.appendChild(btn);
             });
 
-            // Auth state
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
                     currentUser = user;
@@ -2021,7 +2104,6 @@
                 }
             });
 
-            // Auth tabs & form
             $('tab-login').onclick = () => { isLoginMode = true; $('tab-login').classList.add('active'); $('tab-register').classList.remove('active'); $('auth-submit-btn').textContent = 'Entrar'; };
             $('tab-register').onclick = () => { isLoginMode = false; $('tab-register').classList.add('active'); $('tab-login').classList.remove('active'); $('auth-submit-btn').textContent = 'Criar conta'; };
             $('auth-form').onsubmit = async (e) => {
@@ -2036,7 +2118,6 @@
             };
             $('logout-btn').onclick = () => { pauseTimer(true); signOut(auth); };
 
-            // Theme
             $('theme-toggle').onclick = () => {
                 const next = document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
                 localStorage.setItem('theme', next);
@@ -2044,12 +2125,10 @@
                 if (dailyChart) renderDashboard();
             };
 
-            // Navigation
             document.querySelectorAll('.nav-btn').forEach(b => b.addEventListener('click', () => switchView(b.dataset.view)));
             $('btn-go-exams').onclick = () => switchView('exams');
             $('mini-timer-pill').onclick = () => switchView('timer');
 
-            // Close modals
             document.querySelectorAll('[data-close]').forEach(btn => {
                 btn.onclick = () => $(btn.dataset.close).classList.add('hidden');
             });
@@ -2058,18 +2137,15 @@
                 ov.addEventListener('click', (e) => { if (e.target === ov) ov.classList.add('hidden'); });
             });
 
-            // Dashboard breakdown filter
             $('breakdown-period').onchange = () => renderSubjectBreakdown(computeStats());
 
-            // Timer controls
             document.querySelectorAll('.mode-pill').forEach(p => p.onclick = () => setTimerMode(p.dataset.mode));
             $('btn-timer-start').onclick = startTimer;
             $('btn-timer-pause').onclick = () => pauseTimer(true);
-            $('btn-timer-save').onclick = saveStopwatchSession;
+            $('btn-timer-save').onclick = saveCurrentTimerSession;
             $('btn-timer-reset').onclick = () => { elapsedSec = 0; setTimerMode(timerMode); };
             $('timer-subject-select').onchange = updateTimerDisplay;
 
-            // Ambient Audio
             $('music-toggle').onclick = () => {
                 const playing = noiseNodes !== null || !$('bg-audio').paused;
                 if (playing) { stopAudio(); return; }
@@ -2092,7 +2168,6 @@
                 if (noiseNodes) noiseNodes.gain.gain.value = parseFloat(e.target.value) * 0.5;
             };
 
-            // Subject modal
             const openSubModal = () => { $('subject-modal').classList.remove('hidden'); $('subject-name-input').focus(); };
             $('btn-quick-subject').onclick = openSubModal;
             $('btn-add-subject-view').onclick = openSubModal;
@@ -2107,23 +2182,47 @@
                 toast('Matéria criada!', 'success');
             };
 
-            // Manual log modal
-            $('btn-manual-log').onclick = () => {
-                $('manual-date').value = dateKey(new Date());
-                $('manual-modal').classList.remove('hidden');
-                $('manual-minutes').focus();
-            };
+            // Manual log modal + atalhos
+            $('btn-manual-log').onclick = openManualModal;
+            $('btn-timer-manual').onclick = openManualModal;
+            $('manual-presets').addEventListener('click', (e) => {
+                const chip = e.target.closest('.preset-chip');
+                if (!chip) return;
+                $('manual-minutes').value = chip.dataset.mins;
+            });
             $('manual-form').onsubmit = async (e) => {
                 e.preventDefault();
-                const mins = parseInt($('manual-minutes').value);
-                if (!mins || mins < 1) return;
-                await logStudySession($('manual-subject').value || null, mins * 60, 'manual', $('manual-note').value.trim(), $('manual-date').value);
-                $('manual-form').reset();
-                $('manual-modal').classList.add('hidden');
-                toast(`${mins} min registrados com sucesso!`, 'success');
+                const mins = parseInt($('manual-minutes').value, 10);
+                if (!mins || mins < 1) {
+                    toast('Informe pelo menos 1 minuto.', 'error');
+                    return;
+                }
+                const btn = $('manual-submit-btn');
+                btn.disabled = true;
+                btn.textContent = 'Salvando...';
+                try {
+                    const ok = await logStudySession(
+                        $('manual-subject').value || null,
+                        mins * 60,
+                        'manual',
+                        $('manual-note').value.trim(),
+                        $('manual-date').value
+                    );
+                    if (ok) {
+                        $('manual-form').reset();
+                        $('manual-minutes').value = 45;
+                        $('manual-modal').classList.add('hidden');
+                        toast(`${mins} min registrados com sucesso!`, 'success');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    toast('Erro ao registrar minutos.', 'error');
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'Adicionar ao controle';
+                }
             };
 
-            // Calendar
             $('cal-prev').onclick = () => { calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; } renderCalendar(); };
             $('cal-next').onclick = () => { calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; } renderCalendar(); };
             $('cal-today').onclick = () => { const now = new Date(); calYear = now.getFullYear(); calMonth = now.getMonth(); selectedDate = dateKey(now); renderCalendar(); };
@@ -2140,11 +2239,9 @@
                 toast(val ? 'Google Agenda carregado.' : 'Incorporação removida.', 'success');
             };
 
-            // Exams
             $('btn-add-exam').onclick = () => { $('exam-date').value = selectedDate; $('exam-modal').classList.remove('hidden'); $('exam-title').focus(); };
             $('exam-form').onsubmit = saveExam;
 
-            // PDF
             $('btn-pdf-open').onclick = () => {
                 if (subjects.length === 0) { toast('Crie uma matéria antes de estudar PDF.', 'info'); return; }
                 $('pdf-modal').classList.remove('hidden');
@@ -2167,7 +2264,6 @@
             };
             $('btn-pdf-close').onclick = () => closePdfReader(true);
 
-            // Settings
             $('btn-open-settings').onclick = () => {
                 $('set-weekly-goal').value = settings.weeklyGoalHours;
                 $('set-focus').value = settings.focusMin;
@@ -2197,7 +2293,6 @@
                 toast('Configurações salvas.', 'success');
             };
 
-            // Summary
             $('btn-export-summary').onclick = () => {
                 $('summary-text').textContent = buildSummaryText();
                 $('summary-modal').classList.remove('hidden');
@@ -2218,9 +2313,8 @@
                 }
             };
 
-            // Salva foco em andamento caso feche a aba
             window.addEventListener('beforeunload', () => {
-                if (isRunning && (timerMode === 'focus' || timerMode === 'pdf') && elapsedSec >= 15) {
+                if (isRunning && (timerMode === 'focus' || timerMode === 'pdf') && elapsedSec >= 5) {
                     pauseTimer(true);
                 }
             });
